@@ -2,9 +2,7 @@
 
 import { useEffect } from 'react'
 
-// Replace REPLACE_WITH_TALLY_FORM_ID with your actual Tally form ID
-// Get it from tally.so → your form → Share → Embed
-const TALLY_FORM_ID = 'REPLACE_WITH_TALLY_FORM_ID'
+const TALLY_FORM_ID = 'KY6qqA'
 
 export default function TallyForm() {
   useEffect(() => {
