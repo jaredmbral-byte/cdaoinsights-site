@@ -29,21 +29,21 @@ export default function Home() {
     <div className="relative z-10 flex flex-col min-h-screen font-sans">
 
       {/* ── Nav ──────────────────────────────────────────────────────────── */}
-      <header className="w-full border-b border-[#1e2230]">
+      <header className="w-full border-b border-[#D9D6D0]">
         <nav
           className="max-w-3xl mx-auto px-6 py-5 flex items-center justify-between"
           aria-label="Main navigation"
         >
           <a
             href="/"
-            className="text-[#f4f4f5] font-semibold tracking-tight text-base"
+            className="text-[#1A1A1A] font-semibold tracking-tight text-base"
             aria-label="CDAO Insights home"
           >
             CDAO Insights
           </a>
           <a
             href="#join"
-            className="text-sm text-[#a1a1aa] hover:text-[#f4f4f5] transition-colors duration-200"
+            className="text-sm text-[#6B6B6B] hover:text-[#1A1A1A] transition-colors duration-200"
           >
             Join →
           </a>
@@ -57,21 +57,21 @@ export default function Home() {
           aria-labelledby="hero-heading"
         >
           {/* Eyebrow */}
-          <p className="text-xs font-medium tracking-widest uppercase text-[#6366f1] mb-6">
+          <p className="text-xs font-medium tracking-widest uppercase text-[#1A1A1A] mb-6">
             Community Intelligence Resource
           </p>
 
           {/* Headline */}
           <h1
             id="hero-heading"
-            className="text-4xl sm:text-5xl font-semibold leading-[1.15] tracking-tight text-[#f4f4f5] mb-6"
+            className="text-4xl sm:text-5xl font-semibold leading-[1.15] tracking-tight text-[#1A1A1A] mb-6"
           >
             What enterprise data and AI leaders are{' '}
-            <em className="not-italic text-[#a1a1aa]">actually</em> building
+            <em className="not-italic text-[#6B6B6B]">actually</em> building
           </h1>
 
           {/* Subheadline */}
-          <p className="text-lg text-[#a1a1aa] leading-relaxed max-w-2xl mb-12">
+          <p className="text-lg text-[#6B6B6B] leading-relaxed max-w-2xl mb-12">
             Peer signals, market context, and trends for CDOs, CAIOs, and senior
             data leaders at large enterprises. No vendor agendas. No thought
             leadership theater.
@@ -80,16 +80,16 @@ export default function Home() {
           {/* Email Capture */}
           <div
             id="join"
-            className="bg-[#0f1117] border border-[#1e2230] rounded-xl p-6 sm:p-8 max-w-lg"
+            className="bg-white border border-[#D9D6D0] rounded-xl p-6 sm:p-8 max-w-lg"
           >
-            <p className="text-sm font-medium text-[#f4f4f5] mb-1">
+            <p className="text-sm font-medium text-[#1A1A1A] mb-1">
               Get the briefing
             </p>
-            <p className="text-sm text-[#71717a] mb-5">
+            <p className="text-sm text-[#6B6B6B] mb-5">
               Join data and AI leaders at enterprise organizations.
             </p>
             <TallyForm />
-            <p className="text-xs text-[#52525b] mt-4">
+            <p className="text-xs text-[#999590] mt-4">
               No spam. No vendor partnerships that shape what you read.
               Unsubscribe any time.
             </p>
@@ -98,35 +98,35 @@ export default function Home() {
 
         {/* ── Pillars ──────────────────────────────────────────────────────── */}
         <section
-          className="max-w-3xl mx-auto px-6 pb-24 border-t border-[#1e2230] pt-16"
+          className="max-w-3xl mx-auto px-6 pb-24 border-t border-[#D9D6D0] pt-16"
           aria-label="What CDAO Insights covers"
         >
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-10">
             <article>
-              <h2 className="text-xs font-semibold tracking-widest uppercase text-[#6366f1] mb-3">
+              <h2 className="text-xs font-semibold tracking-widest uppercase text-[#1A1A1A] mb-3">
                 Peer Intelligence
               </h2>
-              <p className="text-sm text-[#71717a] leading-relaxed">
+              <p className="text-sm text-[#6B6B6B] leading-relaxed">
                 What your counterparts are prioritizing, where they're
                 struggling, and what's actually shipping inside enterprise
                 organizations.
               </p>
             </article>
             <article>
-              <h2 className="text-xs font-semibold tracking-widest uppercase text-[#6366f1] mb-3">
+              <h2 className="text-xs font-semibold tracking-widest uppercase text-[#1A1A1A] mb-3">
                 Market Signals
               </h2>
-              <p className="text-sm text-[#71717a] leading-relaxed">
+              <p className="text-sm text-[#6B6B6B] leading-relaxed">
                 Where enterprise data and AI investment is moving — sourced from
                 hiring patterns, org changes, and technology adoption before the
                 analysts catch up.
               </p>
             </article>
             <article>
-              <h2 className="text-xs font-semibold tracking-widest uppercase text-[#6366f1] mb-3">
+              <h2 className="text-xs font-semibold tracking-widest uppercase text-[#1A1A1A] mb-3">
                 Independent
               </h2>
-              <p className="text-sm text-[#71717a] leading-relaxed">
+              <p className="text-sm text-[#6B6B6B] leading-relaxed">
                 Community-driven editorial. No sponsor determines what gets
                 covered or how it's framed. The signal stays clean.
               </p>
@@ -136,22 +136,22 @@ export default function Home() {
 
         {/* ── FAQ (AEO-optimized) ───────────────────────────────────────────── */}
         <section
-          className="max-w-3xl mx-auto px-6 pb-24 border-t border-[#1e2230] pt-16"
+          className="max-w-3xl mx-auto px-6 pb-24 border-t border-[#D9D6D0] pt-16"
           aria-labelledby="faq-heading"
         >
           <h2
             id="faq-heading"
-            className="text-xs font-semibold tracking-widest uppercase text-[#52525b] mb-12"
+            className="text-xs font-semibold tracking-widest uppercase text-[#999590] mb-12"
           >
             Context
           </h2>
           <dl className="space-y-10">
             {faqs.map((item, i) => (
               <div key={i}>
-                <dt className="text-base font-medium text-[#e4e4e7] mb-3">
+                <dt className="text-base font-medium text-[#1A1A1A] mb-3">
                   {item.q}
                 </dt>
-                <dd className="text-sm text-[#71717a] leading-relaxed max-w-2xl">
+                <dd className="text-sm text-[#6B6B6B] leading-relaxed max-w-2xl">
                   {item.a}
                 </dd>
               </div>
@@ -161,13 +161,13 @@ export default function Home() {
       </main>
 
       {/* ── Footer ───────────────────────────────────────────────────────── */}
-      <footer className="border-t border-[#1e2230]">
+      <footer className="border-t border-[#D9D6D0]">
         <div className="max-w-3xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <span className="text-sm text-[#52525b]">
+          <span className="text-sm text-[#999590]">
             CDAO Insights — Community resource for enterprise data &amp; AI
             leaders
           </span>
-          <span className="text-xs text-[#3f3f46]">
+          <span className="text-xs text-[#B5B1AB]">
             © {new Date().getFullYear()} CDAO Insights
           </span>
         </div>

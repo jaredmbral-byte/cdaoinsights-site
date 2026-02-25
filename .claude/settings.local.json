@@ -10,7 +10,13 @@
       "Bash(xargs kill:*)",
       "Bash(git init:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "mcp__09d68364-214f-4c4b-8a09-84cace8e10ef__deploy_to_vercel",
+      "Bash(export NVM_DIR=\"$HOME/.nvm\")",
+      "Bash([ -s \"$NVM_DIR/nvm.sh\" ])",
+      "Bash(. \"$NVM_DIR/nvm.sh\")",
+      "Bash(vercel deploy:*)",
+      "WebFetch(domain:argyle.build)"
     ]
   }
 }

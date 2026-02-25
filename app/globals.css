@@ -3,14 +3,14 @@
 @tailwind utilities;
 
 :root {
-  --bg: #09090b;
-  --surface: #0f1117;
-  --border: #1e2230;
-  --text: #f4f4f5;
-  --text-muted: #71717a;
-  --text-subtle: #a1a1aa;
-  --accent: #6366f1;
-  --accent-dim: rgba(99, 102, 241, 0.12);
+  --bg: #F0EEE9;
+  --surface: #FFFFFF;
+  --border: #D9D6D0;
+  --text: #1A1A1A;
+  --text-muted: #6B6B6B;
+  --text-subtle: #999590;
+  --accent: #1A1A1A;
+  --accent-dim: rgba(0, 0, 0, 0.05);
 }
 
 * {
@@ -39,7 +39,7 @@ body::before {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
   pointer-events: none;
   z-index: 0;
-  opacity: 0.4;
+  opacity: 0.15;
 }
 
 /* Tally form override */
