@@ -24,6 +24,7 @@ html {
   color: var(--text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'dlig' 1, 'lnum' 1, 'tnum' 1;
 }
 
 body {

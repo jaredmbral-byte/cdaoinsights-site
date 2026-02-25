@@ -36,14 +36,14 @@ export default function Home() {
         >
           <a
             href="/"
-            className="text-[#1A1A1A] font-semibold tracking-tight text-base"
+            className="font-mono font-medium text-sm uppercase tracking-[2px] text-[#1A1A1A]"
             aria-label="CDAO Insights home"
           >
             CDAO Insights
           </a>
           <a
             href="#join"
-            className="text-sm text-[#6B6B6B] hover:text-[#1A1A1A] transition-colors duration-200"
+            className="font-mono text-sm uppercase tracking-[2px] text-[#6B6B6B] hover:text-[#1A1A1A] transition-colors duration-200"
           >
             Join →
           </a>
@@ -57,14 +57,14 @@ export default function Home() {
           aria-labelledby="hero-heading"
         >
           {/* Eyebrow */}
-          <p className="text-xs font-medium tracking-widest uppercase text-[#1A1A1A] mb-6">
+          <p className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#1A1A1A] mb-6">
             Community Intelligence Resource
           </p>
 
           {/* Headline */}
           <h1
             id="hero-heading"
-            className="text-4xl sm:text-5xl font-semibold leading-[1.15] tracking-tight text-[#1A1A1A] mb-6"
+            className="text-4xl sm:text-5xl font-light leading-[1.15] tracking-[-1px] text-[#1A1A1A] mb-6"
           >
             What enterprise data and AI leaders are{' '}
             <em className="not-italic text-[#6B6B6B]">actually</em> building
@@ -103,17 +103,17 @@ export default function Home() {
         >
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-10">
             <article>
-              <h2 className="text-xs font-semibold tracking-widest uppercase text-[#1A1A1A] mb-3">
+              <h2 className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#1A1A1A] mb-3">
                 Peer Intelligence
               </h2>
               <p className="text-sm text-[#6B6B6B] leading-relaxed">
-                What your counterparts are prioritizing, where they're
-                struggling, and what's actually shipping inside enterprise
+                What your counterparts are prioritizing, where they&apos;re
+                struggling, and what&apos;s actually shipping inside enterprise
                 organizations.
               </p>
             </article>
             <article>
-              <h2 className="text-xs font-semibold tracking-widest uppercase text-[#1A1A1A] mb-3">
+              <h2 className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#1A1A1A] mb-3">
                 Market Signals
               </h2>
               <p className="text-sm text-[#6B6B6B] leading-relaxed">
@@ -123,12 +123,12 @@ export default function Home() {
               </p>
             </article>
             <article>
-              <h2 className="text-xs font-semibold tracking-widest uppercase text-[#1A1A1A] mb-3">
+              <h2 className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#1A1A1A] mb-3">
                 Independent
               </h2>
               <p className="text-sm text-[#6B6B6B] leading-relaxed">
                 Community-driven editorial. No sponsor determines what gets
-                covered or how it's framed. The signal stays clean.
+                covered or how it&apos;s framed. The signal stays clean.
               </p>
             </article>
           </div>
@@ -141,7 +141,7 @@ export default function Home() {
         >
           <h2
             id="faq-heading"
-            className="text-xs font-semibold tracking-widest uppercase text-[#999590] mb-12"
+            className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#999590] mb-12"
           >
             Context
           </h2>
@@ -163,11 +163,10 @@ export default function Home() {
       {/* ── Footer ───────────────────────────────────────────────────────── */}
       <footer className="border-t border-[#D9D6D0]">
         <div className="max-w-3xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <span className="text-sm text-[#999590]">
-            CDAO Insights — Community resource for enterprise data &amp; AI
-            leaders
+          <span className="font-mono text-xs uppercase tracking-[2px] text-[#999590]">
+            CDAO Insights — Enterprise data &amp; AI leaders
           </span>
-          <span className="text-xs text-[#B5B1AB]">
+          <span className="font-mono text-xs uppercase tracking-[2px] text-[#B5B1AB]">
             © {new Date().getFullYear()} CDAO Insights
           </span>
         </div>
