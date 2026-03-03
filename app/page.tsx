@@ -31,7 +31,7 @@ export default function Home() {
       {/* ── Nav ──────────────────────────────────────────────────────────── */}
       <header className="w-full border-b border-[#D9D6D0]">
         <nav
-          className="max-w-3xl mx-auto px-6 py-5 flex items-center justify-between"
+          className="max-w-5xl mx-auto px-6 py-5 flex items-center justify-between"
           aria-label="Main navigation"
         >
           <a
@@ -41,12 +41,17 @@ export default function Home() {
           >
             CDAO Insights
           </a>
-          <a
-            href="#join"
-            className="font-mono text-sm uppercase tracking-[2px] text-[#6B6B6B] hover:text-[#1A1A1A] transition-colors duration-200"
-          >
-            Join →
-          </a>
+          <div className="flex items-center gap-6">
+            <a href="/hiring" className="font-mono text-sm uppercase tracking-[2px] text-[#6B6B6B] hover:text-[#1A1A1A] transition-colors">Hiring</a>
+            <a href="/intelligence" className="font-mono text-sm uppercase tracking-[2px] text-[#6B6B6B] hover:text-[#1A1A1A] transition-colors">Intelligence</a>
+            <a href="/compensation" className="font-mono text-sm uppercase tracking-[2px] text-[#6B6B6B] hover:text-[#1A1A1A] transition-colors">Compensation</a>
+            <a
+              href="#join"
+              className="font-mono text-sm uppercase tracking-[2px] text-[#6B6B6B] hover:text-[#1A1A1A] transition-colors"
+            >
+              Join →
+            </a>
+          </div>
         </nav>
       </header>
 
