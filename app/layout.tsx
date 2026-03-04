@@ -11,7 +11,7 @@ const inter = Inter({
 const inconsolata = Inconsolata({
   subsets: ['latin'],
   variable: '--font-inconsolata',
-  weight: ['500'],
+  weight: ['400', '500', '700'],
   display: 'swap',
 })
 
@@ -136,7 +136,51 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
       </head>
-      <body>{children}</body>
+      <body className="bg-[#0A0A0A] text-[#E8E8E8]">
+        {/* ── Sticky Nav ─────────────────────────────────────────────────── */}
+        <header className="sticky top-0 z-50 bg-[#0A0A0A]/95 backdrop-blur-sm border-b border-[#1E1E1E]">
+          <nav
+            className="max-w-[1200px] mx-auto px-6 h-14 flex items-center justify-between"
+            aria-label="Main navigation"
+          >
+            <a
+              href="/"
+              className="font-mono font-bold text-sm tracking-[3px] text-[#E8E8E8] uppercase"
+              aria-label="CDAO Insights home"
+            >
+              CDAO INSIGHTS
+            </a>
+            <div className="flex items-center gap-6">
+              <a href="/moves" className="font-mono text-xs uppercase tracking-[2px] text-[#888888] hover:text-[#E8E8E8] transition-colors">
+                Moves
+              </a>
+              <a href="/hiring" className="font-mono text-xs uppercase tracking-[2px] text-[#888888] hover:text-[#E8E8E8] transition-colors">
+                Hiring
+              </a>
+              <a href="/intelligence" className="font-mono text-xs uppercase tracking-[2px] text-[#888888] hover:text-[#E8E8E8] transition-colors">
+                Intelligence
+              </a>
+              <a href="/compensation" className="font-mono text-xs uppercase tracking-[2px] text-[#888888] hover:text-[#E8E8E8] transition-colors">
+                Compensation
+              </a>
+            </div>
+          </nav>
+        </header>
+
+        {children}
+
+        {/* ── Footer ───────────────────────────────────────────────────────── */}
+        <footer className="border-t border-[#1E1E1E]">
+          <div className="max-w-[1200px] mx-auto px-6 py-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <span className="font-mono text-xs uppercase tracking-[2px] text-[#555555]">
+              CDAO Insights — Enterprise data &amp; AI leaders
+            </span>
+            <span className="font-mono text-xs uppercase tracking-[2px] text-[#555555]">
+              &copy; {new Date().getFullYear()} CDAO Insights
+            </span>
+          </div>
+        </footer>
+      </body>
     </html>
   )
 }

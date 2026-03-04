@@ -62,17 +62,17 @@ function timeAgo(dateStr: string): string {
 }
 
 const TOPIC_COLORS: Record<string, string> = {
-  ai: 'bg-blue-50 text-blue-700',
-  genai: 'bg-purple-50 text-purple-700',
-  governance: 'bg-amber-50 text-amber-700',
-  strategy: 'bg-green-50 text-green-700',
-  leadership: 'bg-rose-50 text-rose-700',
-  funding: 'bg-emerald-50 text-emerald-700',
-  'data-quality': 'bg-orange-50 text-orange-700',
-  security: 'bg-red-50 text-red-700',
-  'agentic-ai': 'bg-indigo-50 text-indigo-700',
-  infrastructure: 'bg-cyan-50 text-cyan-700',
-  general: 'bg-gray-50 text-gray-600',
+  ai: 'border-blue-500/30 text-blue-400',
+  genai: 'border-purple-500/30 text-purple-400',
+  governance: 'border-amber-500/30 text-amber-400',
+  strategy: 'border-green-500/30 text-green-400',
+  leadership: 'border-rose-500/30 text-rose-400',
+  funding: 'border-emerald-500/30 text-emerald-400',
+  'data-quality': 'border-orange-500/30 text-orange-400',
+  security: 'border-red-500/30 text-red-400',
+  'agentic-ai': 'border-indigo-500/30 text-indigo-400',
+  infrastructure: 'border-cyan-500/30 text-cyan-400',
+  general: 'border-[#333] text-[#888888]',
 }
 
 export default async function IntelligencePage({
@@ -87,125 +87,97 @@ export default async function IntelligencePage({
   const articles = await getArticles(topic, days)
 
   return (
-    <div className="relative z-10 flex flex-col min-h-screen font-sans">
-      {/* Nav */}
-      <header className="w-full border-b border-[#D9D6D0]">
-        <nav className="max-w-5xl mx-auto px-6 py-5 flex items-center justify-between" aria-label="Main navigation">
-          <a href="/" className="font-mono font-medium text-sm uppercase tracking-[2px] text-[#1A1A1A]">
-            CDAO Insights
+    <main className="flex-1 max-w-[1200px] mx-auto px-6 pt-16 pb-24 w-full">
+      {/* Page header */}
+      <p className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#555555] mb-4">
+        Market Intelligence
+      </p>
+      <h1 className="text-3xl sm:text-4xl font-semibold leading-[1.15] tracking-[-0.5px] text-[#E8E8E8] mb-3">
+        What&apos;s moving in enterprise data &amp; AI
+      </h1>
+      <p className="text-base text-[#888888] leading-relaxed max-w-2xl mb-10">
+        Curated signals from across the market — AI regulation, governance shifts,
+        vendor moves, and leadership changes. Updated every 15 minutes.
+      </p>
+
+      {/* Topic filters */}
+      <div className="flex flex-wrap gap-2 mb-10">
+        {TOPICS.map((t) => (
+          <a
+            key={t.value}
+            href={`/intelligence${t.value ? `?topic=${t.value}` : ''}${days !== 7 ? `${t.value ? '&' : '?'}days=${days}` : ''}`}
+            className={`font-mono text-xs uppercase tracking-[1px] px-3 py-1.5 rounded-sm border transition-colors ${
+              (topic === t.value || (!topic && t.value === ''))
+                ? 'bg-[#E8E8E8] text-[#0A0A0A] border-[#E8E8E8]'
+                : 'bg-transparent text-[#888888] border-[#1E1E1E] hover:border-[#555555] hover:text-[#E8E8E8]'
+            }`}
+          >
+            {t.label}
           </a>
-          <div className="flex items-center gap-6">
-            <a href="/hiring" className="font-mono text-sm uppercase tracking-[2px] text-[#6B6B6B] hover:text-[#1A1A1A] transition-colors">Hiring</a>
-            <a href="/intelligence" className="font-mono text-sm uppercase tracking-[2px] text-[#1A1A1A] border-b border-[#1A1A1A]">Intelligence</a>
-            <a href="/compensation" className="font-mono text-sm uppercase tracking-[2px] text-[#6B6B6B] hover:text-[#1A1A1A] transition-colors">Compensation</a>
-          </div>
-        </nav>
-      </header>
+        ))}
+      </div>
 
-      <main className="flex-1 max-w-5xl mx-auto px-6 pt-16 pb-24 w-full">
-        {/* Page header */}
-        <p className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#999590] mb-4">
-          Market Intelligence
-        </p>
-        <h1 className="text-3xl sm:text-4xl font-light leading-[1.15] tracking-[-1px] text-[#1A1A1A] mb-3">
-          What&apos;s moving in enterprise data &amp; AI
-        </h1>
-        <p className="text-base text-[#6B6B6B] leading-relaxed max-w-2xl mb-10">
-          Curated signals from across the market — AI regulation, governance shifts,
-          vendor moves, and leadership changes. Updated every 15 minutes.
-        </p>
+      {/* Results */}
+      <p className="font-mono text-xs text-[#555555] mb-6">
+        {articles.length} {articles.length === 1 ? 'article' : 'articles'}
+      </p>
 
-        {/* Topic filters */}
-        <div className="flex flex-wrap gap-2 mb-10">
-          {TOPICS.map((t) => (
+      {articles.length > 0 ? (
+        <div className="space-y-3">
+          {articles.map((article) => (
             <a
-              key={t.value}
-              href={`/intelligence${t.value ? `?topic=${t.value}` : ''}${days !== 7 ? `${t.value ? '&' : '?'}days=${days}` : ''}`}
-              className={`font-mono text-xs uppercase tracking-[1px] px-3 py-1.5 rounded-full border transition-colors ${
-                (topic === t.value || (!topic && t.value === ''))
-                  ? 'bg-[#1A1A1A] text-white border-[#1A1A1A]'
-                  : 'bg-white text-[#6B6B6B] border-[#D9D6D0] hover:border-[#1A1A1A] hover:text-[#1A1A1A]'
-              }`}
+              key={article.id}
+              href={article.source_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block border border-[#1E1E1E] rounded-sm p-4 hover:border-[#333] hover:bg-[#111111] transition-all group"
             >
-              {t.label}
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex-1 min-w-0">
+                  <h2 className="text-base text-[#E8E8E8] group-hover:text-[#3B82F6] mb-2 leading-snug">
+                    {article.title}
+                  </h2>
+                  {article.summary && (
+                    <p className="text-sm text-[#888888] leading-relaxed mb-3 line-clamp-2">
+                      {article.summary}
+                    </p>
+                  )}
+                  <div className="flex items-center gap-3 flex-wrap">
+                    {article.topics.map((t) => (
+                      <span
+                        key={t}
+                        className={`font-mono text-[10px] uppercase tracking-[1px] px-2 py-0.5 rounded-sm border ${TOPIC_COLORS[t] || TOPIC_COLORS.general}`}
+                      >
+                        {t.replace('-', ' ')}
+                      </span>
+                    ))}
+                    {article.source_name && (
+                      <span className="font-mono text-[10px] uppercase tracking-[1px] text-[#555555]">
+                        {article.source_name}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <span className="font-mono text-[11px] text-[#555555] whitespace-nowrap mt-1">
+                  {article.published_at ? timeAgo(article.published_at) : '—'}
+                </span>
+              </div>
             </a>
           ))}
         </div>
-
-        {/* Results */}
-        <p className="font-mono text-xs text-[#999590] mb-6">
-          {articles.length} {articles.length === 1 ? 'article' : 'articles'}
-        </p>
-
-        {articles.length > 0 ? (
-          <div className="space-y-4">
-            {articles.map((article) => (
-              <a
-                key={article.id}
-                href={article.source_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block border border-[#D9D6D0] rounded-xl p-5 hover:border-[#999590] hover:bg-[#FAFAF8] transition-all group"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex-1 min-w-0">
-                    <h2 className="text-base font-medium text-[#1A1A1A] group-hover:underline mb-2 leading-snug">
-                      {article.title}
-                    </h2>
-                    {article.summary && (
-                      <p className="text-sm text-[#6B6B6B] leading-relaxed mb-3 line-clamp-2">
-                        {article.summary}
-                      </p>
-                    )}
-                    <div className="flex items-center gap-3 flex-wrap">
-                      {article.topics.map((t) => (
-                        <span
-                          key={t}
-                          className={`font-mono text-[10px] uppercase tracking-[1px] px-2 py-0.5 rounded ${TOPIC_COLORS[t] || TOPIC_COLORS.general}`}
-                        >
-                          {t.replace('-', ' ')}
-                        </span>
-                      ))}
-                      {article.source_name && (
-                        <span className="font-mono text-[10px] uppercase tracking-[1px] text-[#B5B1AB]">
-                          {article.source_name}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                  <span className="font-mono text-xs text-[#B5B1AB] whitespace-nowrap mt-1">
-                    {article.published_at ? timeAgo(article.published_at) : '—'}
-                  </span>
-                </div>
-              </a>
-            ))}
-          </div>
-        ) : (
-          <div className="border border-[#D9D6D0] rounded-xl p-12 text-center">
-            <p className="text-[#999590] mb-2">No articles yet</p>
-            <p className="text-sm text-[#B5B1AB]">
-              News is ingested every 15 minutes from RSS feeds. Check back shortly.
-            </p>
-          </div>
-        )}
-      </main>
-
-      {/* Footer */}
-      <footer className="border-t border-[#D9D6D0]">
-        <div className="max-w-5xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <span className="font-mono text-xs uppercase tracking-[2px] text-[#999590]">
-            CDAO Insights — Enterprise data &amp; AI leaders
-          </span>
-          <span className="font-mono text-xs uppercase tracking-[2px] text-[#B5B1AB]">
-            &copy; {new Date().getFullYear()} CDAO Insights
-          </span>
+      ) : (
+        <div className="border border-[#1E1E1E] rounded-sm p-12 text-center">
+          <p className="text-[#888888] mb-2">No articles yet</p>
+          <p className="text-sm text-[#555555]">
+            News is ingested every 15 minutes from RSS feeds. Check back shortly.
+          </p>
         </div>
-      </footer>
+      )}
 
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleListSchema(articles)) }}
       />
-    </div>
+    </main>
   )
 }

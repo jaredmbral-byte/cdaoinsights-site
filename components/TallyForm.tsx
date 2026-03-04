@@ -30,7 +30,7 @@ export default function TallyForm() {
       height="80"
       frameBorder="0"
       title="Join CDAO Insights"
-      className="min-h-[80px]"
+      className="min-h-[80px] invert"
     />
   )
 }

@@ -51,17 +51,17 @@ const MOVE_TYPE_LABELS: Record<string, string> = {
 }
 
 const TOPIC_COLORS: Record<string, string> = {
-  ai: 'bg-blue-50 text-blue-700',
-  genai: 'bg-purple-50 text-purple-700',
-  governance: 'bg-amber-50 text-amber-700',
-  strategy: 'bg-green-50 text-green-700',
-  leadership: 'bg-rose-50 text-rose-700',
-  funding: 'bg-emerald-50 text-emerald-700',
-  'data-quality': 'bg-orange-50 text-orange-700',
-  security: 'bg-red-50 text-red-700',
-  'agentic-ai': 'bg-indigo-50 text-indigo-700',
-  infrastructure: 'bg-cyan-50 text-cyan-700',
-  general: 'bg-gray-50 text-gray-600',
+  ai: 'border-blue-500/30 text-blue-400',
+  genai: 'border-purple-500/30 text-purple-400',
+  governance: 'border-amber-500/30 text-amber-400',
+  strategy: 'border-green-500/30 text-green-400',
+  leadership: 'border-rose-500/30 text-rose-400',
+  funding: 'border-emerald-500/30 text-emerald-400',
+  'data-quality': 'border-orange-500/30 text-orange-400',
+  security: 'border-red-500/30 text-red-400',
+  'agentic-ai': 'border-indigo-500/30 text-indigo-400',
+  infrastructure: 'border-cyan-500/30 text-cyan-400',
+  general: 'border-[#333] text-[#888888]',
 }
 
 export default async function Home() {
@@ -86,121 +86,74 @@ export default async function Home() {
   const topIntel = (intelligenceResult.data || []) as MarketArticle[]
 
   return (
-    <div className="relative z-10 flex flex-col min-h-screen font-sans">
-
-      {/* ── Nav ──────────────────────────────────────────────────────────── */}
-      <header className="w-full border-b border-[#D9D6D0]">
-        <nav
-          className="max-w-5xl mx-auto px-6 py-5 flex items-center justify-between"
-          aria-label="Main navigation"
-        >
-          <a
-            href="/"
-            className="font-mono font-medium text-sm uppercase tracking-[2px] text-[#1A1A1A]"
-            aria-label="CDAO Insights home"
-          >
-            CDAO Insights
-          </a>
-          <div className="flex items-center gap-6">
-            <a href="/hiring" className="font-mono text-sm uppercase tracking-[2px] text-[#6B6B6B] hover:text-[#1A1A1A] transition-colors">Hiring</a>
-            <a href="/intelligence" className="font-mono text-sm uppercase tracking-[2px] text-[#6B6B6B] hover:text-[#1A1A1A] transition-colors">Intelligence</a>
-            <a href="/moves" className="font-mono text-sm uppercase tracking-[2px] text-[#6B6B6B] hover:text-[#1A1A1A] transition-colors">Moves</a>
-            <a href="/compensation" className="font-mono text-sm uppercase tracking-[2px] text-[#6B6B6B] hover:text-[#1A1A1A] transition-colors">Compensation</a>
-            <a
-              href="#join"
-              className="font-mono text-sm uppercase tracking-[2px] text-[#6B6B6B] hover:text-[#1A1A1A] transition-colors"
-            >
-              Join →
-            </a>
-          </div>
-        </nav>
-      </header>
-
-      {/* ── Hero ─────────────────────────────────────────────────────────── */}
+    <div className="flex flex-col min-h-screen font-sans">
       <main className="flex-1">
+
+        {/* ── Live Stat Bar ─────────────────────────────────────────────── */}
+        <div className="border-b border-[#1E1E1E] overflow-x-auto">
+          <div className="max-w-[1200px] mx-auto px-6 h-10 flex items-center gap-8 whitespace-nowrap">
+            <div className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#00FF94] animate-pulse" />
+              <span className="font-mono text-[11px] uppercase tracking-[1px] text-[#555555]">Live</span>
+            </div>
+            <HiringTicker />
+            <MovesTicker />
+          </div>
+        </div>
+
+        {/* ── Hero ─────────────────────────────────────────────────────────── */}
         <section
-          className="max-w-3xl mx-auto px-6 pt-24 pb-20"
+          className="max-w-[1200px] mx-auto px-6 pt-20 pb-16"
           aria-labelledby="hero-heading"
         >
-          {/* Eyebrow */}
-          <p className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#1A1A1A] mb-6">
-            Community Intelligence Resource
-          </p>
-
-          {/* Headline */}
           <h1
             id="hero-heading"
-            className="text-4xl sm:text-5xl font-light leading-[1.15] tracking-[-1px] text-[#1A1A1A] mb-6"
+            className="text-3xl sm:text-4xl font-semibold leading-[1.2] tracking-[-0.5px] text-[#E8E8E8] mb-4 max-w-2xl"
           >
-            What enterprise data and AI leaders are{' '}
-            <em className="not-italic text-[#6B6B6B]">actually</em> building
+            What enterprise data and AI leaders are actually building
           </h1>
-
-          {/* Subheadline */}
-          <p className="text-lg text-[#6B6B6B] leading-relaxed max-w-2xl mb-12">
-            Peer signals, market context, and trends for CDOs, CAIOs, and senior
-            data leaders at large enterprises. No vendor agendas. No thought
-            leadership theater.
+          <p className="text-base text-[#888888] leading-relaxed max-w-xl mb-10">
+            Peer signals, market context, and trends for CDOs, CAIOs, and senior data leaders. No vendor agendas.
           </p>
 
-          {/* Email Capture */}
+          {/* Inline email capture */}
           <div
             id="join"
-            className="bg-white border border-[#D9D6D0] rounded-xl p-6 sm:p-8 max-w-lg"
+            className="bg-[#111111] border border-[#1E1E1E] rounded-sm p-5 max-w-md"
           >
-            <p className="text-sm font-medium text-[#1A1A1A] mb-1">
+            <p className="font-mono text-xs uppercase tracking-[1px] text-[#888888] mb-3">
               Get the briefing
             </p>
-            <p className="text-sm text-[#6B6B6B] mb-5">
-              Join data and AI leaders at enterprise organizations.
-            </p>
             <TallyForm />
-            <p className="text-xs text-[#999590] mt-4">
-              No spam. No vendor partnerships that shape what you read.
-              Unsubscribe any time.
+            <p className="text-[11px] text-[#555555] mt-3">
+              No spam. No vendor partnerships. Unsubscribe any time.
             </p>
           </div>
         </section>
 
-        {/* ── Hiring Ticker ────────────────────────────────────────────────── */}
-        <section
-          className="max-w-3xl mx-auto px-6 pb-16"
-          aria-label="Executive hiring data"
-        >
-          <HiringTicker />
-        </section>
-
-        {/* ── Executive Moves Ticker ─────────────────────────────────────── */}
-        <section
-          className="max-w-3xl mx-auto px-6 pb-16"
-          aria-label="Executive moves data"
-        >
-          <MovesTicker />
-        </section>
-
-        {/* ── Latest Executive Moves (server-rendered) ─────────────────────── */}
+        {/* ── Executive Moves (server-rendered) ───────────────────────────── */}
         {latestMoves.length > 0 && (
           <section
-            className="max-w-3xl mx-auto px-6 pb-16"
+            className="max-w-[1200px] mx-auto px-6 pb-16"
             aria-label="Latest executive moves"
           >
-            <div className="border-t border-[#D9D6D0] pt-16">
-              <div className="flex items-center justify-between mb-8">
-                <h2 className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#999590]">
-                  Latest Executive Moves
+            <div className="border-t border-[#1E1E1E] pt-12">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#555555]">
+                  Executive Moves
                 </h2>
                 <a
                   href="/moves"
-                  className="font-mono text-xs uppercase tracking-[1px] text-[#6B6B6B] hover:text-[#1A1A1A] transition-colors"
+                  className="font-mono text-xs uppercase tracking-[1px] text-[#555555] hover:text-[#E8E8E8] transition-colors"
                 >
                   View all →
                 </a>
               </div>
-              <div className="divide-y divide-[#E8E5E0] border border-[#D9D6D0] rounded-xl overflow-hidden">
+              <div className="border border-[#1E1E1E] rounded-sm overflow-hidden divide-y divide-[#1E1E1E]">
                 {latestMoves.map((move) => (
                   <article
                     key={move.id}
-                    className="px-6 py-4 hover:bg-[#FAFAF8] transition-colors"
+                    className="px-5 py-3.5 hover:bg-[#111111] transition-colors"
                   >
                     <div className="flex items-start justify-between gap-4">
                       <div className="min-w-0 flex-1">
@@ -208,30 +161,34 @@ export default async function Home() {
                           href={move.source_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-sm font-medium text-[#1A1A1A] hover:underline leading-snug block mb-1"
+                          className="text-sm text-[#E8E8E8] hover:text-[#3B82F6] leading-snug block mb-1"
                         >
                           {move.headline}
                         </a>
-                        <div className="flex flex-wrap items-center gap-2 text-xs text-[#999590]">
+                        <div className="flex flex-wrap items-center gap-2 text-xs text-[#555555]">
                           {move.company_name && (
-                            <span className="text-[#6B6B6B]">{move.company_name}</span>
+                            <span className="text-[#888888]">{move.company_name}</span>
                           )}
                           {move.published_at && (
                             <>
-                              {move.company_name && <span className="text-[#D9D6D0]">|</span>}
-                              <span>{timeAgo(move.published_at)}</span>
+                              {move.company_name && <span className="text-[#333]">|</span>}
+                              <span className="font-mono">{timeAgo(move.published_at)}</span>
                             </>
                           )}
                         </div>
                       </div>
                       <div className="flex items-center gap-2 flex-shrink-0">
                         {move.person_name && (
-                          <span className="font-mono text-[10px] uppercase tracking-[1px] px-2 py-0.5 rounded bg-[#F0EEE9] text-[#6B6B6B]">
+                          <span className="font-mono text-[10px] uppercase tracking-[1px] px-2 py-0.5 rounded-sm border border-[#1E1E1E] text-[#888888]">
                             {move.person_name}
                           </span>
                         )}
                         {move.move_type && (
-                          <span className="font-mono text-[10px] uppercase tracking-[1px] px-2 py-0.5 rounded bg-[#F0EEE9] text-[#6B6B6B]">
+                          <span className={`font-mono text-[10px] uppercase tracking-[1px] px-2 py-0.5 rounded-sm border ${
+                            move.move_type === 'leaves'
+                              ? 'border-red-500/30 text-[#EF4444]'
+                              : 'border-[#1E1E1E] text-[#888888]'
+                          }`}>
                             {MOVE_TYPE_LABELS[move.move_type] || move.move_type}
                           </span>
                         )}
@@ -247,37 +204,37 @@ export default async function Home() {
         {/* ── Top Intelligence (server-rendered) ───────────────────────────── */}
         {topIntel.length > 0 && (
           <section
-            className="max-w-3xl mx-auto px-6 pb-16"
+            className="max-w-[1200px] mx-auto px-6 pb-16"
             aria-label="Top intelligence"
           >
-            <div className="border-t border-[#D9D6D0] pt-16">
-              <div className="flex items-center justify-between mb-8">
-                <h2 className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#999590]">
-                  Top Intelligence
+            <div className="border-t border-[#1E1E1E] pt-12">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#555555]">
+                  Intelligence
                 </h2>
                 <a
                   href="/intelligence"
-                  className="font-mono text-xs uppercase tracking-[1px] text-[#6B6B6B] hover:text-[#1A1A1A] transition-colors"
+                  className="font-mono text-xs uppercase tracking-[1px] text-[#555555] hover:text-[#E8E8E8] transition-colors"
                 >
                   View all →
                 </a>
               </div>
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {topIntel.map((article) => (
                   <a
                     key={article.id}
                     href={article.source_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block border border-[#D9D6D0] rounded-xl p-5 hover:border-[#999590] hover:bg-[#FAFAF8] transition-all group"
+                    className="block border border-[#1E1E1E] rounded-sm p-4 hover:border-[#333] hover:bg-[#111111] transition-all group"
                   >
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1 min-w-0">
-                        <h3 className="text-sm font-medium text-[#1A1A1A] group-hover:underline mb-2 leading-snug">
+                        <h3 className="text-sm text-[#E8E8E8] group-hover:text-[#3B82F6] mb-2 leading-snug">
                           {article.title}
                         </h3>
                         {article.summary && (
-                          <p className="text-xs text-[#6B6B6B] leading-relaxed mb-2 line-clamp-2">
+                          <p className="text-xs text-[#888888] leading-relaxed mb-2 line-clamp-2">
                             {article.summary}
                           </p>
                         )}
@@ -285,19 +242,19 @@ export default async function Home() {
                           {article.topics.slice(0, 3).map((t) => (
                             <span
                               key={t}
-                              className={`font-mono text-[10px] uppercase tracking-[1px] px-2 py-0.5 rounded ${TOPIC_COLORS[t] || TOPIC_COLORS.general}`}
+                              className={`font-mono text-[10px] uppercase tracking-[1px] px-2 py-0.5 rounded-sm border ${TOPIC_COLORS[t] || TOPIC_COLORS.general}`}
                             >
                               {t.replace('-', ' ')}
                             </span>
                           ))}
                           {article.source_name && (
-                            <span className="font-mono text-[10px] uppercase tracking-[1px] text-[#B5B1AB]">
+                            <span className="font-mono text-[10px] uppercase tracking-[1px] text-[#555555]">
                               {article.source_name}
                             </span>
                           )}
                         </div>
                       </div>
-                      <span className="font-mono text-xs text-[#B5B1AB] whitespace-nowrap mt-1">
+                      <span className="font-mono text-[11px] text-[#555555] whitespace-nowrap mt-1">
                         {article.published_at ? timeAgo(article.published_at) : '—'}
                       </span>
                     </div>
@@ -310,35 +267,35 @@ export default async function Home() {
 
         {/* ── Pillars ──────────────────────────────────────────────────────── */}
         <section
-          className="max-w-3xl mx-auto px-6 pb-24 border-t border-[#D9D6D0] pt-16"
+          className="max-w-[1200px] mx-auto px-6 pb-20 border-t border-[#1E1E1E] pt-12"
           aria-label="What CDAO Insights covers"
         >
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-10">
             <article>
-              <h2 className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#1A1A1A] mb-3">
+              <h2 className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#E8E8E8] mb-3">
                 Peer Intelligence
               </h2>
-              <p className="text-sm text-[#6B6B6B] leading-relaxed">
+              <p className="text-sm text-[#888888] leading-relaxed">
                 What your counterparts are prioritizing, where they&apos;re
                 struggling, and what&apos;s actually shipping inside enterprise
                 organizations.
               </p>
             </article>
             <article>
-              <h2 className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#1A1A1A] mb-3">
+              <h2 className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#E8E8E8] mb-3">
                 Market Signals
               </h2>
-              <p className="text-sm text-[#6B6B6B] leading-relaxed">
+              <p className="text-sm text-[#888888] leading-relaxed">
                 Where enterprise data and AI investment is moving — sourced from
                 hiring patterns, org changes, and technology adoption before the
                 analysts catch up.
               </p>
             </article>
             <article>
-              <h2 className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#1A1A1A] mb-3">
+              <h2 className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#E8E8E8] mb-3">
                 Independent
               </h2>
-              <p className="text-sm text-[#6B6B6B] leading-relaxed">
+              <p className="text-sm text-[#888888] leading-relaxed">
                 Community-driven editorial. No sponsor determines what gets
                 covered or how it&apos;s framed. The signal stays clean.
               </p>
@@ -348,22 +305,22 @@ export default async function Home() {
 
         {/* ── FAQ (AEO-optimized) ───────────────────────────────────────────── */}
         <section
-          className="max-w-3xl mx-auto px-6 pb-24 border-t border-[#D9D6D0] pt-16"
+          className="max-w-[1200px] mx-auto px-6 pb-20 border-t border-[#1E1E1E] pt-12"
           aria-labelledby="faq-heading"
         >
           <h2
             id="faq-heading"
-            className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#999590] mb-12"
+            className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#555555] mb-12"
           >
             Context
           </h2>
           <dl className="space-y-10">
             {faqs.map((item, i) => (
               <div key={i}>
-                <dt className="text-base font-medium text-[#1A1A1A] mb-3">
+                <dt className="text-base font-medium text-[#E8E8E8] mb-3">
                   {item.q}
                 </dt>
-                <dd className="text-sm text-[#6B6B6B] leading-relaxed max-w-2xl">
+                <dd className="text-sm text-[#888888] leading-relaxed max-w-2xl">
                   {item.a}
                 </dd>
               </div>
@@ -371,19 +328,6 @@ export default async function Home() {
           </dl>
         </section>
       </main>
-
-      {/* ── Footer ───────────────────────────────────────────────────────── */}
-      <footer className="border-t border-[#D9D6D0]">
-        <div className="max-w-3xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <span className="font-mono text-xs uppercase tracking-[2px] text-[#999590]">
-            CDAO Insights — Enterprise data &amp; AI leaders
-          </span>
-          <span className="font-mono text-xs uppercase tracking-[2px] text-[#B5B1AB]">
-            © {new Date().getFullYear()} CDAO Insights
-          </span>
-        </div>
-      </footer>
-
     </div>
   )
 }

@@ -57,156 +57,127 @@ export default async function CompensationPage({
 
   const benchmarks = await getBenchmarks(role, industry)
 
-  // Get unique industries from data for filter
   const industries = ['All Industries', ...new Set(benchmarks.map((b) => b.industry).filter(Boolean) as string[])]
 
   return (
-    <div className="relative z-10 flex flex-col min-h-screen font-sans">
-      {/* Nav */}
-      <header className="w-full border-b border-[#D9D6D0]">
-        <nav className="max-w-5xl mx-auto px-6 py-5 flex items-center justify-between" aria-label="Main navigation">
-          <a href="/" className="font-mono font-medium text-sm uppercase tracking-[2px] text-[#1A1A1A]">
-            CDAO Insights
+    <main className="flex-1 max-w-[1200px] mx-auto px-6 pt-16 pb-24 w-full">
+      {/* Page header */}
+      <p className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#555555] mb-4">
+        Compensation Benchmarks
+      </p>
+      <h1 className="text-3xl sm:text-4xl font-semibold leading-[1.15] tracking-[-0.5px] text-[#E8E8E8] mb-3">
+        What data &amp; AI leaders earn
+      </h1>
+      <p className="text-base text-[#888888] leading-relaxed max-w-2xl mb-10">
+        Salary benchmarks for CDO, CAIO, and senior data leadership roles.
+        Percentile breakdowns by industry. Updated quarterly.
+      </p>
+
+      {/* Role filter */}
+      <div className="flex flex-wrap gap-2 mb-6">
+        {ROLES.map((r) => (
+          <a
+            key={r}
+            href={`/compensation?role=${encodeURIComponent(r)}${industry ? `&industry=${encodeURIComponent(industry)}` : ''}`}
+            className={`font-mono text-xs uppercase tracking-[1px] px-3 py-1.5 rounded-sm border transition-colors ${
+              (role === r || (!role && r === 'All Roles'))
+                ? 'bg-[#E8E8E8] text-[#0A0A0A] border-[#E8E8E8]'
+                : 'bg-transparent text-[#888888] border-[#1E1E1E] hover:border-[#555555] hover:text-[#E8E8E8]'
+            }`}
+          >
+            {r}
           </a>
-          <div className="flex items-center gap-6">
-            <a href="/hiring" className="font-mono text-sm uppercase tracking-[2px] text-[#6B6B6B] hover:text-[#1A1A1A] transition-colors">Hiring</a>
-            <a href="/intelligence" className="font-mono text-sm uppercase tracking-[2px] text-[#6B6B6B] hover:text-[#1A1A1A] transition-colors">Intelligence</a>
-            <a href="/compensation" className="font-mono text-sm uppercase tracking-[2px] text-[#1A1A1A] border-b border-[#1A1A1A]">Compensation</a>
-          </div>
-        </nav>
-      </header>
+        ))}
+      </div>
 
-      <main className="flex-1 max-w-5xl mx-auto px-6 pt-16 pb-24 w-full">
-        {/* Page header */}
-        <p className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#999590] mb-4">
-          Compensation Benchmarks
-        </p>
-        <h1 className="text-3xl sm:text-4xl font-light leading-[1.15] tracking-[-1px] text-[#1A1A1A] mb-3">
-          What data &amp; AI leaders earn
-        </h1>
-        <p className="text-base text-[#6B6B6B] leading-relaxed max-w-2xl mb-10">
-          Salary benchmarks for CDO, CAIO, and senior data leadership roles.
-          Percentile breakdowns by industry. Updated quarterly.
-        </p>
+      {/* Industry filter */}
+      <div className="flex flex-wrap gap-2 mb-10">
+        {industries.map((ind) => (
+          <a
+            key={ind}
+            href={`/compensation?industry=${encodeURIComponent(ind)}${role ? `&role=${encodeURIComponent(role)}` : ''}`}
+            className={`font-mono text-[10px] uppercase tracking-[1px] px-2.5 py-1 rounded-sm border transition-colors ${
+              (industry === ind || (!industry && ind === 'All Industries'))
+                ? 'bg-[#888888] text-[#0A0A0A] border-[#888888]'
+                : 'bg-transparent text-[#555555] border-[#1E1E1E] hover:border-[#555555] hover:text-[#888888]'
+            }`}
+          >
+            {ind}
+          </a>
+        ))}
+      </div>
 
-        {/* Role filter */}
-        <div className="flex flex-wrap gap-2 mb-6">
-          {ROLES.map((r) => (
-            <a
-              key={r}
-              href={`/compensation?role=${encodeURIComponent(r)}${industry ? `&industry=${encodeURIComponent(industry)}` : ''}`}
-              className={`font-mono text-xs uppercase tracking-[1px] px-3 py-1.5 rounded-full border transition-colors ${
-                (role === r || (!role && r === 'All Roles'))
-                  ? 'bg-[#1A1A1A] text-white border-[#1A1A1A]'
-                  : 'bg-white text-[#6B6B6B] border-[#D9D6D0] hover:border-[#1A1A1A] hover:text-[#1A1A1A]'
-              }`}
-            >
-              {r}
-            </a>
-          ))}
-        </div>
-
-        {/* Industry filter */}
-        <div className="flex flex-wrap gap-2 mb-10">
-          {industries.map((ind) => (
-            <a
-              key={ind}
-              href={`/compensation?industry=${encodeURIComponent(ind)}${role ? `&role=${encodeURIComponent(role)}` : ''}`}
-              className={`font-mono text-[10px] uppercase tracking-[1px] px-2.5 py-1 rounded-full border transition-colors ${
-                (industry === ind || (!industry && ind === 'All Industries'))
-                  ? 'bg-[#6B6B6B] text-white border-[#6B6B6B]'
-                  : 'bg-white text-[#999590] border-[#D9D6D0] hover:border-[#6B6B6B] hover:text-[#6B6B6B]'
-              }`}
-            >
-              {ind}
-            </a>
-          ))}
-        </div>
-
-        {/* Results */}
-        {benchmarks.length > 0 ? (
-          <div className="border border-[#D9D6D0] rounded-xl overflow-hidden">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-[#D9D6D0] bg-[#FAFAF8]">
-                  <th className="text-left font-mono text-xs font-medium uppercase tracking-[1px] text-[#999590] px-4 py-3">
-                    Role
-                  </th>
-                  <th className="text-left font-mono text-xs font-medium uppercase tracking-[1px] text-[#999590] px-4 py-3 hidden sm:table-cell">
-                    Industry
-                  </th>
-                  <th className="text-right font-mono text-xs font-medium uppercase tracking-[1px] text-[#999590] px-4 py-3">
-                    25th
-                  </th>
-                  <th className="text-right font-mono text-xs font-medium uppercase tracking-[1px] text-[#999590] px-4 py-3">
-                    Median
-                  </th>
-                  <th className="text-right font-mono text-xs font-medium uppercase tracking-[1px] text-[#999590] px-4 py-3">
-                    75th
-                  </th>
-                  <th className="text-right font-mono text-xs font-medium uppercase tracking-[1px] text-[#999590] px-4 py-3 hidden md:table-cell">
-                    90th
-                  </th>
+      {/* Results */}
+      {benchmarks.length > 0 ? (
+        <div className="border border-[#1E1E1E] rounded-sm overflow-hidden">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-[#1E1E1E] bg-[#111111]">
+                <th className="text-left font-mono text-xs font-medium uppercase tracking-[1px] text-[#555555] px-4 py-3">
+                  Role
+                </th>
+                <th className="text-left font-mono text-xs font-medium uppercase tracking-[1px] text-[#555555] px-4 py-3 hidden sm:table-cell">
+                  Industry
+                </th>
+                <th className="text-right font-mono text-xs font-medium uppercase tracking-[1px] text-[#555555] px-4 py-3">
+                  25th
+                </th>
+                <th className="text-right font-mono text-xs font-medium uppercase tracking-[1px] text-[#555555] px-4 py-3">
+                  Median
+                </th>
+                <th className="text-right font-mono text-xs font-medium uppercase tracking-[1px] text-[#555555] px-4 py-3">
+                  75th
+                </th>
+                <th className="text-right font-mono text-xs font-medium uppercase tracking-[1px] text-[#555555] px-4 py-3 hidden md:table-cell">
+                  90th
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {benchmarks.map((b) => (
+                <tr
+                  key={b.id}
+                  className="border-b border-[#1E1E1E] last:border-b-0 hover:bg-[#111111] transition-colors"
+                >
+                  <td className="px-4 py-3">
+                    <span className="text-[#E8E8E8]">{b.role_title}</span>
+                  </td>
+                  <td className="px-4 py-3 text-[#888888] hidden sm:table-cell">{b.industry || 'All'}</td>
+                  <td className="px-4 py-3 text-right font-mono text-[#555555]">{formatSalary(b.p25)}</td>
+                  <td className="px-4 py-3 text-right font-mono font-medium text-[#00FF94]">{formatSalary(b.p50)}</td>
+                  <td className="px-4 py-3 text-right font-mono text-[#888888]">{formatSalary(b.p75)}</td>
+                  <td className="px-4 py-3 text-right font-mono text-[#555555] hidden md:table-cell">{formatSalary(b.p90)}</td>
                 </tr>
-              </thead>
-              <tbody>
-                {benchmarks.map((b) => (
-                  <tr
-                    key={b.id}
-                    className="border-b border-[#D9D6D0] last:border-b-0 hover:bg-[#FAFAF8] transition-colors"
-                  >
-                    <td className="px-4 py-3">
-                      <span className="text-[#1A1A1A] font-medium">{b.role_title}</span>
-                    </td>
-                    <td className="px-4 py-3 text-[#6B6B6B] hidden sm:table-cell">{b.industry || 'All'}</td>
-                    <td className="px-4 py-3 text-right font-mono text-[#999590]">{formatSalary(b.p25)}</td>
-                    <td className="px-4 py-3 text-right font-mono font-medium text-[#1A1A1A]">{formatSalary(b.p50)}</td>
-                    <td className="px-4 py-3 text-right font-mono text-[#6B6B6B]">{formatSalary(b.p75)}</td>
-                    <td className="px-4 py-3 text-right font-mono text-[#999590] hidden md:table-cell">{formatSalary(b.p90)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <div className="border border-[#D9D6D0] rounded-xl p-12 text-center">
-            <p className="text-[#999590] mb-2">No compensation data yet</p>
-            <p className="text-sm text-[#B5B1AB]">
-              Benchmark data is refreshed monthly. Run the initial data load to populate.
-            </p>
-          </div>
-        )}
-
-        {/* Methodology note */}
-        <div className="mt-8 p-4 bg-[#FAFAF8] border border-[#D9D6D0] rounded-lg">
-          <p className="font-mono text-[10px] uppercase tracking-[1px] text-[#999590] mb-2">
-            Methodology
-          </p>
-          <p className="text-xs text-[#6B6B6B] leading-relaxed">
-            Compensation data is aggregated from BLS Occupational Employment Statistics,
-            Glassdoor, Levels.fyi, and public company filings. Figures represent total
-            cash compensation (base + bonus). Equity compensation varies significantly
-            and is not included. Data is refreshed quarterly.
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <div className="border border-[#1E1E1E] rounded-sm p-12 text-center">
+          <p className="text-[#888888] mb-2">No compensation data yet</p>
+          <p className="text-sm text-[#555555]">
+            Benchmark data is refreshed monthly. Run the initial data load to populate.
           </p>
         </div>
-      </main>
+      )}
 
-      {/* Footer */}
-      <footer className="border-t border-[#D9D6D0]">
-        <div className="max-w-5xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <span className="font-mono text-xs uppercase tracking-[2px] text-[#999590]">
-            CDAO Insights — Enterprise data &amp; AI leaders
-          </span>
-          <span className="font-mono text-xs uppercase tracking-[2px] text-[#B5B1AB]">
-            &copy; {new Date().getFullYear()} CDAO Insights
-          </span>
-        </div>
-      </footer>
+      {/* Methodology note */}
+      <div className="mt-8 p-4 bg-[#111111] border border-[#1E1E1E] rounded-sm">
+        <p className="font-mono text-[10px] uppercase tracking-[1px] text-[#555555] mb-2">
+          Methodology
+        </p>
+        <p className="text-xs text-[#888888] leading-relaxed">
+          Compensation data is aggregated from BLS Occupational Employment Statistics,
+          Glassdoor, Levels.fyi, and public company filings. Figures represent total
+          cash compensation (base + bonus). Equity compensation varies significantly
+          and is not included. Data is refreshed quarterly.
+        </p>
+      </div>
 
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(compBenchmarkSchema()) }}
       />
-    </div>
+    </main>
   )
 }

@@ -88,7 +88,7 @@ export default async function MovesPage({
   const structuredData = [movesListSchema(typedMoves), movesFaqSchema()]
 
   return (
-    <div className="relative z-10 flex flex-col min-h-screen font-sans">
+    <>
       {/* JSON-LD */}
       {structuredData.map((sd, i) => (
         <script
@@ -98,38 +98,15 @@ export default async function MovesPage({
         />
       ))}
 
-      {/* ── Nav ──────────────────────────────────────────────────────────── */}
-      <header className="w-full border-b border-[#D9D6D0]">
-        <nav
-          className="max-w-5xl mx-auto px-6 py-5 flex items-center justify-between"
-          aria-label="Main navigation"
-        >
-          <a
-            href="/"
-            className="font-mono font-medium text-sm uppercase tracking-[2px] text-[#1A1A1A]"
-            aria-label="CDAO Insights home"
-          >
-            CDAO Insights
-          </a>
-          <div className="flex items-center gap-6">
-            <a href="/hiring" className="font-mono text-sm uppercase tracking-[2px] text-[#6B6B6B] hover:text-[#1A1A1A] transition-colors">Hiring</a>
-            <a href="/intelligence" className="font-mono text-sm uppercase tracking-[2px] text-[#6B6B6B] hover:text-[#1A1A1A] transition-colors">Intelligence</a>
-            <a href="/moves" className="font-mono text-sm uppercase tracking-[2px] text-[#1A1A1A] transition-colors">Moves</a>
-            <a href="/compensation" className="font-mono text-sm uppercase tracking-[2px] text-[#6B6B6B] hover:text-[#1A1A1A] transition-colors">Compensation</a>
-          </div>
-        </nav>
-      </header>
-
-      {/* ── Main ─────────────────────────────────────────────────────────── */}
       <main className="flex-1">
-        <section className="max-w-3xl mx-auto px-6 pt-16 pb-8">
-          <p className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#999590] mb-4">
+        <section className="max-w-[1200px] mx-auto px-6 pt-16 pb-8">
+          <p className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#555555] mb-4">
             Executive Moves
           </p>
-          <h1 className="text-3xl sm:text-4xl font-light leading-[1.15] tracking-[-1px] text-[#1A1A1A] mb-4">
+          <h1 className="text-3xl sm:text-4xl font-semibold leading-[1.15] tracking-[-0.5px] text-[#E8E8E8] mb-4">
             CDO, CAIO &amp; CDAIO leadership changes
           </h1>
-          <p className="text-base text-[#6B6B6B] leading-relaxed max-w-2xl mb-8">
+          <p className="text-base text-[#888888] leading-relaxed max-w-2xl mb-8">
             Appointments, departures, and promotions across enterprise data and AI
             leadership. Sourced from news coverage and press releases, updated every
             6 hours.
@@ -147,10 +124,10 @@ export default async function MovesPage({
                 <a
                   key={opt.value}
                   href={`/moves?days=${opt.value}${moveType ? `&type=${moveType}` : ''}`}
-                  className={`font-mono text-[10px] uppercase tracking-[1px] px-3 py-1.5 rounded-full transition-colors ${
+                  className={`font-mono text-[10px] uppercase tracking-[1px] px-3 py-1.5 rounded-sm transition-colors ${
                     String(days) === opt.value
-                      ? 'bg-[#1A1A1A] text-white'
-                      : 'text-[#999590] hover:text-[#1A1A1A] border border-[#D9D6D0]'
+                      ? 'bg-[#E8E8E8] text-[#0A0A0A]'
+                      : 'text-[#555555] hover:text-[#E8E8E8] border border-[#1E1E1E]'
                   }`}
                 >
                   {opt.label}
@@ -162,10 +139,10 @@ export default async function MovesPage({
             <div className="flex gap-1">
               <a
                 href={`/moves?days=${days}`}
-                className={`font-mono text-[10px] uppercase tracking-[1px] px-3 py-1.5 rounded-full transition-colors ${
+                className={`font-mono text-[10px] uppercase tracking-[1px] px-3 py-1.5 rounded-sm transition-colors ${
                   !moveType
-                    ? 'bg-[#1A1A1A] text-white'
-                    : 'text-[#999590] hover:text-[#1A1A1A] border border-[#D9D6D0]'
+                    ? 'bg-[#E8E8E8] text-[#0A0A0A]'
+                    : 'text-[#555555] hover:text-[#E8E8E8] border border-[#1E1E1E]'
                 }`}
               >
                 All
@@ -174,10 +151,10 @@ export default async function MovesPage({
                 <a
                   key={value}
                   href={`/moves?days=${days}&type=${value}`}
-                  className={`font-mono text-[10px] uppercase tracking-[1px] px-3 py-1.5 rounded-full transition-colors ${
+                  className={`font-mono text-[10px] uppercase tracking-[1px] px-3 py-1.5 rounded-sm transition-colors ${
                     moveType === value
-                      ? 'bg-[#1A1A1A] text-white'
-                      : 'text-[#999590] hover:text-[#1A1A1A] border border-[#D9D6D0]'
+                      ? 'bg-[#E8E8E8] text-[#0A0A0A]'
+                      : 'text-[#555555] hover:text-[#E8E8E8] border border-[#1E1E1E]'
                   }`}
                 >
                   {label}
@@ -187,27 +164,27 @@ export default async function MovesPage({
           </div>
 
           {/* ── Count ──────────────────────────────────────────────────────── */}
-          <p className="text-xs text-[#B5B1AB] mb-6">
+          <p className="text-xs text-[#555555] mb-6">
             {typedMoves.length} {typedMoves.length === 1 ? 'move' : 'moves'} in
             the last {days} days
           </p>
         </section>
 
         {/* ── Feed ──────────────────────────────────────────────────────── */}
-        <section className="max-w-3xl mx-auto px-6 pb-24">
+        <section className="max-w-[1200px] mx-auto px-6 pb-24">
           {typedMoves.length === 0 ? (
-            <div className="border border-[#D9D6D0] rounded-xl p-8 text-center">
-              <p className="text-sm text-[#6B6B6B]">
+            <div className="border border-[#1E1E1E] rounded-sm p-8 text-center">
+              <p className="text-sm text-[#888888]">
                 No executive moves found for this time period. Check back soon — the
                 feed refreshes every 6 hours.
               </p>
             </div>
           ) : (
-            <div className="divide-y divide-[#E8E5E0] border border-[#D9D6D0] rounded-xl overflow-hidden">
+            <div className="divide-y divide-[#1E1E1E] border border-[#1E1E1E] rounded-sm overflow-hidden">
               {typedMoves.map((move) => (
                 <article
                   key={move.id}
-                  className="px-6 py-4 hover:bg-[#FAFAF8] transition-colors"
+                  className="px-5 py-3.5 hover:bg-[#111111] transition-colors"
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div className="min-w-0 flex-1">
@@ -215,37 +192,37 @@ export default async function MovesPage({
                         href={move.source_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-sm font-medium text-[#1A1A1A] hover:underline leading-snug block mb-1"
+                        className="text-sm text-[#E8E8E8] hover:text-[#3B82F6] leading-snug block mb-1"
                       >
                         {move.headline}
                       </a>
-                      <div className="flex flex-wrap items-center gap-2 text-xs text-[#999590]">
+                      <div className="flex flex-wrap items-center gap-2 text-xs text-[#555555]">
                         {move.company_name && (
-                          <span className="text-[#6B6B6B]">{move.company_name}</span>
+                          <span className="text-[#888888]">{move.company_name}</span>
                         )}
                         {move.company_name && move.source_name && (
-                          <span className="text-[#D9D6D0]">|</span>
+                          <span className="text-[#333]">|</span>
                         )}
                         {move.source_name && <span>{move.source_name}</span>}
                         {move.published_at && (
                           <>
-                            <span className="text-[#D9D6D0]">|</span>
-                            <span>{timeAgo(move.published_at)}</span>
+                            <span className="text-[#333]">|</span>
+                            <span className="font-mono">{timeAgo(move.published_at)}</span>
                           </>
                         )}
                       </div>
                     </div>
                     <div className="flex items-center gap-2 flex-shrink-0">
                       {move.person_name && (
-                        <span className="font-mono text-[10px] uppercase tracking-[1px] px-2 py-0.5 rounded bg-[#F0EEE9] text-[#6B6B6B]">
+                        <span className="font-mono text-[10px] uppercase tracking-[1px] px-2 py-0.5 rounded-sm border border-[#1E1E1E] text-[#888888]">
                           {move.person_name}
                         </span>
                       )}
                       {move.move_type && (
-                        <span className={`font-mono text-[10px] uppercase tracking-[1px] px-2 py-0.5 rounded ${
+                        <span className={`font-mono text-[10px] uppercase tracking-[1px] px-2 py-0.5 rounded-sm border ${
                           move.move_type === 'leaves'
-                            ? 'bg-red-50 text-red-600'
-                            : 'bg-[#F0EEE9] text-[#6B6B6B]'
+                            ? 'border-red-500/30 text-[#EF4444]'
+                            : 'border-[#1E1E1E] text-[#888888]'
                         }`}>
                           {MOVE_TYPE_LABELS[move.move_type] || move.move_type}
                         </span>
@@ -260,22 +237,22 @@ export default async function MovesPage({
 
         {/* ── FAQ (AEO-optimized) ──────────────────────────────────────── */}
         <section
-          className="max-w-3xl mx-auto px-6 pb-24 border-t border-[#D9D6D0] pt-16"
+          className="max-w-[1200px] mx-auto px-6 pb-24 border-t border-[#1E1E1E] pt-16"
           aria-labelledby="moves-faq-heading"
         >
           <h2
             id="moves-faq-heading"
-            className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#999590] mb-12"
+            className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#555555] mb-12"
           >
             Context
           </h2>
           <dl className="space-y-10">
             {faqs.map((item, i) => (
               <div key={i}>
-                <dt className="text-base font-medium text-[#1A1A1A] mb-3">
+                <dt className="text-base font-medium text-[#E8E8E8] mb-3">
                   {item.q}
                 </dt>
-                <dd className="text-sm text-[#6B6B6B] leading-relaxed max-w-2xl">
+                <dd className="text-sm text-[#888888] leading-relaxed max-w-2xl">
                   {item.a}
                 </dd>
               </div>
@@ -283,18 +260,6 @@ export default async function MovesPage({
           </dl>
         </section>
       </main>
-
-      {/* ── Footer ───────────────────────────────────────────────────────── */}
-      <footer className="border-t border-[#D9D6D0]">
-        <div className="max-w-3xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <span className="font-mono text-xs uppercase tracking-[2px] text-[#999590]">
-            CDAO Insights — Enterprise data &amp; AI leaders
-          </span>
-          <span className="font-mono text-xs uppercase tracking-[2px] text-[#B5B1AB]">
-            &copy; {new Date().getFullYear()} CDAO Insights
-          </span>
-        </div>
-      </footer>
-    </div>
+    </>
   )
 }

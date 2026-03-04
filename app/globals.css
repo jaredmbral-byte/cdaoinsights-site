@@ -3,14 +3,15 @@
 @tailwind utilities;
 
 :root {
-  --bg: #F0EEE9;
-  --surface: #FFFFFF;
-  --border: #D9D6D0;
-  --text: #1A1A1A;
-  --text-muted: #6B6B6B;
-  --text-subtle: #999590;
-  --accent: #1A1A1A;
-  --accent-dim: rgba(0, 0, 0, 0.05);
+  --bg: #0A0A0A;
+  --surface: #111111;
+  --border: #1E1E1E;
+  --text: #E8E8E8;
+  --text-muted: #888888;
+  --text-subtle: #555555;
+  --accent: #00FF94;
+  --link: #3B82F6;
+  --danger: #EF4444;
 }
 
 * {
@@ -24,7 +25,7 @@ html {
   color: var(--text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-feature-settings: 'dlig' 1, 'lnum' 1, 'tnum' 1;
+  font-feature-settings: 'lnum' 1, 'tnum' 1;
 }
 
 body {
@@ -32,19 +33,30 @@ body {
   min-height: 100vh;
 }
 
-/* Subtle noise texture overlay */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.15;
-}
-
 /* Tally form override */
 iframe[src*="tally.so"] {
   border: none !important;
   background: transparent !important;
+}
+
+/* Selection color */
+::selection {
+  background: rgba(0, 255, 148, 0.2);
+  color: #E8E8E8;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0A0A0A;
+}
+::-webkit-scrollbar-thumb {
+  background: #1E1E1E;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #333;
 }

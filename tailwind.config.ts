@@ -13,9 +13,20 @@ const config: Config = {
         mono: ['var(--font-inconsolata)', 'ui-monospace', 'monospace'],
       },
       colors: {
-        surface: '#FFFFFF',
-        border: '#D9D6D0',
-        accent: '#1A1A1A',
+        bg: '#0A0A0A',
+        surface: '#111111',
+        border: '#1E1E1E',
+        accent: '#00FF94',
+        link: '#3B82F6',
+        danger: '#EF4444',
+        text: {
+          DEFAULT: '#E8E8E8',
+          muted: '#888888',
+          subtle: '#555555',
+        },
+      },
+      maxWidth: {
+        site: '1200px',
       },
     },
   },
