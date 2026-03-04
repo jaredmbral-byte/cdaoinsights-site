@@ -111,17 +111,71 @@ function parseIndeedTitle(fullTitle: string): { title: string; company: string; 
 
 // Extract person + company from Google News appointment headlines
 function parseAppointmentHeadline(headline: string): { personName?: string; company?: string; title?: string } | null {
-  // Patterns like "Company Names John Smith as Chief Data Officer"
-  // or "John Smith Appointed Chief AI Officer at Company"
-  // or "Company Hires New CDO"
   const result: { personName?: string; company?: string; title?: string } = {}
 
+  // Strip source suffix like " - ExecutiveGov" or " | CDO Magazine"
+  const cleanHeadline = headline.replace(/\s*[-–|]\s*[A-Z][\w\s&.]+$/, '').trim()
+
   // Try to extract a relevant job title
-  const titleMatch = headline.match(
-    /(?:Chief\s+(?:Data|AI|Analytics|Information)\s+Officer|CDO|CAIO|CAO|CDAIO|VP\s+(?:of\s+)?(?:Data|Analytics|AI)|Head\s+of\s+(?:Data|AI|Analytics))/i
+  const titlePattern = /(?:Chief\s+(?:Data|AI|Analytics|Information)\s+Officer|CDO|CAIO|CAO|CDAIO|VP\s+(?:of\s+)?(?:Data|Analytics|AI)|Head\s+of\s+(?:Data|AI|Analytics))/i
+  const titleMatch = cleanHeadline.match(titlePattern)
+  if (!titleMatch) return null
+  result.title = titleMatch[0]
+
+  // Pattern: "Person Named/Appointed/Joins as Title at/of Company"
+  const namedAtMatch = cleanHeadline.match(
+    /(.+?)\s+(?:named|appointed|joins|tapped|elevated|promoted)\s+.*?(?:at|of|for)\s+(.+)/i
   )
-  if (titleMatch) {
-    result.title = titleMatch[0]
+  if (namedAtMatch) {
+    result.personName = namedAtMatch[1].trim()
+    result.company = namedAtMatch[2].replace(titlePattern, '').replace(/\s+as\s+.*$/i, '').trim()
+  }
+
+  // Pattern: "Company Names/Appoints/Hires Person as Title"
+  if (!result.company) {
+    const companyNamesMatch = cleanHeadline.match(
+      /^(.+?)\s+(?:names?|appoints?|hires?|taps?|promotes?|elevates?)\s+(.+?)(?:\s+as\s+|\s+to\s+|\s+its?\s+|\s+new\s+)/i
+    )
+    if (companyNamesMatch) {
+      result.company = companyNamesMatch[1].trim()
+      result.personName = companyNamesMatch[2].trim()
+    }
+  }
+
+  // Pattern: "Person Named Company Title" (e.g., "Budhu Bhaduri Named ORNL Chief Data Officer")
+  if (!result.company) {
+    const namedTitleMatch = cleanHeadline.match(
+      /(.+?)\s+(?:named|appointed)\s+(.+?)(?:Chief|CDO|CAIO|VP|Head)/i
+    )
+    if (namedTitleMatch) {
+      result.personName = namedTitleMatch[1].trim()
+      result.company = namedTitleMatch[2].trim()
+    }
+  }
+
+  // Pattern: title appears with "at Company" after it
+  if (!result.company) {
+    const atCompanyMatch = cleanHeadline.match(
+      /(?:Chief|CDO|CAIO|VP|Head).+?(?:at|of)\s+(.+?)$/i
+    )
+    if (atCompanyMatch) {
+      result.company = atCompanyMatch[1].trim()
+    }
+  }
+
+  // Clean up company name
+  if (result.company) {
+    // Remove common noise words at start/end
+    result.company = result.company
+      .replace(/^(?:the|new)\s+/i, '')
+      .replace(/\s*['']s?\s*$/, '')
+      .replace(/\s+$/, '')
+      .trim()
+
+    // If company is still the full headline or too long, it's probably wrong
+    if (result.company.length > 60 || result.company === cleanHeadline) {
+      result.company = undefined
+    }
   }
 
   return result.title ? result : null
@@ -192,13 +246,26 @@ async function ingestFromAppointmentRSS(): Promise<ScrapedJob[]> {
         const parsed = parseAppointmentHeadline(item.title)
         if (!parsed) continue
 
-        // Use the news headline as the source, extract what we can
+        // Derive company from parser or fallback to splitting on common verbs
+        let company = parsed.company
+        if (!company) {
+          // Fallback: try splitting headline on action verbs
+          const parts = item.title.split(/\s+(?:names?|appoints?|hires?|taps?|promotes?)\s+/i)
+          if (parts.length >= 2 && parts[0].length < 50) {
+            company = parts[0].replace(/\s*[-–|]\s*[A-Z][\w\s&.]+$/, '').trim()
+          }
+        }
+
+        // Skip if we still can't determine a company
+        if (!company || company.length > 60) continue
+
         results.push({
           title: parsed.title || item.title,
-          company: parsed.company || item.title.split(/\s+(?:names?|appoints?|hires?)\s+/i)[0]?.trim() || 'See Article',
+          company,
           url: item.link,
           date: item.pubDate ? new Date(item.pubDate).toISOString() : undefined,
           source: 'News',
+          // Store person name in location field temporarily (we don't have a dedicated column)
         })
       }
     } catch (err) {
