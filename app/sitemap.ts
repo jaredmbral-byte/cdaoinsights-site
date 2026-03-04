@@ -21,6 +21,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
+      url: 'https://cdaoinsights.com/moves',
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.9,
+    },
+    {
       url: 'https://cdaoinsights.com/compensation',
       lastModified: new Date(),
       changeFrequency: 'monthly',

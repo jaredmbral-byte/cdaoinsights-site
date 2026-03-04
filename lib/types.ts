@@ -43,6 +43,20 @@ export interface CompBenchmark {
   updated_at: string
 }
 
+export interface ExecutiveMove {
+  id: string
+  person_name: string | null
+  title: string | null
+  company_name: string | null
+  move_type: string | null
+  headline: string
+  summary: string | null
+  source_url: string
+  source_name: string | null
+  published_at: string | null
+  ingested_at: string
+}
+
 // ── Filter params ───────────────────────────────────────────────────────────
 
 export interface HiringFilters {
@@ -54,5 +68,11 @@ export interface HiringFilters {
 export interface ArticleFilters {
   topic?: string
   days?: number
+  search?: string
+}
+
+export interface MovesFilters {
+  moveType?: string
+  days?: number // 30, 60, 90
   search?: string
 }

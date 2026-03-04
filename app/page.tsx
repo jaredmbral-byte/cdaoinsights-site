@@ -1,5 +1,6 @@
 import TallyForm from '@/components/TallyForm'
 import HiringTicker from '@/components/HiringTicker'
+import MovesTicker from '@/components/MovesTicker'
 
 // ─── FAQ data (mirrors JSON-LD in layout for visible page content) ────────────
 const faqs = [
@@ -45,6 +46,7 @@ export default function Home() {
           <div className="flex items-center gap-6">
             <a href="/hiring" className="font-mono text-sm uppercase tracking-[2px] text-[#6B6B6B] hover:text-[#1A1A1A] transition-colors">Hiring</a>
             <a href="/intelligence" className="font-mono text-sm uppercase tracking-[2px] text-[#6B6B6B] hover:text-[#1A1A1A] transition-colors">Intelligence</a>
+            <a href="/moves" className="font-mono text-sm uppercase tracking-[2px] text-[#6B6B6B] hover:text-[#1A1A1A] transition-colors">Moves</a>
             <a href="/compensation" className="font-mono text-sm uppercase tracking-[2px] text-[#6B6B6B] hover:text-[#1A1A1A] transition-colors">Compensation</a>
             <a
               href="#join"
@@ -108,6 +110,14 @@ export default function Home() {
           aria-label="Executive hiring data"
         >
           <HiringTicker />
+        </section>
+
+        {/* ── Executive Moves Ticker ─────────────────────────────────────── */}
+        <section
+          className="max-w-3xl mx-auto px-6 pb-16"
+          aria-label="Executive moves data"
+        >
+          <MovesTicker />
         </section>
 
         {/* ── Pillars ──────────────────────────────────────────────────────── */}
