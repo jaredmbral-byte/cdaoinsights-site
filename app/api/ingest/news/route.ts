@@ -5,14 +5,34 @@ import { supabaseAdmin } from '@/lib/supabase-admin'
 // Vercel Cron calls this every 15 minutes
 
 const RSS_FEEDS = [
+  // Google News — targeted enterprise data/AI queries
   { url: 'https://news.google.com/rss/search?q=Chief+Data+Officer+when:7d&hl=en-US&gl=US&ceid=US:en', name: 'Google News' },
   { url: 'https://news.google.com/rss/search?q=Chief+AI+Officer+when:7d&hl=en-US&gl=US&ceid=US:en', name: 'Google News' },
   { url: 'https://news.google.com/rss/search?q=enterprise+data+governance+when:7d&hl=en-US&gl=US&ceid=US:en', name: 'Google News' },
   { url: 'https://news.google.com/rss/search?q=enterprise+AI+adoption+when:7d&hl=en-US&gl=US&ceid=US:en', name: 'Google News' },
-  { url: 'https://venturebeat.com/category/ai/feed/', name: 'VentureBeat' },
-  { url: 'https://techcrunch.com/category/artificial-intelligence/feed/', name: 'TechCrunch' },
+  { url: 'https://news.google.com/rss/search?q=CDO+%22data+strategy%22+enterprise+when:7d&hl=en-US&gl=US&ceid=US:en', name: 'Google News' },
+  { url: 'https://news.google.com/rss/search?q=%22chief+data+officer%22+2026+when:7d&hl=en-US&gl=US&ceid=US:en', name: 'Google News' },
+
+  // Industry-specific feeds — high signal for enterprise data/AI leaders
+  { url: 'https://tdwi.org/rss-feeds/all-articles.aspx', name: 'TDWI' },
+  { url: 'https://www.datasciencecentral.com/feed/', name: 'Data Science Central' },
   { url: 'https://www.datanami.com/feed/', name: 'Datanami' },
 ]
+
+// Strip all HTML tags from a string
+function stripHtml(text: string): string {
+  return text
+    .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1')
+    .replace(/<[^>]+>/g, '')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&nbsp;/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
 
 // Topic classification based on keywords
 function classifyTopics(title: string, summary: string): string[] {
@@ -43,20 +63,28 @@ function classifyTopics(title: string, summary: string): string[] {
   return topics.length > 0 ? topics : ['general']
 }
 
-// Simple relevance scoring
-function scoreRelevance(title: string): number {
-  const t = title.toLowerCase()
-  let score = 0.3 // baseline
+// Relevance scoring — higher bar to reduce noise
+function scoreRelevance(title: string, description: string): number {
+  const t = `${title} ${description}`.toLowerCase()
+  let score = 0.2 // baseline
 
   // High relevance: mentions our target personas directly
-  if (t.includes('chief data officer') || t.includes('cdo')) score += 0.3
-  if (t.includes('chief ai officer') || t.includes('caio')) score += 0.3
-  if (t.includes('data leader') || t.includes('data executive')) score += 0.2
+  if (t.includes('chief data officer') || t.includes('chief data and analytics officer')) score += 0.35
+  if (t.includes('chief ai officer') || t.includes('caio')) score += 0.35
+  if (t.includes('data leader') || t.includes('data executive')) score += 0.25
+  if (t.includes('cdao') || t.includes('cdaio')) score += 0.3
 
   // Medium relevance: enterprise data/AI topics
   if (t.includes('enterprise') && (t.includes('data') || t.includes('ai'))) score += 0.2
-  if (t.includes('data governance')) score += 0.15
-  if (t.includes('data strategy')) score += 0.15
+  if (t.includes('data governance')) score += 0.2
+  if (t.includes('data strategy')) score += 0.2
+  if (t.includes('data quality')) score += 0.15
+  if (t.includes('data mesh') || t.includes('data fabric')) score += 0.15
+  if (t.includes('mdm') || t.includes('master data')) score += 0.15
+  if (t.includes('agentic ai') || t.includes('ai agent')) score += 0.1
+
+  // Slight boost: industry-specific data/AI
+  if ((t.includes('data') || t.includes('analytics')) && t.includes('officer')) score += 0.15
 
   return Math.min(score, 1.0)
 }
@@ -69,13 +97,17 @@ function parseRSS(xml: string): Array<{ title: string; link: string; description
 
   while ((match = itemRegex.exec(xml)) !== null) {
     const itemXml = match[1]
-    const title = itemXml.match(/<title[^>]*>([\s\S]*?)<\/title>/)?.[1]?.replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1').trim() || ''
-    const link = itemXml.match(/<link[^>]*>([\s\S]*?)<\/link>/)?.[1]?.trim() || ''
-    const description = itemXml.match(/<description[^>]*>([\s\S]*?)<\/description>/)?.[1]?.replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1').replace(/<[^>]+>/g, '').trim() || ''
-    const pubDate = itemXml.match(/<pubDate[^>]*>([\s\S]*?)<\/pubDate>/)?.[1]?.trim() || ''
+    const title = stripHtml(
+      itemXml.match(/<title[^>]*>([\s\S]*?)<\/title>/)?.[1] || '',
+    )
+    const link = (itemXml.match(/<link[^>]*>([\s\S]*?)<\/link>/)?.[1] || '').trim()
+    const description = stripHtml(
+      itemXml.match(/<description[^>]*>([\s\S]*?)<\/description>/)?.[1] || '',
+    ).slice(0, 500)
+    const pubDate = (itemXml.match(/<pubDate[^>]*>([\s\S]*?)<\/pubDate>/)?.[1] || '').trim()
 
     if (title && link) {
-      items.push({ title, link, description: description.slice(0, 500), pubDate })
+      items.push({ title, link, description, pubDate })
     }
   }
 
@@ -89,6 +121,7 @@ export async function POST(request: Request) {
   }
 
   let totalInserted = 0
+  let totalSkipped = 0
 
   for (const feed of RSS_FEEDS) {
     try {
@@ -101,19 +134,26 @@ export async function POST(request: Request) {
       const items = parseRSS(xml)
 
       for (const item of items) {
-        const relevance = scoreRelevance(item.title)
-        // Only store articles above minimum relevance threshold
-        if (relevance < 0.3) continue
+        const relevance = scoreRelevance(item.title, item.description)
+
+        // Only store articles scoring 0.5+ (raised from 0.3 to reduce noise)
+        if (relevance < 0.5) {
+          totalSkipped++
+          continue
+        }
 
         const topics = classifyTopics(item.title, item.description)
         const publishedAt = item.pubDate ? new Date(item.pubDate).toISOString() : null
+
+        // Ensure description is clean text (no HTML)
+        const cleanSummary = item.description ? stripHtml(item.description) : null
 
         const { error } = await supabaseAdmin
           .from('market_articles')
           .upsert(
             {
-              title: item.title,
-              summary: item.description || null,
+              title: stripHtml(item.title),
+              summary: cleanSummary,
               source_name: feed.name,
               source_url: item.link,
               published_at: publishedAt,
@@ -132,6 +172,7 @@ export async function POST(request: Request) {
 
   return NextResponse.json({
     inserted: totalInserted,
+    skipped: totalSkipped,
     feeds: RSS_FEEDS.length,
     timestamp: new Date().toISOString(),
   })

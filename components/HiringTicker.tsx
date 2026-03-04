@@ -67,7 +67,7 @@ export default function HiringTicker() {
       <div className="p-6 pb-4">
         <div className="flex items-center justify-between mb-4">
           <p className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#999590]">
-            Executive Hiring Tracker
+            CDO &amp; CAIO Appointment Tracker
           </p>
           {/* Time window toggle */}
           <div className="flex gap-1">
@@ -92,12 +92,12 @@ export default function HiringTicker() {
             {count}
           </span>
           <span className="text-sm text-[#6B6B6B]">
-            {count === 1 ? 'role' : 'roles'} posted
+            {count === 1 ? 'leader' : 'leaders'} appointed
           </span>
         </div>
 
         <p className="text-xs text-[#B5B1AB]">
-          CDO, CAIO, VP Data &amp; senior leadership roles in the last {window} days
+          New Chief Data Officer, Chief AI Officer &amp; VP Data appointments at enterprise organizations in the last {window} days
         </p>
       </div>
 

@@ -1,4 +1,4 @@
-import type { HiringSignal, MarketArticle } from './types'
+import type { HiringSignal, MarketArticle, ExecutiveMove } from './types'
 
 // ── JSON-LD generators for AEO ──────────────────────────────────────────────
 
@@ -52,6 +52,67 @@ export function articleListSchema(articles: MarketArticle[]) {
           : undefined,
       },
     })),
+  }
+}
+
+export function movesListSchema(moves: ExecutiveMove[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'CDO / CAIO / CDAIO Executive Appointment Tracker — CDAO Insights',
+    description:
+      'Real-time feed of Chief Data Officer, Chief AI Officer, and CDAIO executive appointments, departures, and leadership changes at large enterprises.',
+    numberOfItems: moves.length,
+    itemListElement: moves.slice(0, 50).map((m, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      item: {
+        '@type': 'NewsArticle',
+        headline: m.headline,
+        description: m.summary,
+        url: m.source_url,
+        datePublished: m.published_at,
+        publisher: m.source_name
+          ? { '@type': 'Organization', name: m.source_name }
+          : undefined,
+        about: m.company_name
+          ? { '@type': 'Organization', name: m.company_name }
+          : undefined,
+      },
+    })),
+  }
+}
+
+export function movesFaqSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'What is the CDAO Insights Executive Moves feed?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'The Executive Moves feed tracks Chief Data Officer (CDO), Chief AI Officer (CAIO), and Chief Data and AI Officer (CDAIO) appointments, departures, and leadership transitions at enterprise organizations. Sources include press releases, news coverage, and company announcements. The feed is updated every 6 hours.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Why do CDO and CAIO executive moves matter?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Executive leadership changes in data and AI signal strategic shifts at enterprises. A new CDO often precedes major data platform investments, governance initiatives, or organizational restructuring. Tracking these moves provides early indicators of where enterprise data and AI investment is heading.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'How often is the executive moves feed updated?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'The executive moves feed is refreshed every 6 hours from Google News and PR Newswire RSS sources. Articles are deduplicated by URL to prevent repeat entries.',
+        },
+      },
+    ],
   }
 }
 

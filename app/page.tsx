@@ -1,5 +1,10 @@
 import TallyForm from '@/components/TallyForm'
 import HiringTicker from '@/components/HiringTicker'
+import MovesTicker from '@/components/MovesTicker'
+import { createServerClient } from '@/lib/supabase-server'
+import type { ExecutiveMove, MarketArticle } from '@/lib/types'
+
+export const revalidate = 900 // 15 minutes
 
 // ─── FAQ data (mirrors JSON-LD in layout for visible page content) ────────────
 const faqs = [
@@ -25,7 +30,61 @@ const faqs = [
   },
 ]
 
-export default function Home() {
+function timeAgo(dateStr: string): string {
+  const diff = Date.now() - new Date(dateStr).getTime()
+  const hours = Math.floor(diff / 3_600_000)
+  if (hours < 1) return 'Just now'
+  if (hours < 24) return `${hours}h ago`
+  const days = Math.floor(hours / 24)
+  if (days === 1) return '1d ago'
+  if (days < 30) return `${days}d ago`
+  const months = Math.floor(days / 30)
+  return `${months}mo ago`
+}
+
+const MOVE_TYPE_LABELS: Record<string, string> = {
+  appointed: 'Appointed',
+  named: 'Named',
+  joins: 'Joins',
+  leaves: 'Departs',
+  promoted: 'Promoted',
+}
+
+const TOPIC_COLORS: Record<string, string> = {
+  ai: 'bg-blue-50 text-blue-700',
+  genai: 'bg-purple-50 text-purple-700',
+  governance: 'bg-amber-50 text-amber-700',
+  strategy: 'bg-green-50 text-green-700',
+  leadership: 'bg-rose-50 text-rose-700',
+  funding: 'bg-emerald-50 text-emerald-700',
+  'data-quality': 'bg-orange-50 text-orange-700',
+  security: 'bg-red-50 text-red-700',
+  'agentic-ai': 'bg-indigo-50 text-indigo-700',
+  infrastructure: 'bg-cyan-50 text-cyan-700',
+  general: 'bg-gray-50 text-gray-600',
+}
+
+export default async function Home() {
+  const supabase = createServerClient()
+
+  // Fetch latest executive moves and top intelligence in parallel
+  const [movesResult, intelligenceResult] = await Promise.all([
+    supabase
+      .from('executive_moves')
+      .select('id, headline, person_name, company_name, move_type, source_url, published_at')
+      .order('published_at', { ascending: false })
+      .limit(5),
+    supabase
+      .from('market_articles')
+      .select('id, title, summary, source_name, source_url, published_at, topics, relevance')
+      .gte('relevance', 0.5)
+      .order('relevance', { ascending: false })
+      .limit(5),
+  ])
+
+  const latestMoves = (movesResult.data || []) as ExecutiveMove[]
+  const topIntel = (intelligenceResult.data || []) as MarketArticle[]
+
   return (
     <div className="relative z-10 flex flex-col min-h-screen font-sans">
 
@@ -45,6 +104,7 @@ export default function Home() {
           <div className="flex items-center gap-6">
             <a href="/hiring" className="font-mono text-sm uppercase tracking-[2px] text-[#6B6B6B] hover:text-[#1A1A1A] transition-colors">Hiring</a>
             <a href="/intelligence" className="font-mono text-sm uppercase tracking-[2px] text-[#6B6B6B] hover:text-[#1A1A1A] transition-colors">Intelligence</a>
+            <a href="/moves" className="font-mono text-sm uppercase tracking-[2px] text-[#6B6B6B] hover:text-[#1A1A1A] transition-colors">Moves</a>
             <a href="/compensation" className="font-mono text-sm uppercase tracking-[2px] text-[#6B6B6B] hover:text-[#1A1A1A] transition-colors">Compensation</a>
             <a
               href="#join"
@@ -109,6 +169,144 @@ export default function Home() {
         >
           <HiringTicker />
         </section>
+
+        {/* ── Executive Moves Ticker ─────────────────────────────────────── */}
+        <section
+          className="max-w-3xl mx-auto px-6 pb-16"
+          aria-label="Executive moves data"
+        >
+          <MovesTicker />
+        </section>
+
+        {/* ── Latest Executive Moves (server-rendered) ─────────────────────── */}
+        {latestMoves.length > 0 && (
+          <section
+            className="max-w-3xl mx-auto px-6 pb-16"
+            aria-label="Latest executive moves"
+          >
+            <div className="border-t border-[#D9D6D0] pt-16">
+              <div className="flex items-center justify-between mb-8">
+                <h2 className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#999590]">
+                  Latest Executive Moves
+                </h2>
+                <a
+                  href="/moves"
+                  className="font-mono text-xs uppercase tracking-[1px] text-[#6B6B6B] hover:text-[#1A1A1A] transition-colors"
+                >
+                  View all →
+                </a>
+              </div>
+              <div className="divide-y divide-[#E8E5E0] border border-[#D9D6D0] rounded-xl overflow-hidden">
+                {latestMoves.map((move) => (
+                  <article
+                    key={move.id}
+                    className="px-6 py-4 hover:bg-[#FAFAF8] transition-colors"
+                  >
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="min-w-0 flex-1">
+                        <a
+                          href={move.source_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sm font-medium text-[#1A1A1A] hover:underline leading-snug block mb-1"
+                        >
+                          {move.headline}
+                        </a>
+                        <div className="flex flex-wrap items-center gap-2 text-xs text-[#999590]">
+                          {move.company_name && (
+                            <span className="text-[#6B6B6B]">{move.company_name}</span>
+                          )}
+                          {move.published_at && (
+                            <>
+                              {move.company_name && <span className="text-[#D9D6D0]">|</span>}
+                              <span>{timeAgo(move.published_at)}</span>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 flex-shrink-0">
+                        {move.person_name && (
+                          <span className="font-mono text-[10px] uppercase tracking-[1px] px-2 py-0.5 rounded bg-[#F0EEE9] text-[#6B6B6B]">
+                            {move.person_name}
+                          </span>
+                        )}
+                        {move.move_type && (
+                          <span className="font-mono text-[10px] uppercase tracking-[1px] px-2 py-0.5 rounded bg-[#F0EEE9] text-[#6B6B6B]">
+                            {MOVE_TYPE_LABELS[move.move_type] || move.move_type}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* ── Top Intelligence (server-rendered) ───────────────────────────── */}
+        {topIntel.length > 0 && (
+          <section
+            className="max-w-3xl mx-auto px-6 pb-16"
+            aria-label="Top intelligence"
+          >
+            <div className="border-t border-[#D9D6D0] pt-16">
+              <div className="flex items-center justify-between mb-8">
+                <h2 className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#999590]">
+                  Top Intelligence
+                </h2>
+                <a
+                  href="/intelligence"
+                  className="font-mono text-xs uppercase tracking-[1px] text-[#6B6B6B] hover:text-[#1A1A1A] transition-colors"
+                >
+                  View all →
+                </a>
+              </div>
+              <div className="space-y-4">
+                {topIntel.map((article) => (
+                  <a
+                    key={article.id}
+                    href={article.source_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block border border-[#D9D6D0] rounded-xl p-5 hover:border-[#999590] hover:bg-[#FAFAF8] transition-all group"
+                  >
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-sm font-medium text-[#1A1A1A] group-hover:underline mb-2 leading-snug">
+                          {article.title}
+                        </h3>
+                        {article.summary && (
+                          <p className="text-xs text-[#6B6B6B] leading-relaxed mb-2 line-clamp-2">
+                            {article.summary}
+                          </p>
+                        )}
+                        <div className="flex items-center gap-2 flex-wrap">
+                          {article.topics.slice(0, 3).map((t) => (
+                            <span
+                              key={t}
+                              className={`font-mono text-[10px] uppercase tracking-[1px] px-2 py-0.5 rounded ${TOPIC_COLORS[t] || TOPIC_COLORS.general}`}
+                            >
+                              {t.replace('-', ' ')}
+                            </span>
+                          ))}
+                          {article.source_name && (
+                            <span className="font-mono text-[10px] uppercase tracking-[1px] text-[#B5B1AB]">
+                              {article.source_name}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <span className="font-mono text-xs text-[#B5B1AB] whitespace-nowrap mt-1">
+                        {article.published_at ? timeAgo(article.published_at) : '—'}
+                      </span>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* ── Pillars ──────────────────────────────────────────────────────── */}
         <section

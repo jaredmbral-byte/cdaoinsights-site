@@ -36,15 +36,79 @@ const INDEED_RSS_URLS = [
 ]
 
 // Google News RSS for executive appointment announcements
+// NOTE: Use "Chief Data Officer" (not bare "CDO") to avoid false positives
+// like Chief Development Officer, Chief Digital Officer, etc.
 const APPOINTMENT_RSS_URLS = [
   'https://news.google.com/rss/search?q=%22Chief+Data+Officer%22+%22appointed%22+OR+%22hired%22+OR+%22named%22+when:14d&hl=en-US&gl=US&ceid=US:en',
   'https://news.google.com/rss/search?q=%22Chief+AI+Officer%22+%22appointed%22+OR+%22hired%22+OR+%22named%22+when:14d&hl=en-US&gl=US&ceid=US:en',
-  'https://news.google.com/rss/search?q=%22CAIO%22+OR+%22CDO%22+%22appointed%22+OR+%22named%22+when:14d&hl=en-US&gl=US&ceid=US:en',
+  'https://news.google.com/rss/search?q=%22Chief+Analytics+Officer%22+OR+%22CAIO%22+%22appointed%22+OR+%22named%22+when:14d&hl=en-US&gl=US&ceid=US:en',
+  'https://news.google.com/rss/search?q=%22CDAO%22+OR+%22CDAIO%22+%22appointed%22+OR+%22named%22+when:14d&hl=en-US&gl=US&ceid=US:en',
 ]
+
+// ─── CDO Disambiguation ────────────────────────────────────────────────────────
+// "CDO" is ambiguous — it can mean Chief Data Officer, Chief Digital Officer,
+// Chief Development Officer, Chief Diversity Officer, etc.
+// These helpers ensure we only capture data/analytics/AI executives.
+
+const FALSE_POSITIVE_CDO_TITLES = [
+  'chief development officer',
+  'chief digital officer',
+  'chief diversity officer',
+  'chief design officer',
+  'chief delivery officer',
+  'chief disruption officer',
+  'chief dental officer',
+  'chief diplomatic officer',
+  'collateralized debt obligation',
+  'community development officer',
+]
+
+// Keywords that confirm we're talking about data/analytics/AI context
+const DATA_AI_CONTEXT_KEYWORDS = [
+  'data', 'analytics', 'ai ', 'artificial intelligence', 'machine learning',
+  'ml ', 'governance', 'data quality', 'data strategy', 'data platform',
+  'data infrastructure', 'data engineering', 'data science', 'big data',
+  'business intelligence', ' bi ', 'data lake', 'data warehouse',
+  'data mesh', 'data fabric', 'mdm', 'master data',
+]
+
+/**
+ * Check if "CDO" in context actually means Chief Data Officer.
+ * Returns true only if:
+ * - The full title explicitly says "Chief Data Officer" / "Chief Data and Analytics Officer"
+ * - OR surrounding context contains data/analytics/AI keywords
+ * - AND the full title is NOT a known false-positive expansion
+ */
+function isCdoDataRelated(title: string, context: string = ''): boolean {
+  const t = title.toLowerCase()
+  const ctx = (title + ' ' + context).toLowerCase()
+
+  // If the title explicitly says "Chief Data Officer" — always valid
+  if (t.includes('chief data officer') || t.includes('chief data and analytics officer')) {
+    return true
+  }
+
+  // If the title explicitly matches a false-positive expansion — reject
+  if (FALSE_POSITIVE_CDO_TITLES.some(fp => t.includes(fp))) {
+    return false
+  }
+
+  // If "CDO" abbreviation appears, check surrounding context for data/AI keywords
+  if (t.includes('cdo')) {
+    return DATA_AI_CONTEXT_KEYWORDS.some(kw => ctx.includes(kw))
+  }
+
+  // Not CDO-related at all, pass through (other checks will handle relevance)
+  return true
+}
 
 function classifySeniority(title: string): string {
   const t = title.toLowerCase()
-  if (t.includes('chief') || t.includes('cdo') || t.includes('caio') || t.includes('cao'))
+  if (t.includes('chief') || t.includes('caio') || t.includes('cdaio'))
+    return 'C-Suite'
+  // Only classify "CDO" as C-Suite if it's actually data-related
+  if (t.includes('cdo') && isCdoDataRelated(title)) return 'C-Suite'
+  if (t.includes('cao') && (t.includes('analytics') || !t.includes('chief accounting')))
     return 'C-Suite'
   if (t.includes('svp') || t.includes('senior vice president')) return 'SVP'
   if (t.includes('vp') || t.includes('vice president')) return 'VP'
@@ -117,9 +181,20 @@ function parseAppointmentHeadline(headline: string): { personName?: string; comp
   const cleanHeadline = headline.replace(/\s*[-–|]\s*[A-Z][\w\s&.]+$/, '').trim()
 
   // Try to extract a relevant job title
-  const titlePattern = /(?:Chief\s+(?:Data|AI|Analytics|Information)\s+Officer|CDO|CAIO|CAO|CDAIO|VP\s+(?:of\s+)?(?:Data|Analytics|AI)|Head\s+of\s+(?:Data|AI|Analytics))/i
-  const titleMatch = cleanHeadline.match(titlePattern)
-  if (!titleMatch) return null
+  // Match explicit titles first; "CDO" alone requires additional disambiguation
+  const explicitTitlePattern = /(?:Chief\s+(?:Data|AI|Analytics|Information|Data\s+(?:and|&)\s+Analytics)\s+Officer|CAIO|CDAIO|VP\s+(?:of\s+)?(?:Data|Analytics|AI)|Head\s+of\s+(?:Data|AI|Analytics))/i
+  const cdoOnlyPattern = /\bCDO\b/i
+  // Combined pattern for cleanup (stripping title from company name)
+  const titlePattern = /(?:Chief\s+(?:Data|AI|Analytics|Information|Data\s+(?:and|&)\s+Analytics)\s+Officer|CDO|CAIO|CDAIO|VP\s+(?:of\s+)?(?:Data|Analytics|AI)|Head\s+of\s+(?:Data|AI|Analytics))/i
+
+  let titleMatch = cleanHeadline.match(explicitTitlePattern)
+  if (!titleMatch) {
+    // If only "CDO" abbreviation found, validate it's data-related using headline context
+    titleMatch = cleanHeadline.match(cdoOnlyPattern)
+    if (!titleMatch || !isCdoDataRelated(cleanHeadline, cleanHeadline)) {
+      return null
+    }
+  }
   result.title = titleMatch[0]
 
   // Pattern: "Person Named/Appointed/Joins as Title at/of Company"
@@ -182,15 +257,20 @@ function parseAppointmentHeadline(headline: string): { personName?: string; comp
 }
 
 // Check if a title is relevant to our target roles
-function isRelevantTitle(title: string): boolean {
+function isRelevantTitle(title: string, context: string = ''): boolean {
   const t = title.toLowerCase()
-  return SEARCH_QUERIES.some(q => t.includes(q.toLowerCase())) ||
-    t.includes('cdo') ||
-    t.includes('caio') ||
-    t.includes('cdaio') ||
-    t.includes('data officer') ||
-    t.includes('ai officer') ||
-    t.includes('analytics officer')
+
+  // Direct matches on full title phrases — always relevant
+  if (SEARCH_QUERIES.some(q => t.includes(q.toLowerCase()))) return true
+  if (t.includes('caio') || t.includes('cdaio')) return true
+  if (t.includes('data officer') || t.includes('ai officer') || t.includes('analytics officer')) return true
+
+  // "CDO" requires disambiguation — only accept if data-related
+  if (t.includes('cdo')) {
+    return isCdoDataRelated(title, context)
+  }
+
+  return false
 }
 
 // ─── Source 1: Indeed RSS (free) ──────────────────────────────────────────────
@@ -208,7 +288,7 @@ async function ingestFromIndeedRSS(): Promise<ScrapedJob[]> {
       const items = parseRSS(xml)
 
       for (const item of items) {
-        if (!isRelevantTitle(item.title)) continue
+        if (!isRelevantTitle(item.title, item.description)) continue
 
         const parsed = parseIndeedTitle(item.title)
         results.push({
@@ -308,7 +388,7 @@ async function ingestFromFirecrawlSearch(): Promise<ScrapedJob[]> {
           ? (rawResult as { description?: string }).description
           : (rawResult as { metadata?: { description?: string } }).metadata?.description
 
-        if (!title || !isRelevantTitle(title)) continue
+        if (!title || !isRelevantTitle(title, description || '')) continue
 
         // Try to extract company from the title or description
         let company = 'Unknown'
