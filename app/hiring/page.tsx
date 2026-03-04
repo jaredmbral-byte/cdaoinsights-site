@@ -98,7 +98,7 @@ export default async function HiringPage({
           Executive Hiring Tracker
         </p>
         <h1 className="text-3xl sm:text-4xl font-light leading-[1.15] tracking-[-1px] text-[#1A1A1A] mb-3">
-          Who&apos;s hiring data &amp; AI leaders
+          New CDO, CAIO &amp; data leadership appointments
         </h1>
         <p className="text-base text-[#6B6B6B] leading-relaxed max-w-2xl mb-10">
           Real-time tracking of CDO, CAIO, VP Data, and senior leadership roles
