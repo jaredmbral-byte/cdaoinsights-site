@@ -2,7 +2,7 @@ import TallyForm from '@/components/TallyForm'
 import HiringTicker from '@/components/HiringTicker'
 import MovesTicker from '@/components/MovesTicker'
 import { createServerClient } from '@/lib/supabase-server'
-import type { ExecutiveMove, MarketArticle } from '@/lib/types'
+import type { ExecutiveMove, MarketArticle, WeeklyBrief } from '@/lib/types'
 
 export const revalidate = 900 // 15 minutes
 
@@ -67,8 +67,8 @@ const TOPIC_COLORS: Record<string, string> = {
 export default async function Home() {
   const supabase = createServerClient()
 
-  // Fetch latest executive moves and top intelligence in parallel
-  const [movesResult, intelligenceResult] = await Promise.all([
+  // Fetch latest executive moves, top intelligence, and weekly brief in parallel
+  const [movesResult, intelligenceResult, briefResult] = await Promise.all([
     supabase
       .from('executive_moves')
       .select('id, headline, person_name, company_name, move_type, source_url, published_at')
@@ -80,10 +80,16 @@ export default async function Home() {
       .gte('relevance', 0.5)
       .order('relevance', { ascending: false })
       .limit(5),
+    supabase
+      .from('weekly_brief')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(4),
   ])
 
   const latestMoves = (movesResult.data || []) as ExecutiveMove[]
   const topIntel = (intelligenceResult.data || []) as MarketArticle[]
+  const weeklyBrief = (briefResult.data || []) as WeeklyBrief[]
 
   return (
     <div className="flex flex-col min-h-screen font-sans">
@@ -110,10 +116,10 @@ export default async function Home() {
             id="hero-heading"
             className="text-3xl sm:text-4xl font-semibold leading-[1.2] tracking-[-0.5px] text-[#E8E8E8] mb-4 max-w-2xl"
           >
-            What enterprise data and AI leaders are actually building
+            The Bloomberg Terminal for Data Leadership
           </h1>
           <p className="text-base text-[#888888] leading-relaxed max-w-xl mb-10">
-            Peer signals, market context, and trends for CDOs, CAIOs, and senior data leaders. No vendor agendas.
+            Signal-dense intelligence for CDOs, CAIOs, and CDAIOs. Daily.
           </p>
 
           {/* Inline email capture */}
@@ -122,7 +128,7 @@ export default async function Home() {
             className="bg-[#111111] border border-[#1E1E1E] rounded-sm p-5 max-w-md"
           >
             <p className="font-mono text-xs uppercase tracking-[1px] text-[#888888] mb-3">
-              Get the briefing
+              Enter Platform
             </p>
             <TallyForm />
             <p className="text-[11px] text-[#555555] mt-3">
@@ -130,6 +136,45 @@ export default async function Home() {
             </p>
           </div>
         </section>
+
+        {/* ── Weekly Brief ──────────────────────────────────────────────── */}
+        {weeklyBrief.length > 0 && (
+          <section
+            className="max-w-[1200px] mx-auto px-6 pb-16"
+            aria-label="Weekly brief"
+          >
+            <div className="border-t border-[#1E1E1E] pt-12">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#555555]">
+                  Weekly Brief
+                </h2>
+                <span className="font-mono text-[11px] text-[#555555]">
+                  {weeklyBrief[0]?.week_label}
+                </span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {weeklyBrief.map((entry) => (
+                  <div
+                    key={entry.id}
+                    className="border border-[#1E1E1E] rounded-sm p-4 hover:border-[#333] transition-colors"
+                  >
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="font-mono text-[10px] uppercase tracking-[1px] px-2 py-0.5 rounded-sm border border-[#1E1E1E] text-[#888888]">
+                        {entry.category}
+                      </span>
+                    </div>
+                    <h3 className="text-sm font-medium text-[#E8E8E8] mb-2 leading-snug">
+                      {entry.headline}
+                    </h3>
+                    <p className="text-xs text-[#888888] leading-relaxed">
+                      {entry.body}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* ── Executive Moves (server-rendered) ───────────────────────────── */}
         {latestMoves.length > 0 && (

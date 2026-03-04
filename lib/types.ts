@@ -57,6 +57,15 @@ export interface ExecutiveMove {
   ingested_at: string
 }
 
+export interface WeeklyBrief {
+  id: string
+  headline: string
+  body: string
+  week_label: string
+  category: string
+  created_at: string
+}
+
 // ── Filter params ───────────────────────────────────────────────────────────
 
 export interface HiringFilters {
