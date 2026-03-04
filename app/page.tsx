@@ -1,4 +1,5 @@
 import TallyForm from '@/components/TallyForm'
+import HiringTicker from '@/components/HiringTicker'
 
 // ─── FAQ data (mirrors JSON-LD in layout for visible page content) ────────────
 const faqs = [
@@ -99,6 +100,14 @@ export default function Home() {
               Unsubscribe any time.
             </p>
           </div>
+        </section>
+
+        {/* ── Hiring Ticker ────────────────────────────────────────────────── */}
+        <section
+          className="max-w-3xl mx-auto px-6 pb-16"
+          aria-label="Executive hiring data"
+        >
+          <HiringTicker />
         </section>
 
         {/* ── Pillars ──────────────────────────────────────────────────────── */}
