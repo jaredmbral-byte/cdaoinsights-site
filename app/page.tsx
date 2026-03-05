@@ -209,7 +209,7 @@ export default async function Home() {
                           rel="noopener noreferrer"
                           className="text-sm text-[#E8E8E8] hover:text-[#3B82F6] leading-snug block mb-1"
                         >
-                          {move.headline}
+                          {cleanTitle(move.headline)}
                         </a>
                         <div className="flex flex-wrap items-center gap-2 text-xs text-[#555555]">
                           {move.company_name && (

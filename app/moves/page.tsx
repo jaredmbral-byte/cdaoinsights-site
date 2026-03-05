@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { createClient } from '@supabase/supabase-js'
 import type { ExecutiveMove } from '@/lib/types'
 import { movesListSchema, movesFaqSchema } from '@/lib/schema'
+import { cleanTitle } from '@/lib/text'
 
 export const revalidate = 1800 // 30 minutes
 
@@ -194,7 +195,7 @@ export default async function MovesPage({
                         rel="noopener noreferrer"
                         className="text-sm text-[#E8E8E8] hover:text-[#3B82F6] leading-snug block mb-1"
                       >
-                        {move.headline}
+                        {cleanTitle(move.headline)}
                       </a>
                       <div className="flex flex-wrap items-center gap-2 text-xs text-[#555555]">
                         {move.company_name && (
