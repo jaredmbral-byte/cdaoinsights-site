@@ -17,6 +17,34 @@ const RSS_FEEDS = [
   { url: 'https://tdwi.org/rss-feeds/all-articles.aspx', name: 'TDWI' },
   { url: 'https://www.datasciencecentral.com/feed/', name: 'Data Science Central' },
   { url: 'https://www.datanami.com/feed/', name: 'Datanami' },
+
+  // Data governance, quality & catalog vendors
+  { url: 'https://www.dataversity.net/feed/', name: 'Dataversity' },
+  { url: 'https://www.collibra.com/us/en/blog/rss.xml', name: 'Collibra Blog' },
+  { url: 'https://www.alation.com/blog/feed/', name: 'Alation Blog' },
+  { url: 'https://www.atlan.com/blog/rss.xml', name: 'Atlan Blog' },
+  { url: 'https://www.montecarlodata.com/blog/feed/', name: 'Monte Carlo Blog' },
+  { url: 'https://www.greatexpectations.io/blog/rss.xml', name: 'Great Expectations Blog' },
+
+  // Data engineering & integration
+  { url: 'https://www.getdbt.com/blog/rss.xml', name: 'dbt Blog' },
+  { url: 'https://www.fivetran.com/blog/rss', name: 'Fivetran Blog' },
+  { url: 'https://www.informatica.com/blogs.rss.html', name: 'Informatica Blog' },
+
+  // Cloud data platforms
+  { url: 'https://aws.amazon.com/blogs/big-data/feed/', name: 'AWS Big Data Blog' },
+  { url: 'https://www.databricks.com/blog/feed', name: 'Databricks Blog' },
+  { url: 'https://www.snowflake.com/blog/feed/', name: 'Snowflake Blog' },
+
+  // Executive strategy & leadership
+  { url: 'https://news.google.com/rss/search?q=%22data+governance%22+enterprise+2026+when:7d&hl=en-US&gl=US&ceid=US:en', name: 'Google News' },
+  { url: 'https://news.google.com/rss/search?q=%22agentic+AI%22+enterprise+when:7d&hl=en-US&gl=US&ceid=US:en', name: 'Google News' },
+  { url: 'https://news.google.com/rss/search?q=%22data+quality%22+enterprise+when:7d&hl=en-US&gl=US&ceid=US:en', name: 'Google News' },
+  { url: 'https://news.google.com/rss/search?q=CDO+CAIO+%22data+leader%22+when:7d&hl=en-US&gl=US&ceid=US:en', name: 'Google News' },
+
+  // Research & thought leadership
+  { url: 'https://sloanreview.mit.edu/feed/', name: 'MIT Sloan Review' },
+  { url: 'https://datamanagementreview.com/feed/', name: 'Data Management Review' },
 ]
 
 import { stripHtml } from '@/lib/text'

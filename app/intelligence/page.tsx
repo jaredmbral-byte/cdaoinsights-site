@@ -5,10 +5,20 @@ import { cleanTitle, cleanSummary } from '@/lib/text'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Market Intelligence — Enterprise Data & AI News | CDAO Insights',
+  title: 'Weekly Intelligence Brief | CDAO Insights',
   description:
-    'Curated intelligence feed for enterprise data and AI leaders. AI regulation, data governance, vendor moves, funding rounds, and market signals — without the noise.',
+    'Curated weekly briefings for data and AI executives — vendor moves, regulatory updates, and strategic signals that matter to CDOs.',
+  keywords: 'CDO newsletter, data executive briefing, AI governance news, enterprise data strategy, CDO weekly brief',
   alternates: { canonical: 'https://cdaoinsights.com/intelligence' },
+  openGraph: {
+    title: 'Weekly Intelligence Brief | CDAO Insights',
+    description: 'Curated weekly briefings for data and AI executives — vendor moves, regulatory updates, and strategic signals that matter to CDOs.',
+    url: 'https://cdaoinsights.com/intelligence',
+    siteName: 'CDAO Insights',
+    type: 'website',
+    images: [{ url: 'https://cdaoinsights.com/og-default.png' }],
+  },
+  twitter: { card: 'summary_large_image', site: '@cdaoinsights' },
 }
 
 export const revalidate = 900 // 15 minutes

@@ -4,10 +4,20 @@ import type { HiringSignal } from '@/lib/types'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Executive Hiring Tracker — CDO, CAIO & Data Leadership Roles | CDAO Insights',
+  title: 'CDO & CAIO Job Openings | CDAO Insights',
   description:
-    'Real-time tracking of Chief Data Officer, Chief AI Officer, VP of Data, and senior data leadership hires at large enterprises. Updated daily.',
+    'Active chief data officer and chief AI officer job postings from enterprise companies. Updated weekly.',
+  keywords: 'CDO jobs, chief data officer job openings, CAIO hiring, data executive roles, CDO job board',
   alternates: { canonical: 'https://cdaoinsights.com/hiring' },
+  openGraph: {
+    title: 'CDO & CAIO Job Openings | CDAO Insights',
+    description: 'Active chief data officer and chief AI officer job postings from enterprise companies. Updated weekly.',
+    url: 'https://cdaoinsights.com/hiring',
+    siteName: 'CDAO Insights',
+    type: 'website',
+    images: [{ url: 'https://cdaoinsights.com/og-default.png' }],
+  },
+  twitter: { card: 'summary_large_image', site: '@cdaoinsights' },
 }
 
 // Revalidate every 30 minutes

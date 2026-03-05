@@ -7,16 +7,20 @@ import { cleanTitle } from '@/lib/text'
 export const revalidate = 1800 // 30 minutes
 
 export const metadata: Metadata = {
-  title: 'Executive Moves — CDO, CAIO & CDAIO Appointments | CDAO Insights',
+  title: 'CDO & CAIO Executive Moves | CDAO Insights',
   description:
-    'Track Chief Data Officer, Chief AI Officer, and CDAIO executive appointments, departures, and leadership transitions at enterprise organizations. Updated every 6 hours.',
+    'Track chief data officer and chief AI officer appointments, departures, and transitions across Fortune 500 and high-growth companies.',
+  keywords: 'CDO appointments, chief data officer moves, CAIO transitions, data executive hiring, CDO departures',
   alternates: { canonical: 'https://cdaoinsights.com/moves' },
   openGraph: {
-    title: 'Executive Moves — CDO & CAIO Appointments',
-    description:
-      'Real-time feed of CDO, CAIO, and CDAIO executive moves at large enterprises.',
+    title: 'CDO & CAIO Executive Moves | CDAO Insights',
+    description: 'Track chief data officer and chief AI officer appointments, departures, and transitions across Fortune 500 and high-growth companies.',
     url: 'https://cdaoinsights.com/moves',
+    siteName: 'CDAO Insights',
+    type: 'website',
+    images: [{ url: 'https://cdaoinsights.com/og-default.png' }],
   },
+  twitter: { card: 'summary_large_image', site: '@cdaoinsights' },
 }
 
 // FAQ data for visible page content

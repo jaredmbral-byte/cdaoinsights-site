@@ -1,0 +1,83 @@
+{
+  "lastUpdated": "2026-03-05",
+  "categories": [
+    {
+      "name": "Data Governance & Catalog",
+      "slug": "governance-catalog",
+      "description": "Platforms for metadata management, data cataloging, policy enforcement, and governance workflows.",
+      "vendors": [
+        { "name": "Collibra", "website": "https://www.collibra.com", "type": "Enterprise", "notes": "Market leader in data governance; acquired Sifflet for observability." },
+        { "name": "Alation", "website": "https://www.alation.com", "type": "Enterprise", "notes": "Data intelligence platform; strong in data catalog and search." },
+        { "name": "Atlan", "website": "https://www.atlan.com", "type": "Growth", "notes": "Modern data workspace; active metadata and collaboration focus." },
+        { "name": "Informatica", "website": "https://www.informatica.com", "type": "Enterprise", "notes": "Acquired by Salesforce; IDMC platform covers governance, quality, integration." },
+        { "name": "data.world", "website": "https://data.world", "type": "Mid-Market", "notes": "Cloud-native data catalog with knowledge graph approach." },
+        { "name": "Precisely", "website": "https://www.precisely.com", "type": "Enterprise", "notes": "Data integrity suite covering quality, governance, and enrichment." }
+      ]
+    },
+    {
+      "name": "Data Observability & Quality",
+      "slug": "observability-quality",
+      "description": "Tools for monitoring data pipeline health, detecting anomalies, and ensuring data reliability at scale.",
+      "vendors": [
+        { "name": "Monte Carlo", "website": "https://www.montecarlodata.com", "type": "Growth", "notes": "Pioneer of data observability category; end-to-end pipeline monitoring." },
+        { "name": "Great Expectations", "website": "https://www.greatexpectations.io", "type": "Open Source", "notes": "Open-source data quality validation framework; GX Cloud for enterprise." },
+        { "name": "Soda", "website": "https://www.soda.io", "type": "Growth", "notes": "Data quality checks as code; integrates with dbt and Airflow." },
+        { "name": "Bigeye", "website": "https://www.bigeye.com", "type": "Growth", "notes": "Automated data quality monitoring with ML-driven anomaly detection." },
+        { "name": "Acceldata", "website": "https://www.acceldata.io", "type": "Growth", "notes": "Data observability across compute, pipelines, and reliability." },
+        { "name": "Anomalo", "website": "https://www.anomalo.com", "type": "Growth", "notes": "Automated data quality monitoring using unsupervised ML." }
+      ]
+    },
+    {
+      "name": "Data Integration & Pipelines",
+      "slug": "integration-pipelines",
+      "description": "ETL/ELT platforms, data integration tools, and pipeline orchestration for enterprise data movement.",
+      "vendors": [
+        { "name": "Fivetran", "website": "https://www.fivetran.com", "type": "Enterprise", "notes": "Automated data integration; 500+ connectors for ELT." },
+        { "name": "dbt Labs", "website": "https://www.getdbt.com", "type": "Growth", "notes": "Analytics engineering standard; SQL-based transformation layer." },
+        { "name": "Airbyte", "website": "https://www.airbyte.com", "type": "Open Source", "notes": "Open-source data integration with 350+ connectors." },
+        { "name": "Matillion", "website": "https://www.matillion.com", "type": "Enterprise", "notes": "Data productivity platform; low-code data integration and transformation." },
+        { "name": "Dagster", "website": "https://www.dagster.io", "type": "Open Source", "notes": "Data orchestration platform; asset-based pipeline management." },
+        { "name": "Prefect", "website": "https://www.prefect.io", "type": "Open Source", "notes": "Workflow orchestration for data pipelines; Python-native." }
+      ]
+    },
+    {
+      "name": "AI/ML Platforms",
+      "slug": "ai-ml-platforms",
+      "description": "End-to-end platforms for building, training, deploying, and governing AI and machine learning models.",
+      "vendors": [
+        { "name": "Databricks", "website": "https://www.databricks.com", "type": "Enterprise", "notes": "Lakehouse platform; Mosaic ML acquisition for foundation models." },
+        { "name": "Dataiku", "website": "https://www.dataiku.com", "type": "Enterprise", "notes": "Everyday AI platform; visual ML + GenAI for enterprise teams." },
+        { "name": "Weights & Biases", "website": "https://www.wandb.ai", "type": "Growth", "notes": "ML experiment tracking, model registry, and LLM evaluation." },
+        { "name": "Domino Data Lab", "website": "https://www.dominodatalab.com", "type": "Enterprise", "notes": "Enterprise MLOps platform; model management and governance." },
+        { "name": "H2O.ai", "website": "https://www.h2o.ai", "type": "Enterprise", "notes": "AutoML and GenAI platform; h2oGPT for enterprise LLM deployment." },
+        { "name": "Anthropic", "website": "https://www.anthropic.com", "type": "Enterprise", "notes": "Claude AI; enterprise-grade LLM with constitutional AI approach." }
+      ]
+    },
+    {
+      "name": "Cloud Data Platforms",
+      "slug": "cloud-data-platforms",
+      "description": "Cloud-native data warehouses, lakehouses, and unified analytics platforms for enterprise-scale workloads.",
+      "vendors": [
+        { "name": "Snowflake", "website": "https://www.snowflake.com", "type": "Enterprise", "notes": "Cloud data platform; data sharing, marketplace, and Cortex AI." },
+        { "name": "Microsoft Fabric", "website": "https://www.microsoft.com/en-us/microsoft-fabric", "type": "Enterprise", "notes": "Unified analytics platform on Azure; 18K+ enterprise customers." },
+        { "name": "Google BigQuery", "website": "https://cloud.google.com/bigquery", "type": "Enterprise", "notes": "Serverless data warehouse; BigLake for lakehouse, Gemini integration." },
+        { "name": "Amazon Redshift", "website": "https://aws.amazon.com/redshift/", "type": "Enterprise", "notes": "Cloud data warehouse; serverless, ML integration via SageMaker." },
+        { "name": "Starburst", "website": "https://www.starburst.io", "type": "Growth", "notes": "Trino-based query engine; federated analytics across data sources." },
+        { "name": "Dremio", "website": "https://www.dremio.com", "type": "Growth", "notes": "Lakehouse platform; Apache Iceberg-native, sub-second BI queries." }
+      ]
+    },
+    {
+      "name": "Data Security & Privacy",
+      "slug": "security-privacy",
+      "description": "Tools for data access governance, privacy compliance, encryption, masking, and security posture management.",
+      "vendors": [
+        { "name": "OneTrust", "website": "https://www.onetrust.com", "type": "Enterprise", "notes": "Privacy, security, and governance platform; GDPR/CCPA compliance." },
+        { "name": "BigID", "website": "https://www.bigid.com", "type": "Enterprise", "notes": "Data intelligence for privacy, security, and governance." },
+        { "name": "Immuta", "website": "https://www.immuta.com", "type": "Enterprise", "notes": "Data access governance; policy-based controls for cloud data." },
+        { "name": "Securiti", "website": "https://www.securiti.ai", "type": "Enterprise", "notes": "Data command center; AI-driven data security and privacy." },
+        { "name": "Privacera", "website": "https://www.privacera.com", "type": "Enterprise", "notes": "Open-source data governance and access control; Apache Ranger-based." },
+        { "name": "Skyflow", "website": "https://www.skyflow.com", "type": "Growth", "notes": "Data privacy vault; API-first approach to sensitive data isolation." }
+      ]
+    }
+  ]
+}

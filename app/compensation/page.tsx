@@ -4,10 +4,20 @@ import type { CompBenchmark } from '@/lib/types'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Compensation Benchmarks — CDO, CAIO & Data Leadership Salaries | CDAO Insights',
+  title: 'CDO & CAIO Compensation Benchmarks | CDAO Insights',
   description:
-    'Salary benchmarks for Chief Data Officers, Chief AI Officers, VP of Data & Analytics, and senior data leadership roles. Percentile breakdowns by industry and geography.',
+    'Salary and total compensation data for chief data officers and chief AI officers, benchmarked by industry, company size, and geography.',
+  keywords: 'CDO salary, chief data officer compensation, CAIO pay, data executive salary benchmark, CDO total comp',
   alternates: { canonical: 'https://cdaoinsights.com/compensation' },
+  openGraph: {
+    title: 'CDO & CAIO Compensation Benchmarks | CDAO Insights',
+    description: 'Salary and total compensation data for chief data officers and chief AI officers, benchmarked by industry, company size, and geography.',
+    url: 'https://cdaoinsights.com/compensation',
+    siteName: 'CDAO Insights',
+    type: 'website',
+    images: [{ url: 'https://cdaoinsights.com/og-default.png' }],
+  },
+  twitter: { card: 'summary_large_image', site: '@cdaoinsights' },
 }
 
 export const revalidate = 86400 // 24 hours — comp data changes slowly
