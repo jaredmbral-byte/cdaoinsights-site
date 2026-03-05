@@ -117,7 +117,7 @@ export default async function Home() {
             id="hero-heading"
             className="text-3xl sm:text-4xl font-semibold leading-[1.2] tracking-[-0.5px] text-[#E8E8E8] mb-4 max-w-2xl"
           >
-            The Bloomberg Terminal for Data Leadership
+            Real-Time Intelligence for Data Leadership
           </h1>
           <p className="text-base text-[#888888] leading-relaxed max-w-xl mb-10">
             Signal-dense intelligence for CDOs, CAIOs, and CDAIOs. Daily.

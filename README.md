@@ -1,6 +1,6 @@
 # cdaoinsights.com
 
-Real-time intelligence platform for enterprise data & AI leaders (CDO / CDAIO / CAIO / VP Data). Bloomberg terminal aesthetic — dark theme, data-dense, zero fluff.
+Real-time intelligence platform for enterprise data & AI leaders (CDO / CDAIO / CAIO / VP Data). Dark theme, data-dense, zero fluff.
 
 ## Stack
 
