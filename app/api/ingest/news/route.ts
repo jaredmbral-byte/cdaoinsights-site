@@ -19,20 +19,7 @@ const RSS_FEEDS = [
   { url: 'https://www.datanami.com/feed/', name: 'Datanami' },
 ]
 
-// Strip all HTML tags from a string
-function stripHtml(text: string): string {
-  return text
-    .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1')
-    .replace(/<[^>]+>/g, '')
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&nbsp;/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim()
-}
+import { stripHtml } from '@/lib/text'
 
 // Topic classification based on keywords
 function classifyTopics(title: string, summary: string): string[] {

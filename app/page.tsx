@@ -2,6 +2,7 @@ import TallyForm from '@/components/TallyForm'
 import HiringTicker from '@/components/HiringTicker'
 import MovesTicker from '@/components/MovesTicker'
 import { createServerClient } from '@/lib/supabase-server'
+import { cleanTitle, cleanSummary } from '@/lib/text'
 import type { ExecutiveMove, MarketArticle, WeeklyBrief } from '@/lib/types'
 
 export const revalidate = 900 // 15 minutes
@@ -276,11 +277,11 @@ export default async function Home() {
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1 min-w-0">
                         <h3 className="text-sm text-[#E8E8E8] group-hover:text-[#3B82F6] mb-2 leading-snug">
-                          {article.title}
+                          {cleanTitle(article.title)}
                         </h3>
-                        {article.summary && (
+                        {cleanSummary(article.summary, article.title) && (
                           <p className="text-xs text-[#888888] leading-relaxed mb-2 line-clamp-2">
-                            {article.summary}
+                            {cleanSummary(article.summary, article.title)}
                           </p>
                         )}
                         <div className="flex items-center gap-2 flex-wrap">

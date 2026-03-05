@@ -1,6 +1,7 @@
 import { createServerClient } from '@/lib/supabase-server'
 import { articleListSchema } from '@/lib/schema'
 import type { MarketArticle } from '@/lib/types'
+import { cleanTitle, cleanSummary } from '@/lib/text'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -135,11 +136,11 @@ export default async function IntelligencePage({
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">
                   <h2 className="text-base text-[#E8E8E8] group-hover:text-[#3B82F6] mb-2 leading-snug">
-                    {article.title}
+                    {cleanTitle(article.title)}
                   </h2>
-                  {article.summary && (
+                  {cleanSummary(article.summary, article.title) && (
                     <p className="text-sm text-[#888888] leading-relaxed mb-3 line-clamp-2">
-                      {article.summary}
+                      {cleanSummary(article.summary, article.title)}
                     </p>
                   )}
                   <div className="flex items-center gap-3 flex-wrap">
