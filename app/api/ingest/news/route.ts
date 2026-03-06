@@ -199,3 +199,6 @@ export async function POST(request: Request) {
     timestamp: new Date().toISOString(),
   })
 }
+
+// Vercel Cron sends GET requests — re-export POST as GET
+export { POST as GET }

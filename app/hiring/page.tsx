@@ -1,5 +1,5 @@
 import { createServerClient } from '@/lib/supabase-server'
-import { hiringListSchema } from '@/lib/schema'
+import { hiringListSchema, hiringFaqSchema } from '@/lib/schema'
 import type { HiringSignal } from '@/lib/types'
 import type { Metadata } from 'next'
 
@@ -218,10 +218,55 @@ export default async function HiringPage({
         </div>
       )}
 
+      {/* FAQ */}
+      <section className="mt-16 border-t border-[#1E1E1E] pt-12">
+        <h2 className="text-xl font-semibold text-[#E8E8E8] mb-8">
+          Frequently asked questions
+        </h2>
+        <div className="space-y-6 max-w-3xl">
+          <div>
+            <h3 className="text-sm font-medium text-[#E8E8E8] mb-2">
+              What roles does the CDAO Insights hiring tracker cover?
+            </h3>
+            <p className="text-sm text-[#888888] leading-relaxed">
+              The hiring tracker monitors Chief Data Officer (CDO), Chief AI Officer (CAIO),
+              Chief Data and AI Officer (CDAIO), VP of Data, VP of Analytics, Head of Data,
+              Head of AI, and Director-level data leadership roles at enterprise organizations.
+              Job postings are sourced from Indeed and Firecrawl search.
+            </p>
+          </div>
+          <div>
+            <h3 className="text-sm font-medium text-[#E8E8E8] mb-2">
+              How often is the hiring data updated?
+            </h3>
+            <p className="text-sm text-[#888888] leading-relaxed">
+              The hiring feed is refreshed every 6 hours from Indeed RSS feeds and Firecrawl
+              web search. Listings are deduplicated by job title and company name to prevent
+              duplicates.
+            </p>
+          </div>
+          <div>
+            <h3 className="text-sm font-medium text-[#E8E8E8] mb-2">
+              What industries are tracked for data and AI executive hiring?
+            </h3>
+            <p className="text-sm text-[#888888] leading-relaxed">
+              Roles are classified across Financial Services, Healthcare, Technology, Retail,
+              Manufacturing, Energy, Insurance, Media &amp; Telecom, Government, Education,
+              and Consulting. Industry classification is based on company name and job
+              description keywords.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* AEO: Structured data */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(hiringListSchema(filtered)) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(hiringFaqSchema()) }}
       />
     </main>
   )

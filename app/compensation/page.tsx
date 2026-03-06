@@ -1,5 +1,5 @@
 import { createServerClient } from '@/lib/supabase-server'
-import { compBenchmarkSchema } from '@/lib/schema'
+import { compBenchmarkSchema, compFaqSchema } from '@/lib/schema'
 import type { CompBenchmark } from '@/lib/types'
 import type { Metadata } from 'next'
 
@@ -184,9 +184,55 @@ export default async function CompensationPage({
         </p>
       </div>
 
+      {/* FAQ */}
+      <section className="mt-16 border-t border-[#1E1E1E] pt-12">
+        <h2 className="text-xl font-semibold text-[#E8E8E8] mb-8">
+          Frequently asked questions
+        </h2>
+        <div className="space-y-6 max-w-3xl">
+          <div>
+            <h3 className="text-sm font-medium text-[#E8E8E8] mb-2">
+              What is the average salary for a Chief Data Officer in 2026?
+            </h3>
+            <p className="text-sm text-[#888888] leading-relaxed">
+              The median total cash compensation for a Chief Data Officer in the United States
+              is approximately $295,000 across all industries. In Financial Services, the
+              median rises to $350,000. In Technology, the median is approximately $335,000.
+              These figures include base salary and bonus but exclude equity compensation.
+            </p>
+          </div>
+          <div>
+            <h3 className="text-sm font-medium text-[#E8E8E8] mb-2">
+              How does Chief AI Officer compensation compare to Chief Data Officer pay?
+            </h3>
+            <p className="text-sm text-[#888888] leading-relaxed">
+              Chief AI Officers typically earn a 10-15% premium over Chief Data Officers. The
+              median CAIO total cash compensation is approximately $325,000 across all
+              industries, compared to $295,000 for CDOs. In Financial Services, the CAIO
+              median reaches $385,000.
+            </p>
+          </div>
+          <div>
+            <h3 className="text-sm font-medium text-[#E8E8E8] mb-2">
+              Where does CDAO Insights compensation data come from?
+            </h3>
+            <p className="text-sm text-[#888888] leading-relaxed">
+              Compensation benchmarks are aggregated from BLS Occupational Employment
+              Statistics, Glassdoor, Levels.fyi, and public company filings. Figures represent
+              total cash compensation (base + bonus). Equity varies significantly and is
+              excluded. Data is refreshed quarterly.
+            </p>
+          </div>
+        </div>
+      </section>
+
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(compBenchmarkSchema()) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(compFaqSchema()) }}
       />
     </main>
   )

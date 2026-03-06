@@ -1,8 +1,8 @@
 {
   "crons": [
-    { "path": "/api/ingest/hiring", "schedule": "0 6 * * *" },
-    { "path": "/api/ingest/news", "schedule": "0 7 * * *" },
-    { "path": "/api/ingest/moves", "schedule": "0 8 * * *" },
+    { "path": "/api/ingest/hiring", "schedule": "0 */6 * * *" },
+    { "path": "/api/ingest/news", "schedule": "15 */6 * * *" },
+    { "path": "/api/ingest/moves", "schedule": "30 */6 * * *" },
     { "path": "/api/ingest/compensation", "schedule": "0 0 1 * *" }
   ]
 }

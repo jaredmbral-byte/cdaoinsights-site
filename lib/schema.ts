@@ -116,6 +116,72 @@ export function movesFaqSchema() {
   }
 }
 
+export function hiringFaqSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'What roles does the CDAO Insights hiring tracker cover?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'The hiring tracker monitors Chief Data Officer (CDO), Chief AI Officer (CAIO), Chief Data and AI Officer (CDAIO), VP of Data, VP of Analytics, Head of Data, Head of AI, and Director-level data leadership roles at enterprise organizations. Job postings are sourced from Indeed and Firecrawl search.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'How often is the hiring data updated?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'The hiring feed is refreshed every 6 hours from Indeed RSS feeds and Firecrawl web search. Listings are deduplicated by job title and company name to prevent duplicates.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'What industries are tracked for data and AI executive hiring?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Roles are classified across Financial Services, Healthcare, Technology, Retail, Manufacturing, Energy, Insurance, Media & Telecom, Government, Education, and Consulting. Industry classification is based on company name and job description keywords.',
+        },
+      },
+    ],
+  }
+}
+
+export function compFaqSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'What is the average salary for a Chief Data Officer in 2026?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'The median total cash compensation for a Chief Data Officer in the United States is approximately $295,000 across all industries. In Financial Services, the median rises to $350,000. In Technology, the median is approximately $335,000. These figures include base salary and bonus but exclude equity compensation.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'How does Chief AI Officer compensation compare to Chief Data Officer pay?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Chief AI Officers typically earn a 10-15% premium over Chief Data Officers. The median CAIO total cash compensation is approximately $325,000 across all industries, compared to $295,000 for CDOs. In Financial Services, the CAIO median reaches $385,000.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Where does CDAO Insights compensation data come from?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Compensation benchmarks are aggregated from BLS Occupational Employment Statistics, Glassdoor, Levels.fyi, and public company filings. Figures represent total cash compensation (base + bonus). Equity varies significantly and is excluded. Data is refreshed quarterly.',
+        },
+      },
+    ],
+  }
+}
+
 export function compBenchmarkSchema() {
   return {
     '@context': 'https://schema.org',

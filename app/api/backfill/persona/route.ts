@@ -53,3 +53,6 @@ export async function POST(request: Request) {
     timestamp: new Date().toISOString(),
   })
 }
+
+// Allow GET for manual trigger via browser/curl
+export { POST as GET }
