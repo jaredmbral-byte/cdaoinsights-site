@@ -2,17 +2,22 @@ import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase-admin'
 import { passesNegativeFilter } from '@/lib/filters'
 
-// Cron-triggered: pull CDO/CAIO/CDAIO executive move announcements
+// Cron-triggered: pull C-Suite executive move announcements
+// (CDO/CAIO/CDAIO/CAO appointments and departures only)
 // from Google News RSS and PR Newswire RSS (free, no API key needed)
-// Vercel Cron calls this every 6 hours
+// VP/Director/Head of roles are tracked via hiring signals, not here
 
+// C-Suite appointment/departure queries only
 const QUERY_TERMS = [
   'appointed Chief Data Officer',
   'named Chief AI Officer',
+  'named Chief Analytics Officer',
   'joins as CDO',
   'Chief Data Officer leaves',
+  'Chief Data Officer departs',
   'appointed CDAIO',
   'named CAIO',
+  'appointed CDAO',
 ]
 
 // Build Google News RSS URLs for each query
@@ -33,7 +38,7 @@ const PR_NEWSWIRE_FEEDS = [
 
 const ALL_FEEDS = [...GOOGLE_NEWS_FEEDS, ...PR_NEWSWIRE_FEEDS]
 
-// Keywords that indicate an executive move article
+// Keywords that indicate an executive move article (C-Suite only)
 const MOVE_KEYWORDS = [
   'appointed', 'appoints', 'appointment',
   'named', 'names',
@@ -44,24 +49,20 @@ const MOVE_KEYWORDS = [
   'steps down', 'resigns', 'resigned', 'resignation',
   'succeeds', 'successor',
   'chief data officer', 'chief ai officer',
+  'chief analytics officer', 'chief data and ai officer',
   'cdo', 'caio', 'cdaio', 'cdao',
-  'vp of data', 'vp of ai',
-  'head of data', 'head of ai',
 ]
 
-// Title patterns that indicate this is specifically a CDO/CAIO role
+// Title patterns — C-Suite only (VP/Director/Head of are handled by hiring signals)
 const ROLE_PATTERNS = [
-  /chief\s+data\s+(?:and\s+)?(?:ai\s+)?officer/i,
-  /chief\s+ai\s+officer/i,
+  /chief\s+data\s+(?:and|&)\s+(?:ai|analytics)\s+officer/i,
   /chief\s+data\s+officer/i,
+  /chief\s+ai\s+officer/i,
   /chief\s+analytics\s+officer/i,
   /\bcdao\b/i,
   /\bcdaio\b/i,
   /\bcaio\b/i,
   /\bcdo\b/i,
-  /\bvp\b.*\bdata\b/i,
-  /\bsvp\b.*\bdata\b/i,
-  /head\s+of\s+(?:data|ai|analytics)/i,
 ]
 
 // Classify the type of executive move
