@@ -197,14 +197,14 @@ export default async function Home() {
         <section className="max-w-[1200px] mx-auto px-6 pb-6">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <a href="/hiring" className="border border-[#1E1E1E] rounded-sm p-4 hover:border-[#333] transition-colors group">
-              <p className="font-mono text-[10px] uppercase tracking-[1px] text-[#555555] mb-1">Hiring Signals</p>
+              <p className="font-mono text-[10px] uppercase tracking-[1px] text-[#555555] mb-1">Open Positions</p>
               <p className="text-2xl font-semibold text-[#00FF94]">{hiringCount.toLocaleString()}</p>
-              <p className="font-mono text-[10px] text-[#555555] mt-0.5">Last 90 days</p>
+              <p className="font-mono text-[10px] text-[#555555] mt-0.5">Job postings · 90d</p>
             </a>
             <a href="/moves" className="border border-[#1E1E1E] rounded-sm p-4 hover:border-[#333] transition-colors group">
-              <p className="font-mono text-[10px] uppercase tracking-[1px] text-[#555555] mb-1">Executive Moves</p>
+              <p className="font-mono text-[10px] uppercase tracking-[1px] text-[#555555] mb-1">C-Suite Moves</p>
               <p className="text-2xl font-semibold text-[#00FF94]">{movesCount.toLocaleString()}</p>
-              <p className="font-mono text-[10px] text-[#555555] mt-0.5">Last 90 days</p>
+              <p className="font-mono text-[10px] text-[#555555] mt-0.5">Appointments &amp; departures · 90d</p>
             </a>
             <a href="/intelligence" className="border border-[#1E1E1E] rounded-sm p-4 hover:border-[#333] transition-colors group">
               <p className="font-mono text-[10px] uppercase tracking-[1px] text-[#555555] mb-1">Market Signals</p>
@@ -252,8 +252,8 @@ export default async function Home() {
                   Quick Links
                 </h2>
                 {[
-                  { label: 'Executive Moves', href: '/moves' },
-                  { label: 'Hiring Signals', href: '/hiring' },
+                  { label: 'C-Suite Moves', href: '/moves' },
+                  { label: 'Open Positions', href: '/hiring' },
                   { label: 'Market Intelligence', href: '/intelligence' },
                   { label: 'Compensation Data', href: '/compensation' },
                 ].map((link) => (
@@ -273,7 +273,7 @@ export default async function Home() {
             <div className="border border-[#1E1E1E] rounded-sm overflow-hidden">
               <div className="flex items-center justify-between px-4 py-3 border-b border-[#1E1E1E]">
                 <h2 className="font-mono text-[10px] uppercase tracking-[2px] text-[#555555]">
-                  Recent Executive Moves
+                  Recent C-Suite Moves
                 </h2>
                 <a href="/moves" className="font-mono text-[10px] uppercase tracking-[1px] text-[#555555] hover:text-[#E8E8E8] transition-colors">
                   View all →
