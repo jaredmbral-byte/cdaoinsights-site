@@ -4,10 +4,10 @@ import { supabaseAdmin } from '@/lib/supabase-admin'
 import { passesNegativeFilter } from '@/lib/filters'
 import { classifyPersona } from '@/lib/taxonomy'
 
-// Multi-source hiring ingestion:
-// 1. Firecrawl search API (uses credits but gets real structured results)
-// 2. Indeed RSS feeds (free, no credits)
-// 3. Google News RSS for executive appointment announcements
+// Multi-source hiring ingestion (job postings only):
+// 1. Indeed RSS feeds (free, no credits)
+// 2. Firecrawl search API (uses credits but gets real structured results)
+// NOTE: Executive appointment announcements are handled by /api/ingest/moves
 
 interface ScrapedJob {
   title: string
@@ -48,16 +48,6 @@ const INDEED_RSS_URLS = [
   // Head of
   'https://www.indeed.com/rss?q=%22Head+of+Data%22&fromage=14&explvl=executive',
   'https://www.indeed.com/rss?q=%22Head+of+AI%22+OR+%22Head+of+Artificial+Intelligence%22&fromage=14',
-]
-
-// Google News RSS for executive appointment announcements
-// NOTE: Use "Chief Data Officer" (not bare "CDO") to avoid false positives
-// like Chief Development Officer, Chief Digital Officer, etc.
-const APPOINTMENT_RSS_URLS = [
-  'https://news.google.com/rss/search?q=%22Chief+Data+Officer%22+%22appointed%22+OR+%22hired%22+OR+%22named%22+when:14d&hl=en-US&gl=US&ceid=US:en',
-  'https://news.google.com/rss/search?q=%22Chief+AI+Officer%22+%22appointed%22+OR+%22hired%22+OR+%22named%22+when:14d&hl=en-US&gl=US&ceid=US:en',
-  'https://news.google.com/rss/search?q=%22Chief+Analytics+Officer%22+OR+%22CAIO%22+%22appointed%22+OR+%22named%22+when:14d&hl=en-US&gl=US&ceid=US:en',
-  'https://news.google.com/rss/search?q=%22CDAO%22+OR+%22CDAIO%22+%22appointed%22+OR+%22named%22+when:14d&hl=en-US&gl=US&ceid=US:en',
 ]
 
 // ─── CDO Disambiguation ────────────────────────────────────────────────────────
@@ -188,89 +178,6 @@ function parseIndeedTitle(fullTitle: string): { title: string; company: string; 
   return { title: fullTitle.trim(), company: 'Unknown' }
 }
 
-// Extract person + company from Google News appointment headlines
-function parseAppointmentHeadline(headline: string): { personName?: string; company?: string; title?: string } | null {
-  const result: { personName?: string; company?: string; title?: string } = {}
-
-  // Strip source suffix like " - ExecutiveGov" or " | CDO Magazine"
-  const cleanHeadline = headline.replace(/\s*[-–|]\s*[A-Z][\w\s&.]+$/, '').trim()
-
-  // Try to extract a relevant job title
-  // Match explicit titles first; "CDO" alone requires additional disambiguation
-  const explicitTitlePattern = /(?:Chief\s+(?:Data|AI|Analytics|Information|Data\s+(?:and|&)\s+Analytics)\s+Officer|CAIO|CDAIO|VP\s+(?:of\s+)?(?:Data|Analytics|AI)|Head\s+of\s+(?:Data|AI|Analytics))/i
-  const cdoOnlyPattern = /\bCDO\b/i
-  // Combined pattern for cleanup (stripping title from company name)
-  const titlePattern = /(?:Chief\s+(?:Data|AI|Analytics|Information|Data\s+(?:and|&)\s+Analytics)\s+Officer|CDO|CAIO|CDAIO|VP\s+(?:of\s+)?(?:Data|Analytics|AI)|Head\s+of\s+(?:Data|AI|Analytics))/i
-
-  let titleMatch = cleanHeadline.match(explicitTitlePattern)
-  if (!titleMatch) {
-    // If only "CDO" abbreviation found, validate it's data-related using headline context
-    titleMatch = cleanHeadline.match(cdoOnlyPattern)
-    if (!titleMatch || !isCdoDataRelated(cleanHeadline, cleanHeadline)) {
-      return null
-    }
-  }
-  result.title = titleMatch[0]
-
-  // Pattern: "Person Named/Appointed/Joins as Title at/of Company"
-  const namedAtMatch = cleanHeadline.match(
-    /(.+?)\s+(?:named|appointed|joins|tapped|elevated|promoted)\s+.*?(?:at|of|for)\s+(.+)/i
-  )
-  if (namedAtMatch) {
-    result.personName = namedAtMatch[1].trim()
-    result.company = namedAtMatch[2].replace(titlePattern, '').replace(/\s+as\s+.*$/i, '').trim()
-  }
-
-  // Pattern: "Company Names/Appoints/Hires Person as Title"
-  if (!result.company) {
-    const companyNamesMatch = cleanHeadline.match(
-      /^(.+?)\s+(?:names?|appoints?|hires?|taps?|promotes?|elevates?)\s+(.+?)(?:\s+as\s+|\s+to\s+|\s+its?\s+|\s+new\s+)/i
-    )
-    if (companyNamesMatch) {
-      result.company = companyNamesMatch[1].trim()
-      result.personName = companyNamesMatch[2].trim()
-    }
-  }
-
-  // Pattern: "Person Named Company Title" (e.g., "Budhu Bhaduri Named ORNL Chief Data Officer")
-  if (!result.company) {
-    const namedTitleMatch = cleanHeadline.match(
-      /(.+?)\s+(?:named|appointed)\s+(.+?)(?:Chief|CDO|CAIO|VP|Head)/i
-    )
-    if (namedTitleMatch) {
-      result.personName = namedTitleMatch[1].trim()
-      result.company = namedTitleMatch[2].trim()
-    }
-  }
-
-  // Pattern: title appears with "at Company" after it
-  if (!result.company) {
-    const atCompanyMatch = cleanHeadline.match(
-      /(?:Chief|CDO|CAIO|VP|Head).+?(?:at|of)\s+(.+?)$/i
-    )
-    if (atCompanyMatch) {
-      result.company = atCompanyMatch[1].trim()
-    }
-  }
-
-  // Clean up company name
-  if (result.company) {
-    // Remove common noise words at start/end
-    result.company = result.company
-      .replace(/^(?:the|new)\s+/i, '')
-      .replace(/\s*['']s?\s*$/, '')
-      .replace(/\s+$/, '')
-      .trim()
-
-    // If company is still the full headline or too long, it's probably wrong
-    if (result.company.length > 60 || result.company === cleanHeadline) {
-      result.company = undefined
-    }
-  }
-
-  return result.title ? result : null
-}
-
 // Check if a title is relevant to our target roles
 function isRelevantTitle(title: string, context: string = ''): boolean {
   const t = title.toLowerCase()
@@ -325,58 +232,7 @@ async function ingestFromIndeedRSS(): Promise<ScrapedJob[]> {
   return results
 }
 
-// ─── Source 2: Google News RSS (appointment announcements) ────────────────────
-async function ingestFromAppointmentRSS(): Promise<ScrapedJob[]> {
-  const results: ScrapedJob[] = []
-
-  for (const url of APPOINTMENT_RSS_URLS) {
-    try {
-      const response = await fetch(url, {
-        headers: { 'User-Agent': 'CDAO-Insights-Bot/1.0' },
-      })
-      if (!response.ok) continue
-
-      const xml = await response.text()
-      const items = parseRSS(xml)
-
-      for (const item of items) {
-        // Negative keyword filter
-        if (!passesNegativeFilter(item.title, item.description, item.link)) continue
-
-        const parsed = parseAppointmentHeadline(item.title)
-        if (!parsed) continue
-
-        // Derive company from parser or fallback to splitting on common verbs
-        let company = parsed.company
-        if (!company) {
-          // Fallback: try splitting headline on action verbs
-          const parts = item.title.split(/\s+(?:names?|appoints?|hires?|taps?|promotes?)\s+/i)
-          if (parts.length >= 2 && parts[0].length < 50) {
-            company = parts[0].replace(/\s*[-–|]\s*[A-Z][\w\s&.]+$/, '').trim()
-          }
-        }
-
-        // Skip if we still can't determine a company
-        if (!company || company.length > 60) continue
-
-        results.push({
-          title: parsed.title || item.title,
-          company,
-          url: item.link,
-          date: item.pubDate ? new Date(item.pubDate).toISOString() : undefined,
-          source: 'News',
-          // Store person name in location field temporarily (we don't have a dedicated column)
-        })
-      }
-    } catch (err) {
-      console.error(`Appointment RSS failed for ${url}:`, err)
-    }
-  }
-
-  return results
-}
-
-// ─── Source 3: Firecrawl search API (uses credits, structured results) ────────
+// ─── Source 2: Firecrawl search API (uses credits, structured results) ────────
 async function ingestFromFirecrawlSearch(): Promise<ScrapedJob[]> {
   const results: ScrapedJob[] = []
 
@@ -452,17 +308,15 @@ export async function POST(request: Request) {
   const sourceResults: Record<string, number> = {}
 
   // Run all sources in parallel
-  const [indeedJobs, appointmentJobs, firecrawlJobs] = await Promise.all([
+  const [indeedJobs, firecrawlJobs] = await Promise.all([
     ingestFromIndeedRSS(),
-    ingestFromAppointmentRSS(),
     ingestFromFirecrawlSearch(),
   ])
 
   sourceResults.indeed = indeedJobs.length
-  sourceResults.appointments = appointmentJobs.length
   sourceResults.firecrawl = firecrawlJobs.length
 
-  const allJobs = [...indeedJobs, ...appointmentJobs, ...firecrawlJobs]
+  const allJobs = [...indeedJobs, ...firecrawlJobs]
 
   // Deduplicate by (title + company) before inserting
   const seen = new Set<string>()
