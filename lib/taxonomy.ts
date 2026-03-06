@@ -111,12 +111,12 @@ const TITLE_MAPPINGS: TitleMapping[] = [
 
   // Head of
   {
-    patterns: [/head\s+of\s+(?:ai|artificial\s+intelligence)/i],
+    patterns: [/head\s+of\s+(?:\w+\s+)?(?:ai|artificial\s+intelligence)/i],
     persona: 'Head of AI',
     seniority: 'Director+',
   },
   {
-    patterns: [/head\s+of\s+data/i],
+    patterns: [/head\s+of\s+(?:\w+\s+)?data/i, /head\s+of\s+(?:\w+\s+)?analytics/i],
     persona: 'Head of Data',
     seniority: 'Director+',
   },
