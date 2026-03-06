@@ -200,5 +200,7 @@ export async function POST(request: Request) {
   })
 }
 
-// Vercel Cron sends GET requests — re-export POST as GET
-export { POST as GET }
+// Vercel Cron sends GET requests
+export async function GET(request: Request) {
+  return POST(request)
+}

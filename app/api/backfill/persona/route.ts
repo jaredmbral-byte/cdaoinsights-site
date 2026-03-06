@@ -55,4 +55,6 @@ export async function POST(request: Request) {
 }
 
 // Allow GET for manual trigger via browser/curl
-export { POST as GET }
+export async function GET(request: Request) {
+  return POST(request)
+}
