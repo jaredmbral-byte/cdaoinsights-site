@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase-admin'
+import { passesNegativeFilter } from '@/lib/filters'
 
 // Cron-triggered: pull news from RSS feeds (free, no Firecrawl credits)
 // Vercel Cron calls this every 15 minutes
@@ -153,6 +154,12 @@ export async function POST(request: Request) {
 
         // Only store articles scoring 0.5+ (raised from 0.3 to reduce noise)
         if (relevance < 0.5) {
+          totalSkipped++
+          continue
+        }
+
+        // Negative keyword filter — reject MMA, CDO financial, and other false positives
+        if (!passesNegativeFilter(item.title, item.description, item.link)) {
           totalSkipped++
           continue
         }

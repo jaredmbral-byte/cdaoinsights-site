@@ -1,20 +1,11 @@
 import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
 
 export const metadata: Metadata = {
   title: 'Sponsor CDAO Insights | Reach Enterprise Data & AI Leaders',
   description:
     'Put your brand in front of 10,000+ enterprise CDOs, CAIOs, and senior data leaders. Category-exclusive sponsorship packages starting at $2,500/quarter.',
-  keywords: 'CDAO sponsorship, CDO advertising, data executive marketing, enterprise data audience, CAIO sponsorship',
-  alternates: { canonical: 'https://cdaoinsights.com/sponsors' },
-  openGraph: {
-    title: 'Sponsor CDAO Insights | Reach Enterprise Data & AI Leaders',
-    description: 'Put your brand in front of 10,000+ enterprise CDOs, CAIOs, and senior data leaders. Category-exclusive sponsorship packages starting at $2,500/quarter.',
-    url: 'https://cdaoinsights.com/sponsors',
-    siteName: 'CDAO Insights',
-    type: 'website',
-    images: [{ url: 'https://cdaoinsights.com/og-default.png' }],
-  },
-  twitter: { card: 'summary_large_image', site: '@cdaoinsights' },
+  robots: { index: false, follow: false },
 }
 
 const TIERS = [
@@ -74,7 +65,16 @@ const STATS = [
   { value: '6', label: 'Sponsor Categories' },
 ]
 
-export default function SponsorsPage() {
+export default async function SponsorsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ key?: string }>
+}) {
+  const params = await searchParams
+  if (params.key !== 'cdao2026') {
+    notFound()
+  }
+
   return (
     <main className="flex-1 max-w-[1200px] mx-auto px-6 pt-16 pb-24 w-full">
       {/* Hero */}
@@ -93,55 +93,12 @@ export default function SponsorsPage() {
       {/* Audience stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-16">
         {STATS.map((stat) => (
-          <div
-            key={stat.label}
-            className="border border-[#1E1E1E] rounded-sm p-4 text-center"
-          >
-            <p className="text-2xl font-semibold text-[#00FF94] mb-1">
-              {stat.value}
-            </p>
-            <p className="font-mono text-[10px] uppercase tracking-[1px] text-[#888888]">
-              {stat.label}
-            </p>
+          <div key={stat.label} className="border border-[#1E1E1E] rounded-sm p-4 text-center">
+            <p className="text-2xl font-semibold text-[#00FF94] mb-1">{stat.value}</p>
+            <p className="font-mono text-[10px] uppercase tracking-[1px] text-[#888888]">{stat.label}</p>
           </div>
         ))}
       </div>
-
-      {/* Why sponsor */}
-      <section className="mb-16">
-        <h2 className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#555555] mb-6">
-          Why Sponsor CDAO Insights
-        </h2>
-        <div className="grid sm:grid-cols-3 gap-6">
-          <div className="border border-[#1E1E1E] rounded-sm p-5">
-            <h3 className="text-sm font-medium text-[#E8E8E8] mb-2">
-              Decision-Maker Audience
-            </h3>
-            <p className="text-sm text-[#888888] leading-relaxed">
-              Our readers are CDOs, CAIOs, VPs of Data, and Heads of Analytics at
-              Fortune 1000 companies. They evaluate and buy enterprise data platforms.
-            </p>
-          </div>
-          <div className="border border-[#1E1E1E] rounded-sm p-5">
-            <h3 className="text-sm font-medium text-[#E8E8E8] mb-2">
-              Category Exclusivity
-            </h3>
-            <p className="text-sm text-[#888888] leading-relaxed">
-              Only one sponsor per category. No competing ads. Your brand is the
-              clear signal in its space — governance, observability, AI/ML, and more.
-            </p>
-          </div>
-          <div className="border border-[#1E1E1E] rounded-sm p-5">
-            <h3 className="text-sm font-medium text-[#E8E8E8] mb-2">
-              Content Integration
-            </h3>
-            <p className="text-sm text-[#888888] leading-relaxed">
-              Sponsorships include editorial opportunities — insight articles,
-              research reports, and roundtables that build credibility with buyers.
-            </p>
-          </div>
-        </div>
-      </section>
 
       {/* Sponsorship tiers */}
       <section className="mb-16">
@@ -153,35 +110,24 @@ export default function SponsorsPage() {
             <div
               key={tier.name}
               className={`border rounded-sm p-6 flex flex-col ${
-                tier.highlight
-                  ? 'border-[#00FF94]/40 bg-[#00FF94]/[0.03]'
-                  : 'border-[#1E1E1E]'
+                tier.highlight ? 'border-[#00FF94]/40 bg-[#00FF94]/[0.03]' : 'border-[#1E1E1E]'
               }`}
             >
-              <h3 className="font-mono text-xs uppercase tracking-[2px] text-[#888888] mb-2">
-                {tier.name}
-              </h3>
+              <h3 className="font-mono text-xs uppercase tracking-[2px] text-[#888888] mb-2">{tier.name}</h3>
               <p className="text-2xl font-semibold text-[#E8E8E8] mb-1">
                 {tier.price}
-                <span className="text-sm font-normal text-[#555555]">
-                  {tier.period}
-                </span>
+                <span className="text-sm font-normal text-[#555555]">{tier.period}</span>
               </p>
               <ul className="mt-4 space-y-2 flex-1">
                 {tier.features.map((feature) => (
-                  <li
-                    key={feature}
-                    className="text-sm text-[#888888] leading-relaxed flex items-start gap-2"
-                  >
-                    <span className="text-[#00FF94] mt-0.5 flex-shrink-0">
-                      &bull;
-                    </span>
+                  <li key={feature} className="text-sm text-[#888888] leading-relaxed flex items-start gap-2">
+                    <span className="text-[#00FF94] mt-0.5 flex-shrink-0">&bull;</span>
                     {feature}
                   </li>
                 ))}
               </ul>
               <a
-                href="mailto:sponsors@cdaoinsights.com?subject=Sponsorship Inquiry — CDAO Insights"
+                href="mailto:sponsors@cdaoinsights.com?subject=Sponsorship Inquiry"
                 className={`mt-6 block text-center font-mono text-xs uppercase tracking-[1px] px-4 py-2.5 rounded-sm transition-colors ${
                   tier.highlight
                     ? 'bg-[#00FF94] text-[#0A0A0A] hover:bg-[#00CC77]'
@@ -202,10 +148,7 @@ export default function SponsorsPage() {
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {CATEGORIES.map((cat) => (
-            <div
-              key={cat}
-              className="border border-[#1E1E1E] rounded-sm px-4 py-3 flex items-center justify-between"
-            >
+            <div key={cat} className="border border-[#1E1E1E] rounded-sm px-4 py-3 flex items-center justify-between">
               <span className="text-sm text-[#E8E8E8]">{cat}</span>
               <span className="font-mono text-[10px] uppercase tracking-[1px] px-2 py-0.5 rounded-sm border border-[#00FF94]/30 text-[#00FF94]">
                 Open
@@ -217,15 +160,12 @@ export default function SponsorsPage() {
 
       {/* CTA */}
       <section className="border border-[#1E1E1E] rounded-sm p-8 text-center">
-        <h2 className="text-xl font-semibold text-[#E8E8E8] mb-3">
-          Ready to reach enterprise data leaders?
-        </h2>
+        <h2 className="text-xl font-semibold text-[#E8E8E8] mb-3">Ready to reach enterprise data leaders?</h2>
         <p className="text-sm text-[#888888] mb-6 max-w-lg mx-auto">
-          Email us to discuss sponsorship options, get audience demographics,
-          or schedule a call with our team.
+          Email us to discuss sponsorship options, get audience demographics, or schedule a call with our team.
         </p>
         <a
-          href="mailto:sponsors@cdaoinsights.com?subject=Sponsorship Inquiry — CDAO Insights"
+          href="mailto:sponsors@cdaoinsights.com?subject=Sponsorship Inquiry"
           className="inline-block font-mono text-xs uppercase tracking-[1px] px-6 py-3 rounded-sm bg-[#00FF94] text-[#0A0A0A] hover:bg-[#00CC77] transition-colors"
         >
           Contact sponsors@cdaoinsights.com

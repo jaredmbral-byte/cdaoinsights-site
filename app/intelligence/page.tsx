@@ -1,18 +1,18 @@
 import { createServerClient } from '@/lib/supabase-server'
 import { articleListSchema } from '@/lib/schema'
 import type { MarketArticle } from '@/lib/types'
-import { cleanTitle, cleanSummary } from '@/lib/text'
+import { cleanTitle } from '@/lib/text'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Weekly Intelligence Brief | CDAO Insights',
+  title: 'Market Intelligence Dashboard | CDAO Insights',
   description:
-    'Curated weekly briefings for data and AI executives — vendor moves, regulatory updates, and strategic signals that matter to CDOs.',
+    'Real-time signal tracking for data and AI executives — AI regulation, governance shifts, vendor moves, and market signals aggregated by topic.',
   keywords: 'CDO newsletter, data executive briefing, AI governance news, enterprise data strategy, CDO weekly brief',
   alternates: { canonical: 'https://cdaoinsights.com/intelligence' },
   openGraph: {
-    title: 'Weekly Intelligence Brief | CDAO Insights',
-    description: 'Curated weekly briefings for data and AI executives — vendor moves, regulatory updates, and strategic signals that matter to CDOs.',
+    title: 'Market Intelligence Dashboard | CDAO Insights',
+    description: 'Real-time signal tracking for data and AI executives — AI regulation, governance shifts, vendor moves, and market signals aggregated by topic.',
     url: 'https://cdaoinsights.com/intelligence',
     siteName: 'CDAO Insights',
     type: 'website',
@@ -23,40 +23,18 @@ export const metadata: Metadata = {
 
 export const revalidate = 900 // 15 minutes
 
-const TOPICS = [
-  { label: 'All', value: '' },
-  { label: 'AI', value: 'ai' },
-  { label: 'GenAI', value: 'genai' },
-  { label: 'Governance', value: 'governance' },
-  { label: 'Strategy', value: 'strategy' },
-  { label: 'Leadership', value: 'leadership' },
-  { label: 'Funding', value: 'funding' },
-  { label: 'Data Quality', value: 'data-quality' },
-  { label: 'Security', value: 'security' },
-  { label: 'Agentic AI', value: 'agentic-ai' },
-]
-
-async function getArticles(topic?: string, days?: number): Promise<MarketArticle[]> {
-  const supabase = createServerClient()
-
-  let query = supabase
-    .from('market_articles')
-    .select('*')
-    .order('published_at', { ascending: false })
-    .limit(100)
-
-  if (topic) {
-    query = query.contains('topics', [topic])
-  }
-
-  if (days) {
-    const cutoff = new Date()
-    cutoff.setDate(cutoff.getDate() - days)
-    query = query.gte('published_at', cutoff.toISOString())
-  }
-
-  const { data } = await query
-  return (data as MarketArticle[]) || []
+const TOPIC_META: Record<string, { label: string; color: string }> = {
+  ai: { label: 'AI', color: 'border-blue-500/30 text-blue-400' },
+  genai: { label: 'GenAI', color: 'border-purple-500/30 text-purple-400' },
+  governance: { label: 'Governance', color: 'border-amber-500/30 text-amber-400' },
+  strategy: { label: 'Strategy', color: 'border-green-500/30 text-green-400' },
+  leadership: { label: 'Leadership', color: 'border-rose-500/30 text-rose-400' },
+  funding: { label: 'Funding', color: 'border-emerald-500/30 text-emerald-400' },
+  'data-quality': { label: 'Data Quality', color: 'border-orange-500/30 text-orange-400' },
+  security: { label: 'Security', color: 'border-red-500/30 text-red-400' },
+  'agentic-ai': { label: 'Agentic AI', color: 'border-indigo-500/30 text-indigo-400' },
+  infrastructure: { label: 'Infrastructure', color: 'border-cyan-500/30 text-cyan-400' },
+  general: { label: 'General', color: 'border-[#333] text-[#888888]' },
 }
 
 function timeAgo(dateStr: string): string {
@@ -72,122 +50,192 @@ function timeAgo(dateStr: string): string {
   return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
 }
 
-const TOPIC_COLORS: Record<string, string> = {
-  ai: 'border-blue-500/30 text-blue-400',
-  genai: 'border-purple-500/30 text-purple-400',
-  governance: 'border-amber-500/30 text-amber-400',
-  strategy: 'border-green-500/30 text-green-400',
-  leadership: 'border-rose-500/30 text-rose-400',
-  funding: 'border-emerald-500/30 text-emerald-400',
-  'data-quality': 'border-orange-500/30 text-orange-400',
-  security: 'border-red-500/30 text-red-400',
-  'agentic-ai': 'border-indigo-500/30 text-indigo-400',
-  infrastructure: 'border-cyan-500/30 text-cyan-400',
-  general: 'border-[#333] text-[#888888]',
-}
-
 export default async function IntelligencePage({
   searchParams,
 }: {
-  searchParams: Promise<{ topic?: string; days?: string }>
+  searchParams: Promise<{ topic?: string }>
 }) {
   const params = await searchParams
-  const topic = params.topic
-  const days = params.days ? parseInt(params.days) : 7
+  const activeTopic = params.topic || ''
 
-  const articles = await getArticles(topic, days)
+  const supabase = createServerClient()
+
+  // Fetch all articles (for topic counts) and filtered results in parallel
+  const [allArticlesResult, filteredResult] = await Promise.all([
+    supabase
+      .from('market_articles')
+      .select('topics, source_name')
+      .gte('relevance', 0.5)
+      .order('published_at', { ascending: false })
+      .limit(500),
+    (() => {
+      let q = supabase
+        .from('market_articles')
+        .select('id, title, source_name, source_url, published_at, topics, relevance')
+        .gte('relevance', 0.5)
+        .order('published_at', { ascending: false })
+        .limit(30)
+      if (activeTopic) {
+        q = q.contains('topics', [activeTopic])
+      }
+      return q
+    })(),
+  ])
+
+  const allArticles = (allArticlesResult.data || []) as Pick<MarketArticle, 'topics' | 'source_name'>[]
+  const filteredArticles = (filteredResult.data || []) as MarketArticle[]
+
+  // Compute topic distribution
+  const topicCounts: Record<string, number> = {}
+  const sourceCounts: Record<string, number> = {}
+
+  for (const article of allArticles) {
+    for (const t of article.topics || []) {
+      topicCounts[t] = (topicCounts[t] || 0) + 1
+    }
+    if (article.source_name) {
+      sourceCounts[article.source_name] = (sourceCounts[article.source_name] || 0) + 1
+    }
+  }
+
+  // Sort topics and sources by count
+  const sortedTopics = Object.entries(topicCounts)
+    .sort(([, a], [, b]) => b - a)
+  const sortedSources = Object.entries(sourceCounts)
+    .sort(([, a], [, b]) => b - a)
+    .slice(0, 8)
 
   return (
-    <main className="flex-1 max-w-[1200px] mx-auto px-6 pt-16 pb-24 w-full">
-      {/* Page header */}
-      <p className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#555555] mb-4">
+    <main className="flex-1 max-w-[1200px] mx-auto px-6 pt-10 pb-24 w-full">
+      {/* Compact header */}
+      <p className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#555555] mb-2">
         Market Intelligence
       </p>
-      <h1 className="text-3xl sm:text-4xl font-semibold leading-[1.15] tracking-[-0.5px] text-[#E8E8E8] mb-3">
-        What&apos;s moving in enterprise data &amp; AI
+      <h1 className="text-2xl sm:text-3xl font-semibold leading-[1.15] tracking-[-0.5px] text-[#E8E8E8] mb-2">
+        Signal Dashboard
       </h1>
-      <p className="text-base text-[#888888] leading-relaxed max-w-2xl mb-10">
-        Curated signals from across the market — AI regulation, governance shifts,
-        vendor moves, and leadership changes. Updated every 15 minutes.
+      <p className="text-sm text-[#888888] leading-relaxed max-w-2xl mb-6">
+        Aggregated market signals for enterprise data &amp; AI leaders. {allArticles.length} articles tracked across {Object.keys(topicCounts).length} topics.
       </p>
 
-      {/* Topic filters */}
-      <div className="flex flex-wrap gap-2 mb-10">
-        {TOPICS.map((t) => (
-          <a
-            key={t.value}
-            href={`/intelligence${t.value ? `?topic=${t.value}` : ''}${days !== 7 ? `${t.value ? '&' : '?'}days=${days}` : ''}`}
-            className={`font-mono text-xs uppercase tracking-[1px] px-3 py-1.5 rounded-sm border transition-colors ${
-              (topic === t.value || (!topic && t.value === ''))
-                ? 'bg-[#E8E8E8] text-[#0A0A0A] border-[#E8E8E8]'
-                : 'bg-transparent text-[#888888] border-[#1E1E1E] hover:border-[#555555] hover:text-[#E8E8E8]'
-            }`}
-          >
-            {t.label}
-          </a>
-        ))}
+      {/* ── Dashboard Grid ─────────────────────────────────────────────── */}
+      <div className="grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-4">
+
+        {/* ── Left Sidebar — Topic Counts + Source Counts ──────────────── */}
+        <div className="space-y-4">
+          {/* Topic Distribution */}
+          <div className="border border-[#1E1E1E] rounded-sm p-4">
+            <h2 className="font-mono text-[10px] uppercase tracking-[2px] text-[#555555] mb-3">
+              Topics
+            </h2>
+            {/* All filter */}
+            <a
+              href="/intelligence"
+              className={`flex items-center justify-between py-1.5 border-b border-[#1E1E1E] text-xs transition-colors ${
+                !activeTopic ? 'text-[#00FF94]' : 'text-[#888888] hover:text-[#E8E8E8]'
+              }`}
+            >
+              <span>All Signals</span>
+              <span className="font-mono text-[11px]">{allArticles.length}</span>
+            </a>
+            {sortedTopics.map(([topic, count]) => {
+              const meta = TOPIC_META[topic] || TOPIC_META.general
+              return (
+                <a
+                  key={topic}
+                  href={`/intelligence?topic=${topic}`}
+                  className={`flex items-center justify-between py-1.5 border-b border-[#1E1E1E] last:border-0 text-xs transition-colors ${
+                    activeTopic === topic ? 'text-[#00FF94]' : 'text-[#888888] hover:text-[#E8E8E8]'
+                  }`}
+                >
+                  <span>{meta.label}</span>
+                  <span className="font-mono text-[11px]">{count}</span>
+                </a>
+              )
+            })}
+          </div>
+
+          {/* Source Distribution */}
+          <div className="border border-[#1E1E1E] rounded-sm p-4">
+            <h2 className="font-mono text-[10px] uppercase tracking-[2px] text-[#555555] mb-3">
+              Top Sources
+            </h2>
+            {sortedSources.map(([source, count]) => (
+              <div
+                key={source}
+                className="flex items-center justify-between py-1.5 border-b border-[#1E1E1E] last:border-0"
+              >
+                <span className="text-xs text-[#888888] truncate mr-2">{source}</span>
+                <span className="font-mono text-[11px] text-[#555555] flex-shrink-0">{count}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── Right Column — Signal Table ──────────────────────────────── */}
+        <div className="border border-[#1E1E1E] rounded-sm overflow-hidden">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-[#1E1E1E]">
+            <h2 className="font-mono text-[10px] uppercase tracking-[2px] text-[#555555]">
+              {activeTopic ? (TOPIC_META[activeTopic]?.label || activeTopic) + ' Signals' : 'Latest Signals'}
+            </h2>
+            <span className="font-mono text-[10px] text-[#555555]">
+              {filteredArticles.length} results
+            </span>
+          </div>
+
+          {filteredArticles.length === 0 ? (
+            <div className="p-8 text-center">
+              <p className="text-xs text-[#555555]">No signals found for this topic. Try a different filter.</p>
+            </div>
+          ) : (
+            <div className="divide-y divide-[#1E1E1E]">
+              {filteredArticles.map((article) => (
+                <a
+                  key={article.id}
+                  href={article.source_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block px-4 py-2.5 hover:bg-[#111111] transition-colors group"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0 flex-1">
+                      <h3 className="text-sm text-[#E8E8E8] group-hover:text-[#3B82F6] leading-snug line-clamp-1">
+                        {cleanTitle(article.title)}
+                      </h3>
+                      <div className="flex items-center gap-2 mt-1">
+                        {article.topics.slice(0, 2).map((t) => {
+                          const meta = TOPIC_META[t] || TOPIC_META.general
+                          return (
+                            <span
+                              key={t}
+                              className={`font-mono text-[9px] uppercase tracking-[1px] px-1.5 py-0.5 rounded-sm border ${meta.color}`}
+                            >
+                              {meta.label}
+                            </span>
+                          )
+                        })}
+                        {article.source_name && (
+                          <span className="font-mono text-[10px] text-[#555555]">
+                            {article.source_name}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <span className="font-mono text-[10px] text-[#555555] whitespace-nowrap mt-1 flex-shrink-0">
+                      {article.published_at ? timeAgo(article.published_at) : '\u2014'}
+                    </span>
+                  </div>
+                </a>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* Results */}
-      <p className="font-mono text-xs text-[#555555] mb-6">
-        {articles.length} {articles.length === 1 ? 'article' : 'articles'}
-      </p>
-
-      {articles.length > 0 ? (
-        <div className="space-y-3">
-          {articles.map((article) => (
-            <a
-              key={article.id}
-              href={article.source_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block border border-[#1E1E1E] rounded-sm p-4 hover:border-[#333] hover:bg-[#111111] transition-all group"
-            >
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex-1 min-w-0">
-                  <h2 className="text-base text-[#E8E8E8] group-hover:text-[#3B82F6] mb-2 leading-snug">
-                    {cleanTitle(article.title)}
-                  </h2>
-                  {cleanSummary(article.summary, article.title) && (
-                    <p className="text-sm text-[#888888] leading-relaxed mb-3 line-clamp-2">
-                      {cleanSummary(article.summary, article.title)}
-                    </p>
-                  )}
-                  <div className="flex items-center gap-3 flex-wrap">
-                    {article.topics.map((t) => (
-                      <span
-                        key={t}
-                        className={`font-mono text-[10px] uppercase tracking-[1px] px-2 py-0.5 rounded-sm border ${TOPIC_COLORS[t] || TOPIC_COLORS.general}`}
-                      >
-                        {t.replace('-', ' ')}
-                      </span>
-                    ))}
-                    {article.source_name && (
-                      <span className="font-mono text-[10px] uppercase tracking-[1px] text-[#555555]">
-                        {article.source_name}
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <span className="font-mono text-[11px] text-[#555555] whitespace-nowrap mt-1">
-                  {article.published_at ? timeAgo(article.published_at) : '—'}
-                </span>
-              </div>
-            </a>
-          ))}
-        </div>
-      ) : (
-        <div className="border border-[#1E1E1E] rounded-sm p-12 text-center">
-          <p className="text-[#888888] mb-2">No articles yet</p>
-          <p className="text-sm text-[#555555]">
-            News is ingested every 15 minutes from RSS feeds. Check back shortly.
-          </p>
-        </div>
-      )}
-
+      {/* JSON-LD for AEO — preserved */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleListSchema(articles)) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleListSchema(filteredArticles)) }}
       />
     </main>
   )

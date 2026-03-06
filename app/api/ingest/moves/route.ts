@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase-admin'
+import { passesNegativeFilter } from '@/lib/filters'
 
 // Cron-triggered: pull CDO/CAIO/CDAIO executive move announcements
 // from Google News RSS and PR Newswire RSS (free, no API key needed)
@@ -170,6 +171,12 @@ export async function POST(request: Request) {
       for (const item of items) {
         // Filter: only store articles that are actually about exec moves
         if (!isRelevantMove(item.title, item.description)) {
+          totalSkipped++
+          continue
+        }
+
+        // Negative keyword filter — reject MMA fighters, CDO financial terms, etc.
+        if (!passesNegativeFilter(item.title, item.description, item.link)) {
           totalSkipped++
           continue
         }

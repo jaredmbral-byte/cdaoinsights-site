@@ -1,13 +1,12 @@
-import TallyForm from '@/components/TallyForm'
 import HiringTicker from '@/components/HiringTicker'
 import MovesTicker from '@/components/MovesTicker'
 import { createServerClient } from '@/lib/supabase-server'
 import { cleanTitle, cleanSummary } from '@/lib/text'
-import type { ExecutiveMove, MarketArticle, WeeklyBrief } from '@/lib/types'
+import type { ExecutiveMove, MarketArticle, WeeklyBrief, CompBenchmark, HiringSignal } from '@/lib/types'
 
 export const revalidate = 900 // 15 minutes
 
-// ─── FAQ data (mirrors JSON-LD in layout for visible page content) ────────────
+// ── FAQ data (mirrors JSON-LD in layout for visible page content) ────────────
 const faqs = [
   { q: 'What is CDAO Insights?', a: 'CDAO Insights is an independent community intelligence resource for enterprise Chief Data Officers, Chief AI Officers, and senior data and analytics leaders. It covers data strategy, AI adoption, governance trends, and peer benchmarks across large enterprises \u2014 without vendor sponsorship influencing editorial.' },
   { q: 'What are the top priorities for Chief Data Officers in 2026?', a: 'Enterprise CDOs are primarily focused on three areas: operationalizing AI at scale, improving data quality and governance as the foundation for AI reliability, and demonstrating measurable business value from data investments. Agentic AI for data stewardship, unstructured data governance, and MDM modernization are emerging as high-priority initiatives.' },
@@ -60,32 +59,107 @@ const TOPIC_COLORS: Record<string, string> = {
   general: 'border-[#333] text-[#888888]',
 }
 
+// Classify seniority from job title for the persona panel
+function classifySeniority(title: string): string {
+  const t = title.toLowerCase()
+  if (t.includes('chief') || t.includes('cdo') || t.includes('caio') || t.includes('cdao') || t.includes('c-suite'))
+    return 'C-Suite'
+  if (t.includes('svp') || t.includes('senior vice president'))
+    return 'SVP'
+  if (t.includes('vp') || t.includes('vice president'))
+    return 'VP'
+  if (t.includes('director') || t.includes('head of'))
+    return 'Director+'
+  return 'Other'
+}
+
+function formatCurrency(n: number): string {
+  if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`
+  if (n >= 1_000) return `$${Math.round(n / 1_000)}K`
+  return `$${n}`
+}
+
 export default async function Home() {
   const supabase = createServerClient()
+  const cutoff90 = new Date()
+  cutoff90.setDate(cutoff90.getDate() - 90)
 
-  // Fetch latest executive moves, top intelligence, and weekly brief in parallel
-  const [movesResult, intelligenceResult, briefResult] = await Promise.all([
+  // Parallel data fetch — dashboard panels
+  const [
+    movesResult,
+    intelligenceResult,
+    briefResult,
+    hiringCountResult,
+    movesCountResult,
+    articlesCountResult,
+    compResult,
+    hiringByRoleResult,
+  ] = await Promise.all([
+    // Latest 5 executive moves
     supabase
       .from('executive_moves')
       .select('id, headline, person_name, company_name, move_type, source_url, published_at')
       .order('published_at', { ascending: false })
       .limit(5),
+    // Top 3 intelligence signals
     supabase
       .from('market_articles')
       .select('id, title, summary, source_name, source_url, published_at, topics, relevance')
       .gte('relevance', 0.5)
       .order('relevance', { ascending: false })
-      .limit(5),
+      .limit(3),
+    // Weekly brief
     supabase
       .from('weekly_brief')
       .select('*')
       .order('created_at', { ascending: false })
       .limit(4),
+    // Hiring signals count (90d)
+    supabase
+      .from('hiring_signals')
+      .select('id', { count: 'exact', head: true })
+      .gte('posted_at', cutoff90.toISOString()),
+    // Executive moves count (90d)
+    supabase
+      .from('executive_moves')
+      .select('id', { count: 'exact', head: true })
+      .gte('published_at', cutoff90.toISOString()),
+    // Market articles count
+    supabase
+      .from('market_articles')
+      .select('id', { count: 'exact', head: true })
+      .gte('relevance', 0.5),
+    // CDO median comp (p50)
+    supabase
+      .from('comp_benchmarks')
+      .select('p50')
+      .eq('role_title', 'Chief Data Officer')
+      .limit(1),
+    // Hiring by role (for persona panel)
+    supabase
+      .from('hiring_signals')
+      .select('job_title')
+      .gte('posted_at', cutoff90.toISOString())
+      .limit(500),
   ])
 
   const latestMoves = (movesResult.data || []) as ExecutiveMove[]
   const topIntel = (intelligenceResult.data || []) as MarketArticle[]
   const weeklyBrief = (briefResult.data || []) as WeeklyBrief[]
+
+  // Stat panel data
+  const hiringCount = hiringCountResult.count ?? 0
+  const movesCount = movesCountResult.count ?? 0
+  const articlesCount = articlesCountResult.count ?? 0
+  const cdoP50 = (compResult.data?.[0] as CompBenchmark | undefined)?.p50 ?? null
+
+  // Persona breakdown from hiring data
+  const hiringTitles = (hiringByRoleResult.data || []) as Pick<HiringSignal, 'job_title'>[]
+  const personaCounts: Record<string, number> = {}
+  for (const row of hiringTitles) {
+    const persona = classifySeniority(row.job_title)
+    personaCounts[persona] = (personaCounts[persona] || 0) + 1
+  }
 
   return (
     <div className="flex flex-col min-h-screen font-sans">
@@ -103,48 +177,223 @@ export default async function Home() {
           </div>
         </div>
 
-        {/* ── Hero ─────────────────────────────────────────────────────────── */}
+        {/* ── Compact Hero ───────────────────────────────────────────────── */}
         <section
-          className="max-w-[1200px] mx-auto px-6 pt-20 pb-16"
+          className="max-w-[1200px] mx-auto px-6 pt-10 pb-6"
           aria-labelledby="hero-heading"
         >
           <h1
             id="hero-heading"
-            className="text-3xl sm:text-4xl font-semibold leading-[1.2] tracking-[-0.5px] text-[#E8E8E8] mb-4 max-w-2xl"
+            className="text-2xl sm:text-3xl font-semibold leading-[1.2] tracking-[-0.5px] text-[#E8E8E8] mb-2"
           >
-            Real-Time Intelligence for Data Leadership
+            Enterprise Data &amp; AI Leadership Intelligence
           </h1>
-          <p className="text-base text-[#888888] leading-relaxed max-w-xl mb-10">
-            Signal-dense intelligence for CDOs, CAIOs, and CDAIOs. Daily.
+          <p className="text-sm text-[#888888] leading-relaxed max-w-xl">
+            Real-time signal tracking for CDOs, CAIOs, and senior data leaders. Who&apos;s hiring, who&apos;s moving, what&apos;s shifting.
           </p>
+        </section>
 
-          {/* Inline email capture */}
-          <div
-            id="join"
-            className="bg-[#111111] border border-[#1E1E1E] rounded-sm p-5 max-w-md"
-          >
-            <p className="font-mono text-xs uppercase tracking-[1px] text-[#888888] mb-3">
-              Enter Platform
-            </p>
-            <TallyForm />
-            <p className="text-[11px] text-[#555555] mt-3">
-              No spam. No vendor partnerships. Unsubscribe any time.
-            </p>
+        {/* ── Stat Panels ────────────────────────────────────────────────── */}
+        <section className="max-w-[1200px] mx-auto px-6 pb-6">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <a href="/hiring" className="border border-[#1E1E1E] rounded-sm p-4 hover:border-[#333] transition-colors group">
+              <p className="font-mono text-[10px] uppercase tracking-[1px] text-[#555555] mb-1">Hiring Signals</p>
+              <p className="text-2xl font-semibold text-[#00FF94]">{hiringCount.toLocaleString()}</p>
+              <p className="font-mono text-[10px] text-[#555555] mt-0.5">Last 90 days</p>
+            </a>
+            <a href="/moves" className="border border-[#1E1E1E] rounded-sm p-4 hover:border-[#333] transition-colors group">
+              <p className="font-mono text-[10px] uppercase tracking-[1px] text-[#555555] mb-1">Executive Moves</p>
+              <p className="text-2xl font-semibold text-[#00FF94]">{movesCount.toLocaleString()}</p>
+              <p className="font-mono text-[10px] text-[#555555] mt-0.5">Last 90 days</p>
+            </a>
+            <a href="/intelligence" className="border border-[#1E1E1E] rounded-sm p-4 hover:border-[#333] transition-colors group">
+              <p className="font-mono text-[10px] uppercase tracking-[1px] text-[#555555] mb-1">Market Signals</p>
+              <p className="text-2xl font-semibold text-[#00FF94]">{articlesCount.toLocaleString()}</p>
+              <p className="font-mono text-[10px] text-[#555555] mt-0.5">Tracked articles</p>
+            </a>
+            <a href="/compensation" className="border border-[#1E1E1E] rounded-sm p-4 hover:border-[#333] transition-colors group">
+              <p className="font-mono text-[10px] uppercase tracking-[1px] text-[#555555] mb-1">CDO Median Comp</p>
+              <p className="text-2xl font-semibold text-[#00FF94]">{cdoP50 ? formatCurrency(cdoP50) : '\u2014'}</p>
+              <p className="font-mono text-[10px] text-[#555555] mt-0.5">Base (P50)</p>
+            </a>
           </div>
         </section>
+
+        {/* ── Two-Column Dashboard ─────────────────────────────────────── */}
+        <section className="max-w-[1200px] mx-auto px-6 pb-6">
+          <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-4">
+
+            {/* Left Column — Persona Breakdown */}
+            <div className="space-y-4">
+              {/* Hiring by Persona */}
+              <div className="border border-[#1E1E1E] rounded-sm p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h2 className="font-mono text-[10px] uppercase tracking-[2px] text-[#555555]">
+                    Hiring by Seniority
+                  </h2>
+                  <a href="/hiring" className="font-mono text-[10px] uppercase tracking-[1px] text-[#555555] hover:text-[#E8E8E8] transition-colors">
+                    All →
+                  </a>
+                </div>
+                {['C-Suite', 'SVP', 'VP', 'Director+', 'Other'].map((level) => (
+                  <div key={level} className="flex items-center justify-between py-1.5 border-b border-[#1E1E1E] last:border-0">
+                    <span className="text-xs text-[#888888]">{level}</span>
+                    <span className="font-mono text-sm font-semibold text-[#E8E8E8]">
+                      {personaCounts[level] || 0}
+                    </span>
+                  </div>
+                ))}
+                <p className="font-mono text-[10px] text-[#555555] mt-2">90-day window</p>
+              </div>
+
+              {/* Top Sources panel */}
+              <div className="border border-[#1E1E1E] rounded-sm p-4">
+                <h2 className="font-mono text-[10px] uppercase tracking-[2px] text-[#555555] mb-3">
+                  Quick Links
+                </h2>
+                {[
+                  { label: 'Executive Moves', href: '/moves' },
+                  { label: 'Hiring Signals', href: '/hiring' },
+                  { label: 'Market Intelligence', href: '/intelligence' },
+                  { label: 'Compensation Data', href: '/compensation' },
+                ].map((link) => (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    className="flex items-center justify-between py-1.5 border-b border-[#1E1E1E] last:border-0 text-xs text-[#888888] hover:text-[#E8E8E8] transition-colors"
+                  >
+                    <span>{link.label}</span>
+                    <span className="text-[#555555]">&rarr;</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            {/* Right Column — Recent Moves Table */}
+            <div className="border border-[#1E1E1E] rounded-sm overflow-hidden">
+              <div className="flex items-center justify-between px-4 py-3 border-b border-[#1E1E1E]">
+                <h2 className="font-mono text-[10px] uppercase tracking-[2px] text-[#555555]">
+                  Recent Executive Moves
+                </h2>
+                <a href="/moves" className="font-mono text-[10px] uppercase tracking-[1px] text-[#555555] hover:text-[#E8E8E8] transition-colors">
+                  View all →
+                </a>
+              </div>
+              {latestMoves.length === 0 ? (
+                <div className="p-6 text-center">
+                  <p className="text-xs text-[#555555]">No recent executive moves. Feed refreshes every 6 hours.</p>
+                </div>
+              ) : (
+                <div className="divide-y divide-[#1E1E1E]">
+                  {latestMoves.map((move) => (
+                    <article
+                      key={move.id}
+                      className="px-4 py-2.5 hover:bg-[#111111] transition-colors"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0 flex-1">
+                          <a
+                            href={move.source_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-sm text-[#E8E8E8] hover:text-[#3B82F6] leading-snug block"
+                          >
+                            {cleanTitle(move.headline)}
+                          </a>
+                          <div className="flex flex-wrap items-center gap-2 text-[11px] text-[#555555] mt-0.5">
+                            {move.company_name && (
+                              <span className="text-[#888888]">{move.company_name}</span>
+                            )}
+                            {move.published_at && (
+                              <>
+                                {move.company_name && <span className="text-[#333]">|</span>}
+                                <span className="font-mono">{timeAgo(move.published_at)}</span>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1.5 flex-shrink-0">
+                          {move.person_name && (
+                            <span className="font-mono text-[10px] uppercase tracking-[1px] px-1.5 py-0.5 rounded-sm border border-[#1E1E1E] text-[#888888]">
+                              {move.person_name}
+                            </span>
+                          )}
+                          {move.move_type && (
+                            <span className={`font-mono text-[10px] uppercase tracking-[1px] px-1.5 py-0.5 rounded-sm border ${
+                              move.move_type === 'leaves'
+                                ? 'border-red-500/30 text-[#EF4444]'
+                                : 'border-[#1E1E1E] text-[#888888]'
+                            }`}>
+                              {MOVE_TYPE_LABELS[move.move_type] || move.move_type}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+
+        {/* ── Top Signals (compact cards) ─────────────────────────────── */}
+        {topIntel.length > 0 && (
+          <section className="max-w-[1200px] mx-auto px-6 pb-6">
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="font-mono text-[10px] uppercase tracking-[2px] text-[#555555]">
+                Top Signals
+              </h2>
+              <a
+                href="/intelligence"
+                className="font-mono text-[10px] uppercase tracking-[1px] text-[#555555] hover:text-[#E8E8E8] transition-colors"
+              >
+                View all →
+              </a>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {topIntel.map((article) => (
+                <a
+                  key={article.id}
+                  href={article.source_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="border border-[#1E1E1E] rounded-sm p-4 hover:border-[#333] hover:bg-[#111111] transition-all group flex flex-col"
+                >
+                  <h3 className="text-sm text-[#E8E8E8] group-hover:text-[#3B82F6] leading-snug mb-2 line-clamp-2">
+                    {cleanTitle(article.title)}
+                  </h3>
+                  <div className="flex items-center gap-2 flex-wrap mt-auto">
+                    {article.topics.slice(0, 2).map((t) => (
+                      <span
+                        key={t}
+                        className={`font-mono text-[10px] uppercase tracking-[1px] px-1.5 py-0.5 rounded-sm border ${TOPIC_COLORS[t] || TOPIC_COLORS.general}`}
+                      >
+                        {t.replace('-', ' ')}
+                      </span>
+                    ))}
+                    <span className="font-mono text-[10px] text-[#555555] ml-auto">
+                      {article.published_at ? timeAgo(article.published_at) : ''}
+                    </span>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* ── Weekly Brief ──────────────────────────────────────────────── */}
         {weeklyBrief.length > 0 && (
           <section
-            className="max-w-[1200px] mx-auto px-6 pb-16"
+            className="max-w-[1200px] mx-auto px-6 pb-8"
             aria-label="Weekly brief"
           >
-            <div className="border-t border-[#1E1E1E] pt-12">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#555555]">
+            <div className="border-t border-[#1E1E1E] pt-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="font-mono text-[10px] uppercase tracking-[2px] text-[#555555]">
                   Weekly Brief
                 </h2>
-                <span className="font-mono text-[11px] text-[#555555]">
+                <span className="font-mono text-[10px] text-[#555555]">
                   {weeklyBrief[0]?.week_label}
                 </span>
               </div>
@@ -172,179 +421,7 @@ export default async function Home() {
           </section>
         )}
 
-        {/* ── Executive Moves (server-rendered) ───────────────────────────── */}
-        {latestMoves.length > 0 && (
-          <section
-            className="max-w-[1200px] mx-auto px-6 pb-16"
-            aria-label="Latest executive moves"
-          >
-            <div className="border-t border-[#1E1E1E] pt-12">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#555555]">
-                  Executive Moves
-                </h2>
-                <a
-                  href="/moves"
-                  className="font-mono text-xs uppercase tracking-[1px] text-[#555555] hover:text-[#E8E8E8] transition-colors"
-                >
-                  View all →
-                </a>
-              </div>
-              <div className="border border-[#1E1E1E] rounded-sm overflow-hidden divide-y divide-[#1E1E1E]">
-                {latestMoves.map((move) => (
-                  <article
-                    key={move.id}
-                    className="px-5 py-3.5 hover:bg-[#111111] transition-colors"
-                  >
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="min-w-0 flex-1">
-                        <a
-                          href={move.source_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-sm text-[#E8E8E8] hover:text-[#3B82F6] leading-snug block mb-1"
-                        >
-                          {cleanTitle(move.headline)}
-                        </a>
-                        <div className="flex flex-wrap items-center gap-2 text-xs text-[#555555]">
-                          {move.company_name && (
-                            <span className="text-[#888888]">{move.company_name}</span>
-                          )}
-                          {move.published_at && (
-                            <>
-                              {move.company_name && <span className="text-[#333]">|</span>}
-                              <span className="font-mono">{timeAgo(move.published_at)}</span>
-                            </>
-                          )}
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2 flex-shrink-0">
-                        {move.person_name && (
-                          <span className="font-mono text-[10px] uppercase tracking-[1px] px-2 py-0.5 rounded-sm border border-[#1E1E1E] text-[#888888]">
-                            {move.person_name}
-                          </span>
-                        )}
-                        {move.move_type && (
-                          <span className={`font-mono text-[10px] uppercase tracking-[1px] px-2 py-0.5 rounded-sm border ${
-                            move.move_type === 'leaves'
-                              ? 'border-red-500/30 text-[#EF4444]'
-                              : 'border-[#1E1E1E] text-[#888888]'
-                          }`}>
-                            {MOVE_TYPE_LABELS[move.move_type] || move.move_type}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </article>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* ── Top Intelligence (server-rendered) ───────────────────────────── */}
-        {topIntel.length > 0 && (
-          <section
-            className="max-w-[1200px] mx-auto px-6 pb-16"
-            aria-label="Top intelligence"
-          >
-            <div className="border-t border-[#1E1E1E] pt-12">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#555555]">
-                  Intelligence
-                </h2>
-                <a
-                  href="/intelligence"
-                  className="font-mono text-xs uppercase tracking-[1px] text-[#555555] hover:text-[#E8E8E8] transition-colors"
-                >
-                  View all →
-                </a>
-              </div>
-              <div className="space-y-3">
-                {topIntel.map((article) => (
-                  <a
-                    key={article.id}
-                    href={article.source_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block border border-[#1E1E1E] rounded-sm p-4 hover:border-[#333] hover:bg-[#111111] transition-all group"
-                  >
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex-1 min-w-0">
-                        <h3 className="text-sm text-[#E8E8E8] group-hover:text-[#3B82F6] mb-2 leading-snug">
-                          {cleanTitle(article.title)}
-                        </h3>
-                        {cleanSummary(article.summary, article.title) && (
-                          <p className="text-xs text-[#888888] leading-relaxed mb-2 line-clamp-2">
-                            {cleanSummary(article.summary, article.title)}
-                          </p>
-                        )}
-                        <div className="flex items-center gap-2 flex-wrap">
-                          {article.topics.slice(0, 3).map((t) => (
-                            <span
-                              key={t}
-                              className={`font-mono text-[10px] uppercase tracking-[1px] px-2 py-0.5 rounded-sm border ${TOPIC_COLORS[t] || TOPIC_COLORS.general}`}
-                            >
-                              {t.replace('-', ' ')}
-                            </span>
-                          ))}
-                          {article.source_name && (
-                            <span className="font-mono text-[10px] uppercase tracking-[1px] text-[#555555]">
-                              {article.source_name}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                      <span className="font-mono text-[11px] text-[#555555] whitespace-nowrap mt-1">
-                        {article.published_at ? timeAgo(article.published_at) : '—'}
-                      </span>
-                    </div>
-                  </a>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* ── Pillars ──────────────────────────────────────────────────────── */}
-        <section
-          className="max-w-[1200px] mx-auto px-6 pb-20 border-t border-[#1E1E1E] pt-12"
-          aria-label="What CDAO Insights covers"
-        >
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-10">
-            <article>
-              <h2 className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#E8E8E8] mb-3">
-                Peer Intelligence
-              </h2>
-              <p className="text-sm text-[#888888] leading-relaxed">
-                What your counterparts are prioritizing, where they&apos;re
-                struggling, and what&apos;s actually shipping inside enterprise
-                organizations.
-              </p>
-            </article>
-            <article>
-              <h2 className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#E8E8E8] mb-3">
-                Market Signals
-              </h2>
-              <p className="text-sm text-[#888888] leading-relaxed">
-                Where enterprise data and AI investment is moving — sourced from
-                hiring patterns, org changes, and technology adoption before the
-                analysts catch up.
-              </p>
-            </article>
-            <article>
-              <h2 className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#E8E8E8] mb-3">
-                Independent
-              </h2>
-              <p className="text-sm text-[#888888] leading-relaxed">
-                Community-driven editorial. No sponsor determines what gets
-                covered or how it&apos;s framed. The signal stays clean.
-              </p>
-            </article>
-          </div>
-        </section>
-
-        {/* ── FAQ (AEO-optimized) ───────────────────────────────────────────── */}
+        {/* ── FAQ (AEO-optimized — below fold) ─────────────────────────── */}
         <section
           className="max-w-[1200px] mx-auto px-6 pb-20 border-t border-[#1E1E1E] pt-12"
           aria-labelledby="faq-heading"

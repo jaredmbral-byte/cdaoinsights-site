@@ -141,9 +141,6 @@ export default function RootLayout({
               <a href="/compensation" className="font-mono text-xs uppercase tracking-[2px] text-[#888888] hover:text-[#E8E8E8] transition-colors">
                 Compensation
               </a>
-              <a href="/sponsors" className="font-mono text-xs uppercase tracking-[2px] text-[#888888] hover:text-[#E8E8E8] transition-colors">
-                Sponsors
-              </a>
             </div>
           </nav>
         </header>

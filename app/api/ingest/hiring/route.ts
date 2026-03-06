@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { firecrawl } from '@/lib/firecrawl'
 import { supabaseAdmin } from '@/lib/supabase-admin'
+import { passesNegativeFilter } from '@/lib/filters'
+import { classifyPersona } from '@/lib/taxonomy'
 
 // Multi-source hiring ingestion:
 // 1. Firecrawl search API (uses credits but gets real structured results)
@@ -27,12 +29,25 @@ const SEARCH_QUERIES = [
 ]
 
 // Indeed RSS feeds — free, no auth required
+// Expanded from 5 → 13 to cover Director+, VP, and C-Suite across data/AI/governance
 const INDEED_RSS_URLS = [
+  // C-Suite
   'https://www.indeed.com/rss?q=%22Chief+Data+Officer%22&fromage=14&explvl=executive',
   'https://www.indeed.com/rss?q=%22Chief+AI+Officer%22&fromage=14&explvl=executive',
   'https://www.indeed.com/rss?q=%22Chief+Analytics+Officer%22&fromage=14&explvl=executive',
+  'https://www.indeed.com/rss?q=%22Chief+Data+and+AI+Officer%22&fromage=14&explvl=executive',
+  // VP level
   'https://www.indeed.com/rss?q=%22VP+Data%22&fromage=14&explvl=executive',
+  'https://www.indeed.com/rss?q=%22VP+Data+Governance%22&fromage=14',
+  'https://www.indeed.com/rss?q=%22VP+AI%22+OR+%22VP+Artificial+Intelligence%22&fromage=14',
+  'https://www.indeed.com/rss?q=%22VP+Analytics%22&fromage=14&explvl=executive',
+  // Director+ level
+  'https://www.indeed.com/rss?q=%22Director+AI%22+OR+%22Director+of+AI%22&fromage=14',
+  'https://www.indeed.com/rss?q=%22Director+Data+Governance%22&fromage=14',
+  'https://www.indeed.com/rss?q=%22Director+of+Data%22&fromage=14',
+  // Head of
   'https://www.indeed.com/rss?q=%22Head+of+Data%22&fromage=14&explvl=executive',
+  'https://www.indeed.com/rss?q=%22Head+of+AI%22+OR+%22Head+of+Artificial+Intelligence%22&fromage=14',
 ]
 
 // Google News RSS for executive appointment announcements
@@ -289,6 +304,8 @@ async function ingestFromIndeedRSS(): Promise<ScrapedJob[]> {
 
       for (const item of items) {
         if (!isRelevantTitle(item.title, item.description)) continue
+        // Negative keyword filter — reject MMA fighters, CDO financial terms, etc.
+        if (!passesNegativeFilter(item.title, item.description, item.link)) continue
 
         const parsed = parseIndeedTitle(item.title)
         results.push({
@@ -323,6 +340,9 @@ async function ingestFromAppointmentRSS(): Promise<ScrapedJob[]> {
       const items = parseRSS(xml)
 
       for (const item of items) {
+        // Negative keyword filter
+        if (!passesNegativeFilter(item.title, item.description, item.link)) continue
+
         const parsed = parseAppointmentHeadline(item.title)
         if (!parsed) continue
 
@@ -485,6 +505,7 @@ export async function POST(request: Request) {
       location: job.location || null,
       source_url: job.url || null,
       seniority: classifySeniority(job.title),
+      persona: classifyPersona(job.title),
       industry: classifyIndustry(`${job.company} ${job.title}`),
       posted_at: job.date || new Date().toISOString(),
       source_name: job.source,

@@ -9,6 +9,8 @@ export interface HiringSignal {
   company_size: string | null
   location: string | null
   seniority: string | null
+  persona: string | null
+  tech_stack: string[] | null
   source_url: string | null
   source_name: string | null
   posted_at: string | null
