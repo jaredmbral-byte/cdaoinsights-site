@@ -2,7 +2,7 @@
 > Single source of truth for all AI sessions (Claude Code on MacBook + Ace via Telegram).
 > Ace reads this from GitHub raw URL. Claude Code reads it automatically from repo root.
 > GitHub: https://github.com/jaredmbral-byte/cdaoinsights-site
-> Last updated: 2026-03-03
+> Last updated: 2026-03-06
 ---
 ## Mission
 Replace cdomagazine.tech and Gartner as the #1 go-to resource for senior data, analytics, and AI executives (CDO / CDAIO / CAIO / VP Data).
@@ -12,7 +12,7 @@ Replace cdomagazine.tech and Gartner as the #1 go-to resource for senior data, a
 2. GTM intelligence reports sold to data/AI vendors ($2-5k/mo)
 ---
 ## Stack
-- **Framework:** Next.js 15 (App Router)
+- **Framework:** Next.js 16 (App Router)
 - **Styling:** Tailwind CSS — modular components, Jared restyled himself
 - **Database:** Supabase (Postgres)
 - **Hosting:** Vercel (auto-deploys on push to main)
@@ -23,20 +23,26 @@ Replace cdomagazine.tech and Gartner as the #1 go-to resource for senior data, a
 ## Pages Built
 | Page | Route | Status | Notes |
 |---|---|---|---|
-| Homepage | / | ✅ Live | Hero, FAQs, Tally email capture, JSON-LD |
+| Homepage | / | ✅ Live | Mission control dashboard — stat panels, moves table, hiring by seniority, top signals, weekly brief, FAQ |
+| Moves | /moves | ✅ Built | Executive appointment/departure tracker |
 | Hiring | /hiring | ✅ Built | CDO/CAIO/VP Data job listings |
-| Intelligence | /intelligence | ✅ Built | News/insights feed |
+| Intelligence | /intelligence | ✅ Built | Signal dashboard — topic sidebar, source counts, compact table |
 | Compensation | /compensation | ✅ Built | Salary benchmarks |
+| Sponsors | /sponsors | ✅ Gated | Requires `?key=cdao2026`. Hidden from nav. Not indexed. |
 ---
 ## API Ingest Routes (Vercel Cron)
 | Route | Source | Frequency | Notes |
 |---|---|---|---|
-| /api/ingest/hiring | Firecrawl → LinkedIn/Indeed | Every 6h | Scrapes C-suite data/AI job listings |
-| /api/ingest/news | TBD | TBD | News/intelligence feed |
+| /api/ingest/hiring | Indeed RSS (13 feeds) + Firecrawl + Google News | Daily | C-suite/VP/Director+ data/AI jobs. Negative keyword filtering + persona taxonomy. |
+| /api/ingest/moves | Google News RSS + PR Newswire | Daily | Executive appointment/departure announcements. Negative keyword filtering. |
+| /api/ingest/news | 20+ RSS feeds (Google News, TDWI, MIT, InfoWorld, etc.) | Daily | Market intelligence. Relevance scoring + negative keyword filtering. |
 | /api/ingest/compensation | TBD | TBD | Salary data ingestion |
+| /api/backfill/persona | One-time | Manual | Backfills persona column on existing hiring_signals rows |
 ---
 ## Supabase
-Tables: executive_moves, jobs, subscribers (check migrations for full schema)
+Tables: executive_moves, hiring_signals, market_articles, comp_benchmarks, weekly_brief, subscribers
+Key columns added: `hiring_signals.persona` (text), `hiring_signals.tech_stack` (text[])
+Check `supabase/migrations/` for full schema history.
 ---
 ## AEO Requirements (non-negotiable)
 - JSON-LD on every page ✅ (homepage done)
@@ -54,15 +60,29 @@ Tables: executive_moves, jobs, subscribers (check migrations for full schema)
 | 2026-03-02 | No auth on launch |
 | 2026-03-03 | Jared handles design changes himself — Claude Code focuses on data/function |
 | 2026-03-03 | Monetization: vendor sponsorships + GTM intelligence reports |
+| 2026-03-06 | Mission control / Palantir-style dashboard — minimal scrolling, dense data panels |
+| 2026-03-06 | Email capture form removed from homepage for now |
+| 2026-03-06 | Sponsors page gated behind ?key=cdao2026, not public |
+| 2026-03-06 | Skip tech stack extraction from job descriptions for now |
+| 2026-03-06 | Track all titles rolling up to CDO/CAIO at Director+, VP, and C-Suite |
+| 2026-03-06 | DESIGN.md is the design contract — read it before any UI changes |
 ---
 ## What's Next (priority order)
-1. Verify Firecrawl ingest is actually pulling live data into Supabase
-2. Get hiring ticker live on homepage with real data (30/60/90 day toggle)
-3. Executive moves feed (new CDO/CAIO appointment announcements) — separate from job listings
-4. Confirm Vercel crons are scheduled and firing
-5. AEO: add JSON-LD + FAQ schema to /hiring, /intelligence, /compensation pages
-6. Email digest (weekly) via Tally subscriber list
-7. Vendor sponsorship page + pricing
+1. Run Supabase migration 004 (persona + tech_stack columns) + trigger backfill
+2. Confirm Vercel crons are scheduled and firing with real data
+3. AEO: add JSON-LD + FAQ schema to /hiring, /compensation pages
+4. Email digest (weekly) via Tally subscriber list
+5. Vendor sponsorship page — finalize data, then un-gate
+6. Tech stack extraction from job descriptions (future — skipped for now)
+---
+## Workflow
+- **Big changes (100+ lines, full page rewrites):** Create a worktree and branch. Do not commit straight to main. Wait for review.
+- **Small changes (styling, copy, single component fixes):** Commit directly to main.
+- **Before every push:** Run `npm run build`. Do not push if build fails.
+- **Supabase migrations:** Generate the SQL file AND attempt to run it via Supabase CLI if the project ref is available in env. If not, leave instructions in a MIGRATIONS.md file.
+- **Default mode:** Plan first, then execute — unless the request says "just do it."
+- **DESIGN.md is the design contract.** Read it at the start of any session involving UI changes. Do not deviate from the color tokens or layout principles documented there.
+- **Tests:** Run `npm test` after any changes to `lib/filters.ts` or `lib/taxonomy.ts`. Do not push if tests fail.
 ---
 ## Ace's Access
 Ace (Jared's Telegram agent) reads this file from:
