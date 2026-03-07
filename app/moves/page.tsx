@@ -69,7 +69,7 @@ export default async function MovesPage({
   const days = parseInt(params.days || '90', 10)
 
   const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
   )
 

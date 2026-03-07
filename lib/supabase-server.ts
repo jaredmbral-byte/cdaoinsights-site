@@ -5,7 +5,7 @@ import { createClient } from '@supabase/supabase-js'
 // NEVER expose the service role key to the client
 export function createServerClient() {
   return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
   )
 }
