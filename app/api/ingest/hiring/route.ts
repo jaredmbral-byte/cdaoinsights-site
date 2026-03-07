@@ -163,7 +163,6 @@ async function ingestFromAdzuna(): Promise<ScrapedJob[]> {
         full_description: '1',
         max_days_old: '14',
         sort_by: 'date',
-        content_type: 'application/json',
       })
 
       const response = await fetch(
