@@ -3,11 +3,17 @@
 
 // Articles containing these terms are almost certainly NOT about data/AI executives
 export const NEGATIVE_KEYWORDS = [
-  // MMA/UFC — "CAIO" is a common Brazilian first name in combat sports
+  // MMA/UFC — "CAIO" is a common Brazilian/Portuguese first name in combat sports
   'mma', 'ufc', 'fighter', 'knockout', 'bout', 'octagon', 'bellator',
   'martial arts', 'wrestling', 'boxing', 'flyweight', 'middleweight',
   'heavyweight', 'bantamweight', 'featherweight', 'welterweight',
   'submission', 'tapout', 'title fight', 'cage', 'combat sport',
+
+  // Soccer/Football — "Caio" and "Rodrigo Caio" are common player names
+  'soccer', 'footballer', 'defender', 'midfielder', 'striker',
+  'goalkeeper', 'flamengo', 'serie a', 'la liga', 'premier league',
+  'champions league', 'transfer window', 'technical committee',
+  'matchday', 'kickoff', 'penalty', 'red card', 'yellow card',
 
   // Collateralized Debt Obligations (financial CDO ≠ Chief Data Officer)
   'collateralized debt', 'cdo tranche', 'structured credit',
@@ -27,7 +33,9 @@ export const NEGATIVE_DOMAINS = [
   'mmafighting.com', 'mmajunkie.com', 'sherdog.com',
   'tapology.com', 'ufc.com', 'bloodyelbow.com',
   'bjpenn.com', 'combatpress.com', 'lowkickmma.com',
-  'espn.com/mma',
+  'espn.com/mma', 'espn.com/soccer', 'espn.com/football',
+  'goal.com', 'transfermarkt.com', 'soccerway.com',
+  'footballtransfers.com', 'fotmob.com',
 ]
 
 export function containsNegativeKeyword(text: string): boolean {

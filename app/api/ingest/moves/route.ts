@@ -39,6 +39,9 @@ const PR_NEWSWIRE_FEEDS = [
 const ALL_FEEDS = [...GOOGLE_NEWS_FEEDS, ...PR_NEWSWIRE_FEEDS]
 
 // Keywords that indicate an executive move article (C-Suite only)
+// NOTE: Acronyms are NOT included here because MOVE_KEYWORDS uses .toLowerCase()
+// comparison which would match names like "Caio". Role matching is handled
+// separately by ROLE_PATTERNS which uses case-sensitive regex for acronyms.
 const MOVE_KEYWORDS = [
   'appointed', 'appoints', 'appointment',
   'named', 'names',
@@ -50,19 +53,20 @@ const MOVE_KEYWORDS = [
   'succeeds', 'successor',
   'chief data officer', 'chief ai officer',
   'chief analytics officer', 'chief data and ai officer',
-  'cdo', 'caio', 'cdaio', 'cdao',
 ]
 
 // Title patterns — C-Suite only (VP/Director/Head of are handled by hiring signals)
+// NOTE: Acronyms (CDO, CAIO, CDAO, CDAIO) are case-sensitive to avoid
+// matching proper names like "Caio" (common Brazilian/Portuguese first name)
 const ROLE_PATTERNS = [
   /chief\s+data\s+(?:and|&)\s+(?:ai|analytics)\s+officer/i,
   /chief\s+data\s+officer/i,
   /chief\s+ai\s+officer/i,
   /chief\s+analytics\s+officer/i,
-  /\bcdao\b/i,
-  /\bcdaio\b/i,
-  /\bcaio\b/i,
-  /\bcdo\b/i,
+  /\bCDAO\b/,
+  /\bCDAIO\b/,
+  /\bCAIO\b/,
+  /\bCDO\b/,
 ]
 
 // Classify the type of executive move
