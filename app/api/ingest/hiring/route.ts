@@ -160,7 +160,6 @@ async function ingestFromAdzuna(): Promise<ScrapedJob[]> {
         app_key: appKey,
         title_only: query,
         results_per_page: '50',
-        full_description: '1',
         max_days_old: '14',
         sort_by: 'date',
       })
