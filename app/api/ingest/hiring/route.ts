@@ -22,7 +22,10 @@ interface ScrapedJob {
 }
 
 // ─── Search queries for each API ─────────────────────────────────────────────
+// Tier 1: Senior roles (shown on site)
+// Tier 2: Engineer roles (tech stack signals only)
 const ADZUNA_TITLE_QUERIES = [
+  // Tier 1: Senior executive roles (featured)
   'Chief Data Officer',
   'Chief AI Officer',
   'Chief Analytics Officer',
@@ -35,6 +38,17 @@ const ADZUNA_TITLE_QUERIES = [
   'Director Data Governance',
   'Director of Data',
   'Director of AI',
+  // Tier 2: Signal-only engineer roles (not featured)
+  'Data Engineer',
+  'Senior Data Engineer',
+  'ML Engineer',
+  'Machine Learning Engineer',
+  'AI Engineer',
+  'Data Architect',
+  'Analytics Engineer',
+  'MLOps Engineer',
+  'Data Platform Engineer',
+  'AI Infrastructure Engineer',
 ]
 
 const USAJOBS_QUERIES = [
@@ -93,6 +107,37 @@ function classifySeniority(title: string): string {
   if (t.includes('vp') || t.includes('vice president')) return 'VP'
   if (t.includes('head of') || t.includes('director')) return 'Director+'
   return 'Senior'
+}
+
+// Determine if a title should be featured (shown on site) or used only for signals
+function isFeaturedTitle(title: string): boolean {
+  const t = title.toLowerCase()
+
+  // Tier 2: Non-featured roles (tech stack signals only)
+  const SIGNAL_ONLY_PATTERNS = [
+    'data engineer',
+    'ml engineer',
+    'machine learning engineer',
+    'ai engineer',
+    'data architect',
+    'analytics engineer',
+    'mlops engineer',
+    'data platform engineer',
+    'ai infrastructure engineer',
+  ]
+
+  for (const pattern of SIGNAL_ONLY_PATTERNS) {
+    if (t.includes(pattern)) {
+      // But if it's also a director/vp/chief, it's featured
+      if (t.includes('director') || t.includes('vp') || t.includes('head of') || t.includes('chief')) {
+        return true
+      }
+      return false
+    }
+  }
+
+  // All other roles are featured (includes all senior roles)
+  return true
 }
 
 function classifyIndustry(text: string): string | null {
@@ -402,6 +447,7 @@ export async function POST(request: Request) {
       posted_at: job.date || new Date().toISOString(),
       source_name: job.source,
       tech_stack: techStack.length > 0 ? techStack : undefined,
+      is_featured: isFeaturedTitle(job.title),
     })
 
     if (!error) {

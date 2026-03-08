@@ -94,10 +94,11 @@ export default async function Home() {
       .select('id, headline, person_name, company_name, move_type, source_url, published_at')
       .order('published_at', { ascending: false })
       .limit(5),
-    // Hiring signals count (90d)
+    // Hiring signals count (90d) — featured only
     supabase
       .from('hiring_signals')
       .select('id', { count: 'exact', head: true })
+      .eq('is_featured', true)
       .gte('posted_at', cutoff90.toISOString()),
     // Executive moves count (90d)
     supabase
@@ -115,15 +116,17 @@ export default async function Home() {
       .select('p50')
       .eq('role_title', 'Chief Data Officer')
       .limit(1),
-    // Seniority breakdown (all hiring signals from last 90d)
+    // Seniority breakdown (featured roles only from last 90d)
     supabase
       .from('hiring_signals')
       .select('seniority')
+      .eq('is_featured', true)
       .gte('posted_at', cutoff90.toISOString()),
-    // Industry breakdown (all hiring signals from last 90d)
+    // Industry breakdown (featured roles only from last 90d)
     supabase
       .from('hiring_signals')
       .select('industry')
+      .eq('is_featured', true)
       .gte('posted_at', cutoff90.toISOString())
       .not('industry', 'is', null),
     // Move type summary (appointed vs departed, last 90d)
@@ -136,12 +139,13 @@ export default async function Home() {
       .from('market_articles')
       .select('topics')
       .gte('published_at', cutoff30.toISOString()),
-    // Top hiring companies (90d)
+    // Top hiring companies (90d) — featured roles only
     supabase
       .from('hiring_signals')
       .select('company_name')
+      .eq('is_featured', true)
       .gte('posted_at', cutoff90.toISOString()),
-    // Tech stack data for skill demand (90d)
+    // Tech stack data for skill demand (90d) — ALL roles (including Tier 2 engineers)
     supabase
       .from('hiring_signals')
       .select('job_title, tech_stack')
