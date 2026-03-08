@@ -194,6 +194,39 @@ function isRelevantTitle(title: string, context: string = ''): boolean {
   return false
 }
 
+// Infer commonly-associated tech from role title when descriptions are truncated
+function inferTechFromRole(title: string): string[] {
+  const t = title.toLowerCase()
+  const tech: string[] = []
+
+  // Data engineers almost universally require SQL + Python
+  if (t.includes('data engineer') || t.includes('analytics engineer')) {
+    tech.push('SQL', 'Python')
+    if (t.includes('senior') || t.includes('lead') || t.includes('staff')) {
+      tech.push('Spark')
+    }
+  }
+  // ML/AI engineers
+  if (t.includes('ml engineer') || t.includes('machine learning engineer') || t.includes('ai engineer')) {
+    tech.push('Python')
+    if (!tech.includes('SQL')) tech.push('SQL')
+  }
+  // MLOps
+  if (t.includes('mlops')) {
+    tech.push('Python', 'Kubernetes', 'Docker')
+  }
+  // Data architect
+  if (t.includes('data architect')) {
+    tech.push('SQL')
+  }
+  // Data platform
+  if (t.includes('data platform')) {
+    tech.push('SQL', 'Python')
+  }
+
+  return tech
+}
+
 // ─── Source 1: Adzuna API (primary) ────────────────────────────────────────────
 // Free tier: 250 requests/day. title_only parameter prevents false positives.
 // Set ADZUNA_APP_ID and ADZUNA_APP_KEY in env vars.
@@ -422,9 +455,14 @@ export async function POST(request: Request) {
   // Insert into Supabase
   let inserted = 0
   let skipped = 0
+  let skippedInvalid = 0
+  let skippedDuplicate = 0
+  let insertErrors = 0
+  const sampleInserted: string[] = []
 
   for (const job of uniqueJobs) {
     if (!job.title || job.company === 'Unknown' || job.company === 'See Article') {
+      skippedInvalid++
       skipped++
       continue
     }
@@ -438,12 +476,16 @@ export async function POST(request: Request) {
       .limit(1)
 
     if (existing && existing.length > 0) {
+      skippedDuplicate++
       skipped++
       continue
     }
 
-    // Extract tech stack from description if available
-    const techStack = job.description ? extractTechStack(job.description) : []
+    // Extract tech stack from description + title, with role-based defaults
+    const descTech = job.description ? extractTechStack(job.description) : []
+    const titleTech = extractTechStack(job.title)
+    const inferredTech = inferTechFromRole(job.title)
+    const techStack = [...new Set([...descTech, ...titleTech, ...inferredTech])].sort()
 
     const { error } = await supabaseAdmin.from('hiring_signals').insert({
       job_title: job.title.trim(),
@@ -461,7 +503,11 @@ export async function POST(request: Request) {
 
     if (!error) {
       inserted++
+      if (sampleInserted.length < 5) {
+        sampleInserted.push(`${job.title} @ ${job.company} [featured=${isFeaturedTitle(job.title)}, tech=${techStack.join(',')}]`)
+      }
     } else {
+      insertErrors++
       console.error(`Insert failed for ${job.title} at ${job.company}:`, error.message)
     }
   }
@@ -472,6 +518,10 @@ export async function POST(request: Request) {
     unique: uniqueJobs.length,
     inserted,
     skipped,
+    skippedInvalid,
+    skippedDuplicate,
+    insertErrors,
+    sampleInserted,
     timestamp: new Date().toISOString(),
   })
 }
