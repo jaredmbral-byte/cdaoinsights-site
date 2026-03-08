@@ -262,7 +262,7 @@ export default async function Home() {
             Command Center for Enterprise Data &amp; AI Leadership
           </h1>
           <p className="text-sm text-[#888888] leading-relaxed max-w-xl">
-            Real-time intelligence for CDOs, CAIOs, and senior data leaders. Track executive moves, hiring trends, and market signals — all in one dashboard.
+            Real-time intelligence for CDOs, CAIOs, and senior data leaders. Track executive moves, hiring trends, and market signals. All in one place.
           </p>
         </section>
 
