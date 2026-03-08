@@ -239,45 +239,55 @@ async function ingestFromAdzuna(): Promise<ScrapedJob[]> {
   }
 
   const results: ScrapedJob[] = []
+  const RESULTS_PER_PAGE = 50
+  const MAX_PAGES = 5 // up to 250 results per query, 250 req/day free tier
 
   for (const query of ADZUNA_TITLE_QUERIES) {
     try {
-      const params = new URLSearchParams({
-        app_id: appId,
-        app_key: appKey,
-        title_only: query,
-        results_per_page: '50',
-        max_days_old: '14',
-        sort_by: 'date',
-      })
+      let page = 1
+      let fetchedOnPage = RESULTS_PER_PAGE
 
-      const response = await fetch(
-        `https://api.adzuna.com/v1/api/jobs/us/search/1?${params}`,
-        { headers: { 'User-Agent': 'CDAO-Insights-Bot/1.0' } },
-      )
-
-      if (!response.ok) {
-        console.error(`Adzuna failed for "${query}": HTTP ${response.status}`)
-        continue
-      }
-
-      const data = await response.json()
-      const jobResults = data.results || []
-
-      for (const job of jobResults) {
-        if (!job.title || !job.company?.display_name) continue
-        if (!isRelevantTitle(job.title, job.description || '')) continue
-        if (!passesNegativeFilter(job.title, job.description || '', job.redirect_url || '')) continue
-
-        results.push({
-          title: job.title,
-          company: job.company.display_name,
-          location: job.location?.display_name || null,
-          url: job.redirect_url || null,
-          date: job.created ? new Date(job.created).toISOString() : undefined,
-          description: job.description || undefined,
-          source: 'Adzuna',
+      while (page <= MAX_PAGES && fetchedOnPage === RESULTS_PER_PAGE) {
+        const params = new URLSearchParams({
+          app_id: appId,
+          app_key: appKey,
+          title_only: query,
+          results_per_page: String(RESULTS_PER_PAGE),
+          max_days_old: '30',
+          sort_by: 'date',
         })
+
+        const response = await fetch(
+          `https://api.adzuna.com/v1/api/jobs/us/search/${page}?${params}`,
+          { headers: { 'User-Agent': 'CDAO-Insights-Bot/1.0' } },
+        )
+
+        if (!response.ok) {
+          console.error(`Adzuna failed for "${query}" page ${page}: HTTP ${response.status}`)
+          break
+        }
+
+        const data = await response.json()
+        const jobResults = data.results || []
+        fetchedOnPage = jobResults.length
+
+        for (const job of jobResults) {
+          if (!job.title || !job.company?.display_name) continue
+          if (!isRelevantTitle(job.title, job.description || '')) continue
+          if (!passesNegativeFilter(job.title, job.description || '', job.redirect_url || '')) continue
+
+          results.push({
+            title: job.title,
+            company: job.company.display_name,
+            location: job.location?.display_name || null,
+            url: job.redirect_url || null,
+            date: job.created ? new Date(job.created).toISOString() : undefined,
+            description: job.description || undefined,
+            source: 'Adzuna',
+          })
+        }
+
+        page++
       }
     } catch (err) {
       console.error(`Adzuna search failed for "${query}":`, err)
