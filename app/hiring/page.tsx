@@ -23,37 +23,21 @@ export const metadata: Metadata = {
 // Revalidate every 30 minutes
 export const revalidate = 1800
 
-const INDUSTRIES = [
-  'All Industries',
-  'Financial Services',
-  'Healthcare',
-  'Technology',
-  'Retail',
-  'Manufacturing',
-  'Energy',
-  'Insurance',
-  'Media & Telecom',
-  'Government',
-]
-
 const TIME_WINDOWS = [
   { label: '30 days', value: '30' },
   { label: '60 days', value: '60' },
   { label: '90 days', value: '90' },
 ]
 
-async function getHiringSignals(industry?: string, days?: number): Promise<HiringSignal[]> {
+async function getHiringSignals(days?: number): Promise<HiringSignal[]> {
   const supabase = createServerClient()
 
   let query = supabase
     .from('hiring_signals')
     .select('*')
+    .eq('is_featured', true) // Only show featured roles (senior exec positions)
     .order('posted_at', { ascending: false })
     .limit(100)
-
-  if (industry && industry !== 'All Industries') {
-    query = query.eq('industry', industry)
-  }
 
   if (days) {
     const cutoff = new Date()
@@ -68,14 +52,13 @@ async function getHiringSignals(industry?: string, days?: number): Promise<Hirin
 export default async function HiringPage({
   searchParams,
 }: {
-  searchParams: Promise<{ industry?: string; days?: string; q?: string }>
+  searchParams: Promise<{ days?: string; q?: string }>
 }) {
   const params = await searchParams
-  const industry = params.industry
   const days = params.days ? parseInt(params.days) : 90
   const search = params.q
 
-  const signals = await getHiringSignals(industry, days)
+  const signals = await getHiringSignals(days)
 
   const filtered = search
     ? signals.filter(
@@ -99,31 +82,12 @@ export default async function HiringPage({
         at large enterprises. Updated every 6 hours.
       </p>
 
-      {/* Filters */}
-      <div className="flex flex-wrap gap-3 mb-8">
-        <div className="flex flex-wrap gap-2">
-          {INDUSTRIES.map((ind) => (
-            <a
-              key={ind}
-              href={`/hiring?industry=${encodeURIComponent(ind)}&days=${days}${search ? `&q=${search}` : ''}`}
-              className={`font-mono text-xs uppercase tracking-[1px] px-3 py-1.5 rounded-sm border transition-colors ${
-                (industry === ind || (!industry && ind === 'All Industries'))
-                  ? 'bg-[#E8E8E8] text-[#0A0A0A] border-[#E8E8E8]'
-                  : 'bg-transparent text-[#888888] border-[#1E1E1E] hover:border-[#555555] hover:text-[#E8E8E8]'
-              }`}
-            >
-              {ind}
-            </a>
-          ))}
-        </div>
-      </div>
-
       {/* Time window */}
       <div className="flex gap-2 mb-10">
         {TIME_WINDOWS.map((tw) => (
           <a
             key={tw.value}
-            href={`/hiring?days=${tw.value}${industry ? `&industry=${encodeURIComponent(industry)}` : ''}${search ? `&q=${search}` : ''}`}
+            href={`/hiring?days=${tw.value}${search ? `&q=${search}` : ''}`}
             className={`font-mono text-xs uppercase tracking-[1px] px-3 py-1.5 border-b-2 transition-colors ${
               String(days) === tw.value
                 ? 'border-[#00FF94] text-[#E8E8E8]'
@@ -151,9 +115,6 @@ export default async function HiringPage({
                 </th>
                 <th className="text-left font-mono text-xs font-medium uppercase tracking-[1px] text-[#555555] px-4 py-3">
                   Company
-                </th>
-                <th className="text-left font-mono text-xs font-medium uppercase tracking-[1px] text-[#555555] px-4 py-3 hidden sm:table-cell">
-                  Industry
                 </th>
                 <th className="text-left font-mono text-xs font-medium uppercase tracking-[1px] text-[#555555] px-4 py-3 hidden md:table-cell">
                   Location
@@ -187,7 +148,6 @@ export default async function HiringPage({
                     )}
                   </td>
                   <td className="px-4 py-3 text-[#888888]">{signal.company_name}</td>
-                  <td className="px-4 py-3 text-[#555555] hidden sm:table-cell">{signal.industry || '—'}</td>
                   <td className="px-4 py-3 text-[#555555] hidden md:table-cell">{signal.location || '—'}</td>
                   <td className="px-4 py-3 hidden md:table-cell">
                     {signal.seniority && (

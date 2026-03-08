@@ -82,7 +82,6 @@ export default async function Home() {
     articlesCountResult,
     compResult,
     hiringSeniorityResult,
-    hiringIndustryResult,
     movesTypeResult,
     marketTopicsResult,
     topCompaniesResult,
@@ -94,10 +93,11 @@ export default async function Home() {
       .select('id, headline, person_name, company_name, move_type, source_url, published_at')
       .order('published_at', { ascending: false })
       .limit(5),
-    // Hiring signals count (90d)
+    // Hiring signals count (90d) — featured only
     supabase
       .from('hiring_signals')
       .select('id', { count: 'exact', head: true })
+      .eq('is_featured', true)
       .gte('posted_at', cutoff90.toISOString()),
     // Executive moves count (90d)
     supabase
@@ -115,17 +115,12 @@ export default async function Home() {
       .select('p50')
       .eq('role_title', 'Chief Data Officer')
       .limit(1),
-    // Seniority breakdown (all hiring signals from last 90d)
+    // Seniority breakdown (featured roles only from last 90d)
     supabase
       .from('hiring_signals')
       .select('seniority')
+      .eq('is_featured', true)
       .gte('posted_at', cutoff90.toISOString()),
-    // Industry breakdown (all hiring signals from last 90d)
-    supabase
-      .from('hiring_signals')
-      .select('industry')
-      .gte('posted_at', cutoff90.toISOString())
-      .not('industry', 'is', null),
     // Move type summary (appointed vs departed, last 90d)
     supabase
       .from('executive_moves')
@@ -136,12 +131,13 @@ export default async function Home() {
       .from('market_articles')
       .select('topics')
       .gte('published_at', cutoff30.toISOString()),
-    // Top hiring companies (90d)
+    // Top hiring companies (90d) — featured roles only
     supabase
       .from('hiring_signals')
       .select('company_name')
+      .eq('is_featured', true)
       .gte('posted_at', cutoff90.toISOString()),
-    // Tech stack data for skill demand (90d)
+    // Tech stack data for skill demand (90d) — ALL roles (including Tier 2 engineers)
     supabase
       .from('hiring_signals')
       .select('job_title, tech_stack')
@@ -168,16 +164,6 @@ export default async function Home() {
       seniorityCounts.Other = (seniorityCounts.Other || 0) + 1
     }
   }
-
-  // Industry breakdown (top 5)
-  const industryRows = (hiringIndustryResult.data || []) as Array<{ industry: string }>
-  const industryCounts: Record<string, number> = {}
-  for (const row of industryRows) {
-    industryCounts[row.industry] = (industryCounts[row.industry] || 0) + 1
-  }
-  const topIndustries = Object.entries(industryCounts)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 5)
 
   // Move type summary (appointed vs departed)
   const moveTypeRows = (movesTypeResult.data || []) as Array<{ move_type: string }>
@@ -322,26 +308,13 @@ export default async function Home() {
               </div>
 
               {/* Seniority breakdown */}
-              <div className="mb-4">
+              <div>
                 <h3 className="font-mono text-[10px] uppercase tracking-[1px] text-[#555555] mb-2">By Seniority</h3>
                 {['C-Suite', 'SVP', 'VP', 'Director+', 'Other'].map((level) => (
                   <a key={level} href="/hiring" className="flex items-center justify-between py-1.5 border-b border-[#1E1E1E] last:border-0 hover:bg-[#111111] transition-colors">
                     <span className="text-xs text-[#888888]">{level}</span>
                     <span className="font-mono text-sm font-semibold text-[#E8E8E8]">
                       {seniorityCounts[level] || 0}
-                    </span>
-                  </a>
-                ))}
-              </div>
-
-              {/* Industry breakdown */}
-              <div>
-                <h3 className="font-mono text-[10px] uppercase tracking-[1px] text-[#555555] mb-2">Top Industries</h3>
-                {topIndustries.map(([industry, count]) => (
-                  <a key={industry} href="/hiring" className="flex items-center justify-between py-1.5 border-b border-[#1E1E1E] last:border-0 hover:bg-[#111111] transition-colors">
-                    <span className="text-xs text-[#888888] truncate">{industry}</span>
-                    <span className="font-mono text-sm font-semibold text-[#E8E8E8]">
-                      {count}
                     </span>
                   </a>
                 ))}
