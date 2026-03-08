@@ -97,7 +97,6 @@ export default async function Home() {
     supabase
       .from('hiring_signals')
       .select('id', { count: 'exact', head: true })
-      .eq('is_featured', true)
       .gte('posted_at', cutoff90.toISOString()),
     // Executive moves count (90d)
     supabase
@@ -119,7 +118,6 @@ export default async function Home() {
     supabase
       .from('hiring_signals')
       .select('seniority')
-      .eq('is_featured', true)
       .gte('posted_at', cutoff90.toISOString()),
     // Move type summary (appointed vs departed, last 90d)
     supabase
@@ -135,7 +133,6 @@ export default async function Home() {
     supabase
       .from('hiring_signals')
       .select('company_name')
-      .eq('is_featured', true)
       .gte('posted_at', cutoff90.toISOString()),
     // Tech stack data for skill demand (90d) — ALL roles (including Tier 2 engineers)
     supabase

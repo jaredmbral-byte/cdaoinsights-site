@@ -35,7 +35,6 @@ async function getHiringSignals(days?: number): Promise<HiringSignal[]> {
   let query = supabase
     .from('hiring_signals')
     .select('*')
-    .eq('is_featured', true) // Only show featured roles (senior exec positions)
     .order('posted_at', { ascending: false })
     .limit(100)
 
