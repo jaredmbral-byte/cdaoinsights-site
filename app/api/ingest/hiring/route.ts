@@ -160,6 +160,7 @@ function classifyIndustry(text: string): string | null {
 function isRelevantTitle(title: string, context: string = ''): boolean {
   const t = title.toLowerCase()
 
+  // Tier 1: Executive roles (featured on site)
   const TARGET_PHRASES = [
     'chief data officer', 'chief ai officer', 'chief analytics officer',
     'chief data and ai officer', 'chief data and analytics officer',
@@ -181,6 +182,14 @@ function isRelevantTitle(title: string, context: string = ''): boolean {
   if (t.includes('cdo')) {
     return isCdoDataRelated(title, context)
   }
+
+  // Tier 2: Engineer/IC roles (tech stack signals only, not featured)
+  const TIER2_PATTERNS = [
+    'data engineer', 'ml engineer', 'machine learning engineer',
+    'ai engineer', 'data architect', 'analytics engineer',
+    'mlops engineer', 'data platform engineer', 'ai infrastructure engineer',
+  ]
+  if (TIER2_PATTERNS.some(p => t.includes(p))) return true
 
   return false
 }
