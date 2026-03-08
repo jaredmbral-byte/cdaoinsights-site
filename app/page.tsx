@@ -58,6 +58,8 @@ const TOPIC_COLORS: Record<string, string> = {
   'agentic-ai': 'border-indigo-500/30 text-indigo-400',
   infrastructure: 'border-cyan-500/30 text-cyan-400',
   layoffs: 'border-red-500/30 text-red-400',
+  'ai-deployment': 'border-violet-500/30 text-violet-400',
+  'microsoft-fabric': 'border-blue-400/30 text-blue-300',
   general: 'border-[#333] text-[#888888]',
 }
 

@@ -35,6 +35,8 @@ const TOPIC_META: Record<string, { label: string; color: string }> = {
   'agentic-ai': { label: 'Agentic AI', color: 'border-indigo-500/30 text-indigo-400' },
   infrastructure: { label: 'Infrastructure', color: 'border-cyan-500/30 text-cyan-400' },
   layoffs: { label: 'Layoffs', color: 'border-red-500/30 text-red-400' },
+  'ai-deployment': { label: 'AI Deployment', color: 'border-violet-500/30 text-violet-400' },
+  'microsoft-fabric': { label: 'Microsoft Fabric', color: 'border-blue-400/30 text-blue-300' },
   general: { label: 'General', color: 'border-[#333] text-[#888888]' },
 }
 

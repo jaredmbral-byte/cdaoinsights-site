@@ -53,6 +53,19 @@ const RSS_FEEDS = [
   { url: 'https://news.google.com/rss/search?q=%22data+quality%22+enterprise+when:7d&hl=en-US&gl=US&ceid=US:en', name: 'Google News' },
   { url: 'https://news.google.com/rss/search?q=CDO+CAIO+%22data+leader%22+when:7d&hl=en-US&gl=US&ceid=US:en', name: 'Google News' },
 
+  // Agentic AI — dedicated feeds (Gartner's #1 theme for 2026)
+  { url: 'https://news.google.com/rss/search?q=%22agentic+AI%22+enterprise+data+when:7d&hl=en-US&gl=US&ceid=US:en', name: 'Google News' },
+  { url: 'https://news.google.com/rss/search?q=%22AI+agents%22+enterprise+production+when:7d&hl=en-US&gl=US&ceid=US:en', name: 'Google News' },
+  { url: 'https://news.google.com/rss/search?q=%22multi-agent%22+OR+%22multiagent%22+enterprise+AI+when:7d&hl=en-US&gl=US&ceid=US:en', name: 'Google News' },
+  { url: 'https://news.google.com/rss/search?q=%22AI+agent%22+governance+data+when:7d&hl=en-US&gl=US&ceid=US:en', name: 'Google News' },
+
+  // Pilot-to-production — CDO pain point #1
+  { url: 'https://news.google.com/rss/search?q=%22AI+pilot%22+production+enterprise+when:14d&hl=en-US&gl=US&ceid=US:en', name: 'Google News' },
+  { url: 'https://news.google.com/rss/search?q=%22scaling+AI%22+enterprise+data+when:7d&hl=en-US&gl=US&ceid=US:en', name: 'Google News' },
+
+  // Microsoft Fabric — eating BI, high CDO relevance
+  { url: 'https://news.google.com/rss/search?q=%22Microsoft+Fabric%22+enterprise+data+when:14d&hl=en-US&gl=US&ceid=US:en', name: 'Google News' },
+
   // Research & thought leadership
   { url: 'https://sloanreview.mit.edu/feed/', name: 'MIT Sloan Review' },
   { url: 'https://datamanagementreview.com/feed/', name: 'Data Management Review' },
@@ -83,10 +96,14 @@ function classifyTopics(title: string, summary: string): string[] {
     topics.push('security')
   if (text.includes('genai') || text.includes('generative') || text.includes('llm') || text.includes('chatgpt'))
     topics.push('genai')
-  if (text.includes('agentic') || text.includes('agent'))
+  if (text.includes('agentic') || text.includes('ai agent') || text.includes('ai agents') || text.includes('multi-agent') || text.includes('multiagent') || text.includes('autonomous agent'))
     topics.push('agentic-ai')
   if (text.includes('layoff') || text.includes('laid off') || text.includes('workforce reduction') || text.includes('job cut') || text.includes('reductions in force') || text.includes('rif '))
     topics.push('layoffs')
+  if (text.includes('pilot to production') || text.includes('pilot-to-production') || text.includes('poc to production') || text.includes('proof of concept') || text.includes('scaling ai') || text.includes('ai at scale') || text.includes('ai in production') || text.includes('ai deployment'))
+    topics.push('ai-deployment')
+  if (text.includes('microsoft fabric') || text.includes('ms fabric') || text.includes('power bi') || text.includes('powerbi'))
+    topics.push('microsoft-fabric')
 
   return topics.length > 0 ? topics : ['general']
 }
@@ -109,7 +126,9 @@ function scoreRelevance(title: string, description: string): number {
   if (t.includes('data quality')) score += 0.15
   if (t.includes('data mesh') || t.includes('data fabric')) score += 0.15
   if (t.includes('mdm') || t.includes('master data')) score += 0.15
-  if (t.includes('agentic ai') || t.includes('ai agent')) score += 0.1
+  if (t.includes('agentic ai') || t.includes('ai agent') || t.includes('ai agents') || t.includes('multi-agent') || t.includes('autonomous agent')) score += 0.25
+  if (t.includes('pilot to production') || t.includes('scaling ai') || t.includes('ai in production')) score += 0.2
+  if (t.includes('microsoft fabric') || t.includes('power bi')) score += 0.15
 
   // Slight boost: industry-specific data/AI
   if ((t.includes('data') || t.includes('analytics')) && t.includes('officer')) score += 0.15
