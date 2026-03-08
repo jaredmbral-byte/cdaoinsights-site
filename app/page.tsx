@@ -82,7 +82,6 @@ export default async function Home() {
     articlesCountResult,
     compResult,
     hiringSeniorityResult,
-    hiringIndustryResult,
     movesTypeResult,
     marketTopicsResult,
     topCompaniesResult,
@@ -122,13 +121,6 @@ export default async function Home() {
       .select('seniority')
       .eq('is_featured', true)
       .gte('posted_at', cutoff90.toISOString()),
-    // Industry breakdown (featured roles only from last 90d)
-    supabase
-      .from('hiring_signals')
-      .select('industry')
-      .eq('is_featured', true)
-      .gte('posted_at', cutoff90.toISOString())
-      .not('industry', 'is', null),
     // Move type summary (appointed vs departed, last 90d)
     supabase
       .from('executive_moves')
@@ -172,16 +164,6 @@ export default async function Home() {
       seniorityCounts.Other = (seniorityCounts.Other || 0) + 1
     }
   }
-
-  // Industry breakdown (top 5)
-  const industryRows = (hiringIndustryResult.data || []) as Array<{ industry: string }>
-  const industryCounts: Record<string, number> = {}
-  for (const row of industryRows) {
-    industryCounts[row.industry] = (industryCounts[row.industry] || 0) + 1
-  }
-  const topIndustries = Object.entries(industryCounts)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 5)
 
   // Move type summary (appointed vs departed)
   const moveTypeRows = (movesTypeResult.data || []) as Array<{ move_type: string }>
@@ -326,26 +308,13 @@ export default async function Home() {
               </div>
 
               {/* Seniority breakdown */}
-              <div className="mb-4">
+              <div>
                 <h3 className="font-mono text-[10px] uppercase tracking-[1px] text-[#555555] mb-2">By Seniority</h3>
                 {['C-Suite', 'SVP', 'VP', 'Director+', 'Other'].map((level) => (
                   <a key={level} href="/hiring" className="flex items-center justify-between py-1.5 border-b border-[#1E1E1E] last:border-0 hover:bg-[#111111] transition-colors">
                     <span className="text-xs text-[#888888]">{level}</span>
                     <span className="font-mono text-sm font-semibold text-[#E8E8E8]">
                       {seniorityCounts[level] || 0}
-                    </span>
-                  </a>
-                ))}
-              </div>
-
-              {/* Industry breakdown */}
-              <div>
-                <h3 className="font-mono text-[10px] uppercase tracking-[1px] text-[#555555] mb-2">Top Industries</h3>
-                {topIndustries.map(([industry, count]) => (
-                  <a key={industry} href="/hiring" className="flex items-center justify-between py-1.5 border-b border-[#1E1E1E] last:border-0 hover:bg-[#111111] transition-colors">
-                    <span className="text-xs text-[#888888] truncate">{industry}</span>
-                    <span className="font-mono text-sm font-semibold text-[#E8E8E8]">
-                      {count}
                     </span>
                   </a>
                 ))}
