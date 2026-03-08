@@ -34,6 +34,7 @@ const TOPIC_META: Record<string, { label: string; color: string }> = {
   security: { label: 'Security', color: 'border-red-500/30 text-red-400' },
   'agentic-ai': { label: 'Agentic AI', color: 'border-indigo-500/30 text-indigo-400' },
   infrastructure: { label: 'Infrastructure', color: 'border-cyan-500/30 text-cyan-400' },
+  layoffs: { label: 'Layoffs', color: 'border-red-500/30 text-red-400' },
   general: { label: 'General', color: 'border-[#333] text-[#888888]' },
 }
 
@@ -74,7 +75,7 @@ export default async function IntelligencePage({
         .select('id, title, source_name, source_url, published_at, topics, relevance')
         .gte('relevance', 0.5)
         .order('published_at', { ascending: false })
-        .limit(30)
+        .limit(100)
       if (activeTopic) {
         q = q.contains('topics', [activeTopic])
       }

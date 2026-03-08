@@ -14,6 +14,16 @@ const RSS_FEEDS = [
   { url: 'https://news.google.com/rss/search?q=CDO+%22data+strategy%22+enterprise+when:7d&hl=en-US&gl=US&ceid=US:en', name: 'Google News' },
   { url: 'https://news.google.com/rss/search?q=%22chief+data+officer%22+2026+when:7d&hl=en-US&gl=US&ceid=US:en', name: 'Google News' },
 
+  // Google News — layoffs & workforce signals (high value for CDOs tracking market)
+  { url: 'https://news.google.com/rss/search?q=data+team+layoffs+enterprise+when:14d&hl=en-US&gl=US&ceid=US:en', name: 'Google News' },
+  { url: 'https://news.google.com/rss/search?q=AI+team+layoffs+tech+when:14d&hl=en-US&gl=US&ceid=US:en', name: 'Google News' },
+  { url: 'https://news.google.com/rss/search?q=analytics+team+cuts+workforce+when:14d&hl=en-US&gl=US&ceid=US:en', name: 'Google News' },
+  { url: 'https://news.google.com/rss/search?q=%22data+engineering%22+layoffs+when:14d&hl=en-US&gl=US&ceid=US:en', name: 'Google News' },
+
+  // Google News — vendor funding rounds (surfaced via news, no paid API needed)
+  { url: 'https://news.google.com/rss/search?q=data+AI+startup+raises+funding+million+when:14d&hl=en-US&gl=US&ceid=US:en', name: 'Google News' },
+  { url: 'https://news.google.com/rss/search?q=Snowflake+OR+Databricks+OR+Alation+OR+Collibra+funding+acquisition+when:14d&hl=en-US&gl=US&ceid=US:en', name: 'Google News' },
+
   // Industry-specific feeds — high signal for enterprise data/AI leaders
   { url: 'https://tdwi.org/rss-feeds/all-articles.aspx', name: 'TDWI' },
   { url: 'https://www.datasciencecentral.com/feed/', name: 'Data Science Central' },
@@ -75,6 +85,8 @@ function classifyTopics(title: string, summary: string): string[] {
     topics.push('genai')
   if (text.includes('agentic') || text.includes('agent'))
     topics.push('agentic-ai')
+  if (text.includes('layoff') || text.includes('laid off') || text.includes('workforce reduction') || text.includes('job cut') || text.includes('reductions in force') || text.includes('rif '))
+    topics.push('layoffs')
 
   return topics.length > 0 ? topics : ['general']
 }

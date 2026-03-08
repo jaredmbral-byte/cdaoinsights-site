@@ -57,6 +57,7 @@ const TOPIC_COLORS: Record<string, string> = {
   security: 'border-red-500/30 text-red-400',
   'agentic-ai': 'border-indigo-500/30 text-indigo-400',
   infrastructure: 'border-cyan-500/30 text-cyan-400',
+  layoffs: 'border-red-500/30 text-red-400',
   general: 'border-[#333] text-[#888888]',
 }
 
