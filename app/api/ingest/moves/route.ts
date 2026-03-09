@@ -36,7 +36,20 @@ const PR_NEWSWIRE_FEEDS = [
   },
 ]
 
-const ALL_FEEDS = [...GOOGLE_NEWS_FEEDS, ...PR_NEWSWIRE_FEEDS]
+// Google Alerts RSS — add your alert URLs to GOOGLE_ALERTS_RSS_URLS env var
+// Format: comma-separated list of RSS URLs from Google Alerts
+// Example alerts to create at https://www.google.com/alerts:
+//   "Chief Data Officer appointed" → RSS → copy URL
+//   "Chief AI Officer named" → RSS → copy URL
+//   "CDO joins" → RSS → copy URL
+//   "CAIO appointed" → RSS → copy URL
+const GOOGLE_ALERTS_FEEDS = (process.env.GOOGLE_ALERTS_RSS_URLS || '')
+  .split(',')
+  .map(url => url.trim())
+  .filter(url => url.startsWith('http'))
+  .map(url => ({ url, name: 'Google Alerts', query: 'google-alert' }))
+
+const ALL_FEEDS = [...GOOGLE_NEWS_FEEDS, ...PR_NEWSWIRE_FEEDS, ...GOOGLE_ALERTS_FEEDS]
 
 // Keywords that indicate an executive move article (C-Suite only)
 // NOTE: Acronyms are NOT included here because MOVE_KEYWORDS uses .toLowerCase()
