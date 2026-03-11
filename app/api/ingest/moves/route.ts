@@ -205,6 +205,43 @@ export async function POST(request: Request) {
         const execTitle = extractTitle(item.title) || extractTitle(item.description)
         const publishedAt = item.pubDate ? new Date(item.pubDate).toISOString() : null
 
+        // Business-key dedup: same person + company within 7 days = same move
+        const windowStart = new Date(Date.now() - 7 * 24 * 3600_000).toISOString()
+
+        if (personName && companyName) {
+          const { data: existing } = await supabaseAdmin
+            .from('executive_moves')
+            .select('id')
+            .ilike('person_name', personName)
+            .ilike('company_name', companyName)
+            .gte('published_at', windowStart)
+            .limit(1)
+
+          if (existing && existing.length > 0) {
+            totalSkipped++
+            continue
+          }
+        } else {
+          // Fallback: if person/company extraction failed, check for headline match
+          // Strip source attribution suffix (e.g., "- Reuters", "| Bloomberg")
+          const coreHeadline = item.title
+            .replace(/\s*[-–|]\s*[A-Z][\w\s&.]+$/g, '')
+            .trim()
+          if (coreHeadline.length > 15) {
+            const { data: headlineMatch } = await supabaseAdmin
+              .from('executive_moves')
+              .select('id')
+              .ilike('headline', `%${coreHeadline}%`)
+              .gte('published_at', windowStart)
+              .limit(1)
+
+            if (headlineMatch && headlineMatch.length > 0) {
+              totalSkipped++
+              continue
+            }
+          }
+        }
+
         const { error } = await supabaseAdmin
           .from('executive_moves')
           .upsert(
