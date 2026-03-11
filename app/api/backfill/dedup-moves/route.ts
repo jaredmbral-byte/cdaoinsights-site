@@ -99,11 +99,21 @@ export async function POST(request: Request) {
     }
   }
 
+  // Debug: show recent entries with their dedup keys
+  const recentDebug = moves.slice(-10).map(m => ({
+    id: m.id,
+    person_name: m.person_name,
+    company_name: m.company_name,
+    title: m.title,
+    headline: (m.headline || '').slice(0, 80),
+  }))
+
   return NextResponse.json({
     total: moves.length,
     duplicatesFound: idsToDelete.length,
     deleted,
     remaining: moves.length - deleted,
+    debug_recent: recentDebug,
     timestamp: new Date().toISOString(),
   })
 }
