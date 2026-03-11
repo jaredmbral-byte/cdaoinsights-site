@@ -205,25 +205,35 @@ export async function POST(request: Request) {
         const execTitle = extractTitle(item.title) || extractTitle(item.description)
         const publishedAt = item.pubDate ? new Date(item.pubDate).toISOString() : null
 
-        // Business-key dedup: same person + company within 7 days = same move
+        // Multi-layer dedup to catch near-duplicate move announcements
         const windowStart = new Date(Date.now() - 7 * 24 * 3600_000).toISOString()
+        let isDuplicate = false
 
-        if (personName && companyName) {
+        // Layer 1: Same person within 7d (a person rarely gets two C-suite roles in a week)
+        if (personName) {
           const { data: existing } = await supabaseAdmin
             .from('executive_moves')
             .select('id')
             .ilike('person_name', personName)
-            .ilike('company_name', companyName)
             .gte('published_at', windowStart)
             .limit(1)
+          if (existing && existing.length > 0) isDuplicate = true
+        }
 
-          if (existing && existing.length > 0) {
-            totalSkipped++
-            continue
-          }
-        } else {
-          // Fallback: if person/company extraction failed, check for headline match
-          // Strip source attribution suffix (e.g., "- Reuters", "| Bloomberg")
+        // Layer 2: Same company + same role title within 7d
+        if (!isDuplicate && companyName && execTitle) {
+          const { data: existing } = await supabaseAdmin
+            .from('executive_moves')
+            .select('id')
+            .ilike('company_name', companyName)
+            .ilike('title', execTitle)
+            .gte('published_at', windowStart)
+            .limit(1)
+          if (existing && existing.length > 0) isDuplicate = true
+        }
+
+        // Layer 3: Headline fallback when name/company extraction both fail
+        if (!isDuplicate && !personName && !companyName) {
           const coreHeadline = item.title
             .replace(/\s*[-–|]\s*[A-Z][\w\s&.]+$/g, '')
             .trim()
@@ -234,12 +244,13 @@ export async function POST(request: Request) {
               .ilike('headline', `%${coreHeadline}%`)
               .gte('published_at', windowStart)
               .limit(1)
-
-            if (headlineMatch && headlineMatch.length > 0) {
-              totalSkipped++
-              continue
-            }
+            if (headlineMatch && headlineMatch.length > 0) isDuplicate = true
           }
+        }
+
+        if (isDuplicate) {
+          totalSkipped++
+          continue
         }
 
         const { error } = await supabaseAdmin

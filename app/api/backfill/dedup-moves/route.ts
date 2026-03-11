@@ -14,7 +14,7 @@ export async function POST(request: Request) {
   // Fetch all moves ordered by published_at
   const { data: moves, error: fetchError } = await supabaseAdmin
     .from('executive_moves')
-    .select('id, person_name, company_name, headline, published_at')
+    .select('id, person_name, company_name, title, headline, published_at')
     .order('published_at', { ascending: true })
 
   if (fetchError) {
@@ -26,43 +26,60 @@ export async function POST(request: Request) {
   }
 
   const idsToDelete: number[] = []
-  const seen = new Map<string, { id: number; published_at: string }>()
+  // Track by person name alone (a person rarely gets two C-suite roles in a week)
+  const seenByPerson = new Map<string, { id: number; published_at: string }>()
+  // Track by company + title (same role at same company = same announcement)
+  const seenByCompanyTitle = new Map<string, { id: number; published_at: string }>()
+  // Headline fallback
+  const seenByHeadline = new Map<string, { id: number; published_at: string }>()
+
+  function isWithin7Days(dateA: string, dateB: string): boolean {
+    return Math.abs(new Date(dateA).getTime() - new Date(dateB).getTime()) / (24 * 3600_000) <= 7
+  }
 
   for (const move of moves) {
-    // Build dedup key: person + company (case insensitive)
-    let dedupKey: string | null = null
+    let isDup = false
 
-    if (move.person_name && move.company_name) {
-      dedupKey = `${move.person_name.toLowerCase().trim()}|${move.company_name.toLowerCase().trim()}`
-    } else {
-      // Fallback: normalize headline (strip source suffix)
+    // Layer 1: Same person within 7 days
+    if (move.person_name) {
+      const personKey = move.person_name.toLowerCase().trim()
+      const existing = seenByPerson.get(personKey)
+      if (existing && isWithin7Days(existing.published_at, move.published_at)) {
+        isDup = true
+      } else if (!existing) {
+        seenByPerson.set(personKey, { id: move.id, published_at: move.published_at })
+      }
+    }
+
+    // Layer 2: Same company + title within 7 days
+    if (!isDup && move.company_name && move.title) {
+      const ctKey = `${move.company_name.toLowerCase().trim()}|${move.title.toLowerCase().trim()}`
+      const existing = seenByCompanyTitle.get(ctKey)
+      if (existing && isWithin7Days(existing.published_at, move.published_at)) {
+        isDup = true
+      } else if (!existing) {
+        seenByCompanyTitle.set(ctKey, { id: move.id, published_at: move.published_at })
+      }
+    }
+
+    // Layer 3: Headline fallback
+    if (!isDup && !move.person_name && !move.company_name) {
       const coreHeadline = (move.headline || '')
         .replace(/\s*[-–|]\s*[A-Z][\w\s&.]+$/g, '')
         .trim()
         .toLowerCase()
       if (coreHeadline.length > 15) {
-        dedupKey = `headline:${coreHeadline}`
+        const existing = seenByHeadline.get(coreHeadline)
+        if (existing && isWithin7Days(existing.published_at, move.published_at)) {
+          isDup = true
+        } else if (!existing) {
+          seenByHeadline.set(coreHeadline, { id: move.id, published_at: move.published_at })
+        }
       }
     }
 
-    if (!dedupKey) continue
-
-    const existing = seen.get(dedupKey)
-    if (existing) {
-      // Check if within 7 day window
-      const existingDate = new Date(existing.published_at).getTime()
-      const currentDate = new Date(move.published_at).getTime()
-      const daysDiff = Math.abs(currentDate - existingDate) / (24 * 3600_000)
-
-      if (daysDiff <= 7) {
-        // Duplicate — mark the newer one for deletion (keep earliest)
-        idsToDelete.push(move.id)
-      } else {
-        // Same person+company but > 7 days apart — likely a different event
-        seen.set(dedupKey, { id: move.id, published_at: move.published_at })
-      }
-    } else {
-      seen.set(dedupKey, { id: move.id, published_at: move.published_at })
+    if (isDup) {
+      idsToDelete.push(move.id)
     }
   }
 
