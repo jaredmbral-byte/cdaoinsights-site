@@ -67,10 +67,25 @@ export async function POST(request: Request) {
 
   // ── Phase 1.5: Company + title dedup ──
   // Same company (normalized) + same title within 7d = same event
-  function normalizeCompany(name: string | null): string | null {
+  // Try to extract a company name from the headline when company_name is null/garbage
+  function extractCompanyFromHeadline(headline: string): string | null {
+    // Pattern: "CompanyName appoints/names/hires/taps/promotes..."
+    const m1 = headline.match(/^([A-Z][\w&.\-]+(?:\s+[A-Z][\w&.\-]+)*)\s+(?:appoints?|names?|hires?|taps?|promotes?|elevates?|selects?)\b/i)
+    if (m1) return m1[1]
+    // Pattern: "... at CompanyName" or "... for CompanyName"
+    const m2 = headline.match(/\bat\s+(?:the\s+)?([A-Z][\w&.\-]+(?:\s+[A-Z][\w&.\-]+)*)\s*[-–|]/i)
+    if (m2) return m2[1]
+    return null
+  }
+
+  function normalizeCompany(name: string | null, headline?: string): string | null {
+    // If name is null or looks like garbage, try extracting from headline
+    if ((!name || name.length < 3 || /\b(india|war)\b/i.test(name)) && headline) {
+      name = extractCompanyFromHeadline(headline)
+    }
     if (!name) return null
     let n = name.toLowerCase().trim()
-    // Strip source attribution junk
+    // Strip source attribution junk (e.g. "The Pentagon - Devdiscourse")
     n = n.replace(/\s*[-–|]\s*[a-z][\w\s&.]+$/g, '').trim()
     // Normalize known synonyms
     const synonyms: Record<string, string> = {
@@ -98,7 +113,7 @@ export async function POST(request: Request) {
   const seenCompanyTitle = new Map<string, { id: string; published_at: string }>()
 
   for (const move of nonDeleted) {
-    const co = normalizeCompany(move.company_name)
+    const co = normalizeCompany(move.company_name, move.headline)
     const ti = normalizeTitle(move.title)
     if (co && ti) {
       const key = `${co}|${ti}`
