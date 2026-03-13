@@ -67,10 +67,16 @@ export async function POST(request: Request) {
 
   // ── Phase 2: Keyword-overlap dedup ──
   // Extract significant words from each headline, group overlapping headlines
-  const STOP_WORDS = new Set([
+  // Words that appear in nearly every move headline — never count as overlap
+  const IGNORE_WORDS = new Set([
     'the', 'a', 'an', 'of', 'to', 'in', 'for', 'and', 'as', 'at', 'by',
     'on', 'is', 'it', 'new', 'its', 'with', 'from', 'has', 'was', 'are',
     'that', 'this', 'will', 'be', 'been', 'have', 'had', 'not', 'but', 'or',
+    // Generic title/role words — these appear in every CDO/CAIO move
+    'chief', 'officer', 'data', 'named', 'names', 'appoints', 'appointed',
+    'announces', 'hires', 'promotes', 'taps', 'elevates', 'joins', 'selects',
+    'former', 'first', 'senior', 'head', 'vice', 'president', 'director',
+    'global', 'executive', 'leadership', 'moves', 'week', 'magazine',
   ])
 
   function getSignificantWords(text: string): Set<string> {
@@ -78,7 +84,7 @@ export async function POST(request: Request) {
       text.toLowerCase()
         .replace(/[^a-z0-9\s]/g, ' ')
         .split(/\s+/)
-        .filter(w => w.length > 2 && !STOP_WORDS.has(w))
+        .filter(w => w.length > 2 && !IGNORE_WORDS.has(w))
     )
   }
 
@@ -105,13 +111,13 @@ export async function POST(request: Request) {
 
       const existingWords = getSignificantWords(existing.headline || '')
       const overlap = wordOverlap(moveWords, existingWords)
-      const minSize = Math.min(moveWords.size, existingWords.size)
 
-      // If 3+ significant words overlap, or >50% of the smaller set overlaps → duplicate
-      if (overlap >= 3 || (minSize > 0 && overlap / minSize >= 0.5)) {
+      // Need 2+ significant (non-title) words in common — e.g. person name + company name
+      if (overlap >= 2) {
         isDup = true
         idsToDelete.push(move.id)
-        deleteReasons[move.id] = `headline overlap with ${existing.id.slice(0, 8)} (${overlap} words)`
+        const sharedWords = [...moveWords].filter(w => existingWords.has(w))
+        deleteReasons[move.id] = `headline overlap with ${existing.id.slice(0, 8)} [${sharedWords.join(', ')}]`
         break
       }
     }
