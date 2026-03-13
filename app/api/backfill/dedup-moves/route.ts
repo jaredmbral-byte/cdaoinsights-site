@@ -65,6 +65,55 @@ export async function POST(request: Request) {
     }
   }
 
+  // ── Phase 1.5: Company + title dedup ──
+  // Same company (normalized) + same title within 7d = same event
+  function normalizeCompany(name: string | null): string | null {
+    if (!name) return null
+    let n = name.toLowerCase().trim()
+    // Strip source attribution junk
+    n = n.replace(/\s*[-–|]\s*[a-z][\w\s&.]+$/g, '').trim()
+    // Normalize known synonyms
+    const synonyms: Record<string, string> = {
+      'pentagon': 'dod', 'defense department': 'dod', 'department of defense': 'dod',
+      'defense': 'dod', 'dept of defense': 'dod',
+    }
+    for (const [pattern, replacement] of Object.entries(synonyms)) {
+      if (n.includes(pattern)) return replacement
+    }
+    // Strip Inc., Corp., etc.
+    n = n.replace(/\b(inc|corp|llc|ltd|plc|co)\b\.?/g, '').trim()
+    return n || null
+  }
+
+  function normalizeTitle(title: string | null): string | null {
+    if (!title) return null
+    return title.toLowerCase().replace(/\s+/g, ' ').trim() || null
+  }
+
+  function isWithin7Days(a: string, b: string): boolean {
+    return Math.abs(new Date(a).getTime() - new Date(b).getTime()) / (24 * 3600_000) <= 7
+  }
+
+  const nonDeleted = moves.filter(m => !idsToDelete.includes(m.id))
+  const seenCompanyTitle = new Map<string, { id: string; published_at: string }>()
+
+  for (const move of nonDeleted) {
+    const co = normalizeCompany(move.company_name)
+    const ti = normalizeTitle(move.title)
+    if (co && ti) {
+      const key = `${co}|${ti}`
+      const existing = seenCompanyTitle.get(key)
+      if (existing && isWithin7Days(existing.published_at, move.published_at)) {
+        idsToDelete.push(move.id)
+        deleteReasons[move.id] = `company+title dupe of ${existing.id.slice(0, 8)} [${co}|${ti}]`
+        continue
+      }
+      if (!existing) {
+        seenCompanyTitle.set(key, { id: move.id, published_at: move.published_at })
+      }
+    }
+  }
+
   // ── Phase 2: Keyword-overlap dedup ──
   // Extract significant words from each headline, group overlapping headlines
   // Words that appear in nearly every move headline — never count as overlap
@@ -97,10 +146,6 @@ export async function POST(request: Request) {
   // Only check non-deleted moves
   const remaining = moves.filter(m => !idsToDelete.includes(m.id))
   const kept: typeof remaining = []
-
-  function isWithin7Days(a: string, b: string): boolean {
-    return Math.abs(new Date(a).getTime() - new Date(b).getTime()) / (24 * 3600_000) <= 7
-  }
 
   for (const move of remaining) {
     const moveWords = getSignificantWords(move.headline || '')
