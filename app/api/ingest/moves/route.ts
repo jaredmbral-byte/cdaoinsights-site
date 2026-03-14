@@ -138,12 +138,46 @@ function extractTitle(headline: string): string | null {
   return null
 }
 
+// Headlines that match CDO/CAIO keywords but aren't actual appointments
+const NON_MOVE_PATTERNS = [
+  /roundtable|summit|conference|webinar/i,
+  /accuses|shuts down rumors|launches|unveils|issues draft/i,
+  /\bIndyCar\b|\bFormula\b|\bNASCAR\b/i,
+  /scaling to \d+|on scaling/i,
+  /will \d{4} be the year/i,
+  /literacy framework/i,
+  /passionate debates|loud rumors/i,
+  /safety guide for citizens/i,
+]
+
 // Check if this article is relevant to executive moves
 function isRelevantMove(title: string, description: string): boolean {
+  // Reject known non-move patterns
+  if (NON_MOVE_PATTERNS.some(p => p.test(title))) return false
+
   const text = `${title} ${description}`.toLowerCase()
   const hasRole = ROLE_PATTERNS.some((p) => p.test(text))
   const hasAction = MOVE_KEYWORDS.some((kw) => text.includes(kw))
   return hasRole && hasAction
+}
+
+// Normalize company name for dedup: strip junk, unify synonyms
+function normalizeCompanyForDedup(name: string | null, headline?: string): string | null {
+  // If name is null or garbage, try extracting from headline
+  if ((!name || name.length < 3) && headline) {
+    const m = headline.match(/^([A-Z][\w&.\-]+(?:\s+[A-Z][\w&.\-]+)*)\s+(?:appoints?|names?|hires?|taps?|promotes?)/i)
+    if (m) name = m[1]
+  }
+  if (!name) return null
+  let n = name.toLowerCase().trim()
+  n = n.replace(/\s*[-–|]\s*[a-z][\w\s&.]+$/g, '').trim()
+  const synonyms: Record<string, string> = {
+    'pentagon': 'dod', 'defense department': 'dod', 'department of defense': 'dod',
+  }
+  for (const [pattern, replacement] of Object.entries(synonyms)) {
+    if (n.includes(pattern)) return replacement
+  }
+  return n || null
 }
 
 // Parse RSS XML into items (reused pattern from news ingest)
@@ -230,6 +264,27 @@ export async function POST(request: Request) {
             .gte('published_at', windowStart)
             .limit(1)
           if (existing && existing.length > 0) isDuplicate = true
+        }
+
+        // Layer 2.5: Normalized company + title dedup (catches Pentagon/DOD synonyms)
+        if (!isDuplicate && execTitle) {
+          const normCo = normalizeCompanyForDedup(companyName, item.title)
+          if (normCo) {
+            const normTitle = execTitle.toLowerCase().trim()
+            // Check existing moves for normalized match
+            const { data: allRecent } = await supabaseAdmin
+              .from('executive_moves')
+              .select('id, company_name, title, headline')
+              .ilike('title', normTitle)
+              .gte('published_at', windowStart)
+              .limit(50)
+            if (allRecent) {
+              for (const existing of allRecent) {
+                const existingNormCo = normalizeCompanyForDedup(existing.company_name, existing.headline)
+                if (existingNormCo === normCo) { isDuplicate = true; break }
+              }
+            }
+          }
         }
 
         // Layer 3: Headline fallback when name/company extraction both fail
