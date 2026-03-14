@@ -91,41 +91,103 @@ function classifyMoveType(text: string): string | null {
     return 'promoted'
   if (t.includes('joins') || t.includes('joined'))
     return 'joins'
-  if (t.includes('named') || t.includes('names'))
-    return 'named'
-  if (t.includes('appointed') || t.includes('appoints') || t.includes('appointment'))
+  if (t.includes('named') || t.includes('names') || t.includes('appointed') || t.includes('appoints') || t.includes('appointment'))
     return 'appointed'
   return null
 }
 
+// Words that are never part of a person's name
+const NAME_STOPWORDS = /\b(former|first|new|current|interim|acting|outgoing|incoming|doge|team|member|employee|official|chief|officer|data|ai|analytics|digital|information|cdo|caio|cdao|cdaio|cto|cfo|cio|coo|vp|svp|evp|president|director|head|senior|junior|lead|staff|principal|managing)\b/i
+
+// Validate that a string looks like a real person name (2-4 capitalized words, no stopwords)
+function isLikelyPersonName(s: string): boolean {
+  const words = s.trim().split(/\s+/)
+  if (words.length < 2 || words.length > 4) return false
+  // Every word should start with uppercase letter
+  if (!words.every(w => /^[A-Z]/.test(w))) return false
+  // Should not contain role/title stopwords
+  if (NAME_STOPWORDS.test(s)) return false
+  // Should not look like a company (no &, Inc, Corp, etc.)
+  if (/[&.]|Inc|Corp|LLC|Ltd|Systems|Group|Department/i.test(s)) return false
+  return true
+}
+
+// Strip source attribution suffix: " - Source Name" or " | Source Name"
+// Requires whitespace before the dash to avoid stripping hyphenated surnames (e.g. Perkins-Munn)
+function stripSource(text: string): string {
+  return text.replace(/\s+[-–|]\s+[A-Z][\w\s&.]+$/, '').trim()
+}
+
+// Reusable regex fragments for name extraction
+const NAME_TOKEN = '[A-Z][a-z]+(?:-[A-Z][a-z]+)*'
+const NAME_2_4 = `(${NAME_TOKEN}(?:\\s+${NAME_TOKEN}){1,3})`
+const VERB = '(?:appoints?|names?|hires?|promotes?|taps?|elevates?|selects?)'
+const VERB_PAST = '(?:named|appointed|hired|promoted|tapped|joined|selected)'
+
 // Extract person name from headline (best effort)
 function extractPersonName(headline: string): string | null {
-  // Common patterns: "Jane Doe Named CDO at Company" or "Company Appoints Jane Doe as CDO"
+  const hl = stripSource(headline)
+
   const patterns = [
-    /^([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)\s+(?:named|appointed|joins|hired|promoted)/i,
-    /(?:appoints?|names?|hires?|promotes?)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)\s+(?:as|to|for)/i,
-    /([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)\s+(?:to\s+(?:lead|head|serve))/i,
+    // "Jane Doe Named CDO" — name at start
+    new RegExp(`^${NAME_2_4}\\s+${VERB_PAST}\\b`, 'i'),
+    // "Company Appoints Jane Doe Chief/CDO/CPO/..." — name between verb and title/abbreviation
+    new RegExp(`${VERB}\\s+${NAME_2_4}\\s+(?:Chief|CDO|CAIO|CDAO|CDAIO|CPO|CTO|CFO|COO|CIO)\\b`, 'i'),
+    // "Company Appoints Jane Doe as/to/for CDO"
+    new RegExp(`${VERB}\\s+${NAME_2_4}\\s+(?:as|to|for)\\b`, 'i'),
+    // Skip filler words: "names former DOGE employee Jane Doe as..."
+    new RegExp(`${VERB}\\s+(?:\\w+\\s+){1,4}${NAME_2_4}\\s+(?:as|to|for)\\b`, 'i'),
+    // "Jane Doe to lead/head/serve"
+    new RegExp(`${NAME_2_4}\\s+to\\s+(?:lead|head|serve)`, 'i'),
   ]
   for (const pattern of patterns) {
-    const match = headline.match(pattern)
-    if (match?.[1]) return match[1].trim()
+    const match = hl.match(pattern)
+    if (match?.[1] && isLikelyPersonName(match[1])) {
+      return match[1].trim()
+    }
   }
   return null
 }
 
 // Extract company name from headline (best effort)
 function extractCompanyName(headline: string): string | null {
-  const patterns = [
-    /(?:at|for|of)\s+([A-Z][A-Za-z0-9&.\-\s]+?)(?:\s+as\b|\s+to\b|\s*[,.]|\s*$)/,
-    /([A-Z][A-Za-z0-9&.\-\s]+?)\s+(?:appoints?|names?|hires?|promotes?)/i,
+  const hl = stripSource(headline)
+  // Handle colon-prefixed headlines like "MSCI : Appoints..."
+  const hlClean = hl.replace(/\s*:\s*/, ' ').trim()
+
+  // Pattern 1: "Company Appoints/Names..." — company before verb at start
+  const companyAtStart = new RegExp(`^([A-Z][\\w&.\\-]+(?:\\s+[A-Z][\\w&.\\-]+)?)\\s+${VERB}\\b`, 'i')
+  const m1 = hlClean.match(companyAtStart)
+  if (m1?.[1]) {
+    let name = m1[1].trim().replace(/\s+(Inc|Corp|LLC|Ltd|Co|PLC)\.?$/i, '').trim()
+    if (name.length >= 2 && name.length <= 50) return name
+  }
+
+  // Pattern 2+3: "...at Company" or "...for Company"
+  const positionPatterns = [
+    /\bat\s+(?:[Tt]he\s+)?([A-Z][\w&.\-]+(?:\s+[A-Z][\w&.\-]+)*)\b/,
+    /\bfor\s+([A-Z][\w&.\-]+(?:\s+[A-Z][\w&.\-]+)*)\b/,
   ]
-  for (const pattern of patterns) {
-    const match = headline.match(pattern)
+  for (const pattern of positionPatterns) {
+    const match = hl.match(pattern)
     if (match?.[1]) {
-      const name = match[1].trim()
-      if (name.length > 2 && name.length < 60) return name
+      let name = match[1].trim()
+      if (isLikelyPersonName(name)) continue
+      if (name.length < 3 || name.length > 50) continue
+      name = name.replace(/\s+(Inc|Corp|LLC|Ltd|Co|PLC)\.?$/i, '').trim()
+      return name
     }
   }
+
+  // Pattern 4: "Person Named COMPANY Chief..." — company between past verb and title
+  const afterPerson = hl.match(new RegExp(`${VERB_PAST}\\s+([A-Z][\\w&.\\-]+(?:\\s+[A-Z][\\w&.\\-]+)?)\\s+(?:Chief|CDO|CAIO|CDAO)`, 'i'))
+  if (afterPerson?.[1]) {
+    let name = afterPerson[1].trim()
+    if (!isLikelyPersonName(name) && name.length >= 2 && name.length <= 50) {
+      return name.replace(/\s+(Inc|Corp|LLC|Ltd|Co|PLC)\.?$/i, '').trim()
+    }
+  }
+
   return null
 }
 
