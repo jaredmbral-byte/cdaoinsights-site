@@ -3,14 +3,16 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'GTM Services for the CDAO Market | CDAO Insights',
   description:
-    'GTM strategy, market intelligence, and community access for data and AI vendors targeting CDO and CAIO buyers. Built by Jared Bral.',
+    'Cold outreach systems, ICP research, and AI-powered GTM workflows for data and AI vendors targeting CDO and CAIO buyers. Built by Jared Bral.',
   alternates: { canonical: 'https://cdaoinsights.com/services' },
   openGraph: {
     title: 'GTM Services for the CDAO Market | CDAO Insights',
-    description: 'GTM strategy, market intelligence, and community access for data and AI vendors targeting CDO and CAIO buyers.',
+    description: 'Cold outreach systems, ICP research, and AI-powered GTM workflows for data and AI vendors targeting CDO and CAIO buyers.',
     url: 'https://cdaoinsights.com/services',
   },
 }
+
+const CALENDLY_URL = 'https://calendly.com/jared-m-bral/30min'
 
 export default function ServicesPage() {
   return (
@@ -22,137 +24,160 @@ export default function ServicesPage() {
             GTM for the CDAO Market
           </h1>
           <p className="text-sm text-[#888888] leading-relaxed max-w-xl">
-            Strategic go-to-market services for data and AI vendors targeting enterprise CDO, CAIO, and VP Data buyers.
+            Cold outreach systems, ICP research, and AI-powered GTM workflows for data and AI vendors targeting enterprise CDO, CAIO, and VP Data buyers. No agency overhead. Practitioner execution.
           </p>
         </section>
 
         {/* Service Cards */}
         <section className="max-w-[1200px] mx-auto px-6 py-12">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Card 1: GTM Strategy */}
+
+            {/* Card 1: Outbound & Cold Outreach */}
             <div className="border border-[#1E1E1E] rounded-sm p-6 flex flex-col">
               <div className="mb-4">
                 <div className="flex items-center justify-between mb-2">
                   <h2 className="text-lg font-semibold text-[#E8E8E8]">
-                    GTM Strategy &amp; Execution
+                    Outbound & Cold Outreach
                   </h2>
                   <span className="font-mono text-[10px] uppercase tracking-[1px] px-2 py-1 rounded-sm border border-[#00FF94] text-[#00FF94]">
                     Most Popular
                   </span>
                 </div>
                 <p className="text-xs text-[#888888] mb-4">
-                  For data/AI vendors (Alation, Fivetran, Monte Carlo, Alteryx types) who want to reach CDOs, CAIOs, and VPs of Data
+                  For data/AI vendors and startups who need a repeatable pipeline into senior data and AI executives
                 </p>
               </div>
 
               <ul className="space-y-2 mb-6 flex-1">
                 <li className="text-sm text-[#888888] flex items-start">
                   <span className="text-[#00FF94] mr-2">•</span>
-                  Build and run their go-to-market motion into the enterprise data/AI buyer community
+                  Build and run cold email systems that actually land in inboxes
                 </li>
                 <li className="text-sm text-[#888888] flex items-start">
                   <span className="text-[#00FF94] mr-2">•</span>
-                  Outbound sequences, event strategy, content positioning
+                  ICP definition, list building, and lead enrichment
                 </li>
                 <li className="text-sm text-[#888888] flex items-start">
                   <span className="text-[#00FF94] mr-2">•</span>
-                  Sponsor/partner plays
+                  Sequencing, copy, and optimization — built to book meetings
+                </li>
+                <li className="text-sm text-[#888888] flex items-start">
+                  <span className="text-[#00FF94] mr-2">•</span>
+                  Direct access to a network of senior CDO and CAIO contacts
                 </li>
               </ul>
 
               <div className="mt-auto">
                 <p className="font-mono text-xs text-[#555555] mb-3">
-                  Starting at $10,000/mo
+                  Contact for pricing
                 </p>
                 <a
-                  href="mailto:jared@cdaoinsights.com?subject=GTM Strategy & Execution Inquiry"
+                  href={CALENDLY_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="block w-full text-center px-4 py-2 border border-[#1E1E1E] rounded-sm text-sm text-[#E8E8E8] hover:border-[#00FF94] hover:text-[#00FF94] transition-colors"
                 >
-                  Get in Touch
+                  Book a 30-Min Call
                 </a>
               </div>
             </div>
 
-            {/* Card 2: Market Intelligence */}
+            {/* Card 2: ICP Research & Positioning */}
             <div className="border border-[#1E1E1E] rounded-sm p-6 flex flex-col">
               <div className="mb-4">
                 <div className="flex items-center justify-between mb-2">
                   <h2 className="text-lg font-semibold text-[#E8E8E8]">
-                    Market Intelligence Reports
+                    ICP Research & Positioning
                   </h2>
                   <span className="font-mono text-[10px] uppercase tracking-[1px] px-2 py-1 rounded-sm border border-blue-500/30 text-blue-400">
+                    Strategy
+                  </span>
+                </div>
+                <p className="text-xs text-[#888888] mb-4">
+                  For vendors, VCs, and PE firms who need to understand the CDAO buyer and sharpen their market positioning
+                </p>
+              </div>
+
+              <ul className="space-y-2 mb-6 flex-1">
+                <li className="text-sm text-[#888888] flex items-start">
+                  <span className="text-[#00FF94] mr-2">•</span>
+                  Deep ICP profiling — who buys, why, and when
+                </li>
+                <li className="text-sm text-[#888888] flex items-start">
+                  <span className="text-[#00FF94] mr-2">•</span>
+                  Competitive positioning and messaging frameworks
+                </li>
+                <li className="text-sm text-[#888888] flex items-start">
+                  <span className="text-[#00FF94] mr-2">•</span>
+                  Market intelligence powered by cdaoinsights.com data
+                </li>
+                <li className="text-sm text-[#888888] flex items-start">
+                  <span className="text-[#00FF94] mr-2">•</span>
+                  Custom research briefs for diligence and strategy
+                </li>
+              </ul>
+
+              <div className="mt-auto">
+                <p className="font-mono text-xs text-[#555555] mb-3">
+                  Contact for pricing
+                </p>
+                <a
+                  href={CALENDLY_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block w-full text-center px-4 py-2 border border-[#1E1E1E] rounded-sm text-sm text-[#E8E8E8] hover:border-[#00FF94] hover:text-[#00FF94] transition-colors"
+                >
+                  Book a 30-Min Call
+                </a>
+              </div>
+            </div>
+
+            {/* Card 3: AI-Powered GTM Systems */}
+            <div className="border border-[#1E1E1E] rounded-sm p-6 flex flex-col">
+              <div className="mb-4">
+                <div className="flex items-center justify-between mb-2">
+                  <h2 className="text-lg font-semibold text-[#E8E8E8]">
+                    AI-Powered GTM Systems
+                  </h2>
+                  <span className="font-mono text-[10px] uppercase tracking-[1px] px-2 py-1 rounded-sm border border-amber-500/30 text-amber-400">
                     New
                   </span>
                 </div>
                 <p className="text-xs text-[#888888] mb-4">
-                  For VCs, PE firms, consultancies, and enterprise data/AI vendors who need sharp, credible intelligence on the CDAO market
+                  For lean GTM teams who want to punch above their weight using tools they already own
                 </p>
               </div>
 
               <ul className="space-y-2 mb-6 flex-1">
                 <li className="text-sm text-[#888888] flex items-start">
                   <span className="text-[#00FF94] mr-2">•</span>
-                  Custom research briefs and ongoing intelligence
+                  AI workflows built on top of your CRM, Sales Nav, and enrichment stack
                 </li>
                 <li className="text-sm text-[#888888] flex items-start">
                   <span className="text-[#00FF94] mr-2">•</span>
-                  Powered by cdaoinsights.com data and direct community access
+                  Lead scoring, context enrichment, and signal-based outreach automation
+                </li>
+                <li className="text-sm text-[#888888] flex items-start">
+                  <span className="text-[#00FF94] mr-2">•</span>
+                  No new tools required — better results from what you already pay for
+                </li>
+                <li className="text-sm text-[#888888] flex items-start">
+                  <span className="text-[#00FF94] mr-2">•</span>
+                  Built for small teams with enterprise-level pipeline goals
                 </li>
               </ul>
 
               <div className="mt-auto">
                 <p className="font-mono text-xs text-[#555555] mb-3">
-                  Starting at $3,500 per report / $5,500/mo ongoing
+                  Contact for pricing
                 </p>
                 <a
-                  href="mailto:jared@cdaoinsights.com?subject=Market Intelligence Report Inquiry"
+                  href={CALENDLY_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="block w-full text-center px-4 py-2 border border-[#1E1E1E] rounded-sm text-sm text-[#E8E8E8] hover:border-[#00FF94] hover:text-[#00FF94] transition-colors"
                 >
-                  Get in Touch
-                </a>
-              </div>
-            </div>
-
-            {/* Card 3: Sponsorship */}
-            <div className="border border-[#1E1E1E] rounded-sm p-6 flex flex-col">
-              <div className="mb-4">
-                <div className="flex items-center justify-between mb-2">
-                  <h2 className="text-lg font-semibold text-[#E8E8E8]">
-                    Sponsorship &amp; Community Access
-                  </h2>
-                  <span className="font-mono text-[10px] uppercase tracking-[1px] px-2 py-1 rounded-sm border border-amber-500/30 text-amber-400">
-                    Limited Availability
-                  </span>
-                </div>
-                <p className="text-xs text-[#888888] mb-4">
-                  For data/AI vendors who want visibility with a targeted audience of senior data and AI leaders
-                </p>
-              </div>
-
-              <ul className="space-y-2 mb-6 flex-1">
-                <li className="text-sm text-[#888888] flex items-start">
-                  <span className="text-[#00FF94] mr-2">•</span>
-                  Category-exclusive sponsorship packages on cdaoinsights.com
-                </li>
-                <li className="text-sm text-[#888888] flex items-start">
-                  <span className="text-[#00FF94] mr-2">•</span>
-                  Featured placement in intelligence briefs and weekly digests
-                </li>
-                <li className="text-sm text-[#888888] flex items-start">
-                  <span className="text-[#00FF94] mr-2">•</span>
-                  Access to the CDAO community for research and feedback
-                </li>
-              </ul>
-
-              <div className="mt-auto">
-                <p className="font-mono text-xs text-[#555555] mb-3">
-                  Starting at $8,000/quarter
-                </p>
-                <a
-                  href="mailto:jared@cdaoinsights.com?subject=Sponsorship & Community Access Inquiry"
-                  className="block w-full text-center px-4 py-2 border border-[#1E1E1E] rounded-sm text-sm text-[#E8E8E8] hover:border-[#00FF94] hover:text-[#00FF94] transition-colors"
-                >
-                  Get in Touch
+                  Book a 30-Min Call
                 </a>
               </div>
             </div>
@@ -167,26 +192,47 @@ export default function ServicesPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl">
             <div className="border-l-2 border-[#00FF94] pl-4">
               <p className="text-sm text-[#888888] leading-relaxed">
-                10+ years building event and community brands for enterprise data, AI, and CDAIO audiences. Started at Evanta (a Gartner company) in 2017.
+                10+ years building GTM and community programs for the enterprise data and AI market. Started at Evanta (a Gartner company) in 2017 selling $25k–$50k thought leadership sponsorships to vendors like Alation, Fivetran, and Monte Carlo.
               </p>
             </div>
             <div className="border-l-2 border-[#00FF94] pl-4">
               <p className="text-sm text-[#888888] leading-relaxed">
-                Deep relationships in the enterprise data and AI vendor space. Built this exact audience from the ground up.
+                Not an agency. No account managers, no overhead, no fluff. You work directly with the person who knows this market cold.
               </p>
             </div>
             <div className="border-l-2 border-[#00FF94] pl-4">
               <p className="text-sm text-[#888888] leading-relaxed">
-                Now runs cdaoinsights.com as a real-time intelligence resource for CDOs and CAIOs. Direct access to the community that data/AI vendors need to reach.
+                Runs cdaoinsights.com — a real-time intelligence platform for senior data and AI executives. Direct access to the exact buyers your team is trying to reach.
               </p>
             </div>
             <div className="border-l-2 border-[#00FF94] pl-4">
               <p className="text-sm text-[#888888] leading-relaxed">
-                Practitioner perspective. No agency fluff. Built to serve the buyer community first, which makes vendor GTM more credible and effective.
+                Uses best-in-class AI tools to deliver enterprise-quality GTM output at a fraction of the cost. Lean teams, big results.
               </p>
             </div>
           </div>
         </section>
+
+        {/* CTA */}
+        <section className="max-w-[1200px] mx-auto px-6 py-12 border-t border-[#1E1E1E]">
+          <div className="max-w-xl">
+            <h2 className="text-xl font-semibold text-[#E8E8E8] mb-3">
+              Ready to build pipeline into the CDAO market?
+            </h2>
+            <p className="text-sm text-[#888888] mb-6">
+              30 minutes. No pitch deck. Just a straight conversation about what you're trying to do and whether I can help.
+            </p>
+            <a
+              href={CALENDLY_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block px-6 py-3 border border-[#00FF94] rounded-sm text-sm text-[#00FF94] hover:bg-[#00FF94] hover:text-black transition-colors font-medium"
+            >
+              Book a 30-Min Call
+            </a>
+          </div>
+        </section>
+
       </main>
     </div>
   )
