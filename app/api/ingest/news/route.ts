@@ -69,6 +69,23 @@ const RSS_FEEDS = [
   // Research & thought leadership
   { url: 'https://sloanreview.mit.edu/feed/', name: 'MIT Sloan Review' },
   { url: 'https://datamanagementreview.com/feed/', name: 'Data Management Review' },
+
+  // AI tools vendors
+  { url: 'https://www.wisdomai.com/blog/rss.xml', name: 'WisdomAI Blog' },
+  { url: 'https://www.glean.com/blog/rss', name: 'Glean Blog' },
+  { url: 'https://hex.tech/blog/rss.xml', name: 'Hex Blog' },
+  { url: 'https://www.thoughtspot.com/blog/rss.xml', name: 'ThoughtSpot Blog' },
+  { url: 'https://www.sigmacomputing.com/blog/rss', name: 'Sigma Blog' },
+  { url: 'https://www.dataiku.com/blog/rss', name: 'Dataiku Blog' },
+  { url: 'https://wandb.ai/site/rss', name: 'W&B Blog' },
+  { url: 'https://news.google.com/rss/search?q="enterprise+AI"+deployment+case+study+when:14d&hl=en-US&gl=US&ceid=US:en', name: 'Google News' },
+  { url: 'https://news.google.com/rss/search?q=WisdomAI+OR+Glean+OR+ThoughtSpot+enterprise+when:14d&hl=en-US&gl=US&ceid=US:en', name: 'Google News' },
+  { url: 'https://news.google.com/rss/search?q="Snowflake+Cortex"+OR+"Databricks+AI"+enterprise+when:7d&hl=en-US&gl=US&ceid=US:en', name: 'Google News' },
+  { url: 'https://news.google.com/rss/search?q="Microsoft+Copilot"+enterprise+data+when:7d&hl=en-US&gl=US&ceid=US:en', name: 'Google News' },
+  { url: 'https://news.google.com/rss/search?q=CDO+OR+CAIO+"AI+tool"+enterprise+when:7d&hl=en-US&gl=US&ceid=US:en', name: 'Google News' },
+  { url: 'https://news.google.com/rss/search?q="agentic+analytics"+OR+"conversational+BI"+enterprise+when:14d&hl=en-US&gl=US&ceid=US:en', name: 'Google News' },
+  { url: 'https://news.google.com/rss/search?q=Databricks+AI+release+OR+announcement+when:7d&hl=en-US&gl=US&ceid=US:en', name: 'Google News' },
+  { url: 'https://news.google.com/rss/search?q=Snowflake+Cortex+OR+"Snowflake+AI"+release+when:7d&hl=en-US&gl=US&ceid=US:en', name: 'Google News' },
 ]
 
 import { stripHtml } from '@/lib/text'
@@ -104,6 +121,22 @@ function classifyTopics(title: string, summary: string): string[] {
     topics.push('ai-deployment')
   if (text.includes('microsoft fabric') || text.includes('ms fabric') || text.includes('power bi') || text.includes('powerbi'))
     topics.push('microsoft-fabric')
+  if (
+    text.includes('wisdomai') || text.includes('wisdom ai') ||
+    text.includes('glean') ||
+    (text.includes('hex') && text.includes('analytics')) ||
+    text.includes('thoughtspot') ||
+    text.includes('sigma computing') ||
+    text.includes('snowflake cortex') ||
+    text.includes('databricks ai') || text.includes('databricks lakehouse') ||
+    text.includes('microsoft copilot') ||
+    text.includes('github copilot') ||
+    text.includes('dataiku') ||
+    text.includes('weights & biases') || text.includes('wandb') ||
+    text.includes('conversational bi') || text.includes('agentic analytics') ||
+    text.includes('langchain') || text.includes('crewai') || text.includes('langgraph')
+  )
+    topics.push('enterprise-ai-tools')
 
   return topics.length > 0 ? topics : ['general']
 }
@@ -129,6 +162,9 @@ function scoreRelevance(title: string, description: string): number {
   if (t.includes('agentic ai') || t.includes('ai agent') || t.includes('ai agents') || t.includes('multi-agent') || t.includes('autonomous agent')) score += 0.25
   if (t.includes('pilot to production') || t.includes('scaling ai') || t.includes('ai in production')) score += 0.2
   if (t.includes('microsoft fabric') || t.includes('power bi')) score += 0.15
+  if (t.includes('snowflake cortex') || t.includes('databricks ai')) score += 0.3
+  if (t.includes('wisdomai') || t.includes('wisdom ai') || t.includes('glean') || t.includes('thoughtspot') || t.includes('conversational bi') || t.includes('agentic analytics')) score += 0.25
+  if (t.includes('enterprise') && t.includes('ai') && (t.includes('deploy') || t.includes('case study') || t.includes('production'))) score += 0.2
 
   // Slight boost: industry-specific data/AI
   if ((t.includes('data') || t.includes('analytics')) && t.includes('officer')) score += 0.15

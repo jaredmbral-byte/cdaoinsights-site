@@ -138,8 +138,8 @@ export default function RootLayout({
               <a href="/intelligence" className="font-mono text-xs uppercase tracking-[2px] text-[#888888] hover:text-[#E8E8E8] transition-colors">
                 Intelligence
               </a>
-              <a href="/vendors" className="font-mono text-xs uppercase tracking-[2px] text-[#888888] hover:text-[#E8E8E8] transition-colors">
-                Vendors
+              <a href="/ai-tools" className="font-mono text-xs uppercase tracking-[2px] text-[#888888] hover:text-[#E8E8E8] transition-colors">
+                AI Tools
               </a>
               <a href="/compensation" className="font-mono text-xs uppercase tracking-[2px] text-[#888888] hover:text-[#E8E8E8] transition-colors">
                 Compensation

@@ -89,7 +89,6 @@ export default async function Home() {
     hiringSeniorityResult,
     movesTypeResult,
     marketTopicsResult,
-    techStackResult,
   ] = await Promise.all([
     // Latest 5 executive moves
     supabase
@@ -135,11 +134,6 @@ export default async function Home() {
       .from('market_articles')
       .select('topics')
       .gte('published_at', cutoff30.toISOString()),
-    // Tech stack data for vendor adoption signals (90d) — ALL roles (including Tier 2 engineers)
-    supabase
-      .from('hiring_signals')
-      .select('job_title, tech_stack')
-      .gte('posted_at', cutoff90.toISOString()),
   ])
 
   const latestMoves = (movesResult.data || []) as ExecutiveMove[]
@@ -186,48 +180,6 @@ export default async function Home() {
   const topTopics = Object.entries(topicCounts)
     .sort((a, b) => b[1] - a[1])
     .slice(0, 5)
-
-  // Vendor adoption signals (90d) — named data/AI vendors only, no commodity skills
-  const techRows = (techStackResult.data || []) as Array<{ job_title: string; tech_stack: string[] | null }>
-  const TRACKED_VENDORS = [
-    'Snowflake',
-    'Databricks',
-    'dbt',
-    'Alation',
-    'Collibra',
-    'Fivetran',
-    'Monte Carlo',
-    'Denodo',
-    'Informatica',
-    'Palantir',
-    'Atlan',
-    'Immuta',
-    'Soda',
-    'Airbyte',
-    'Looker',
-    'Tableau',
-    'Power BI',
-    'Qlik',
-    'ThoughtSpot',
-    'DataRobot',
-    'Weights & Biases',
-    'MLflow',
-  ]
-  const vendorCounts: Record<string, number> = {}
-  TRACKED_VENDORS.forEach(v => { vendorCounts[v] = 0 })
-
-  for (const row of techRows) {
-    const searchText = `${row.job_title} ${(row.tech_stack || []).join(' ')}`.toLowerCase()
-    for (const vendor of TRACKED_VENDORS) {
-      if (searchText.includes(vendor.toLowerCase())) {
-        vendorCounts[vendor]++
-      }
-    }
-  }
-  const topVendors = Object.entries(vendorCounts)
-    .filter(([, count]) => count > 0)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 10)
 
   return (
     <div className="flex flex-col min-h-screen font-sans">
@@ -434,40 +386,27 @@ export default async function Home() {
           </div>
         </section>
 
-        {/* ── Vendor Adoption Signals ──────────────────────────────────── */}
+        {/* ── AI Tools Trending ─────────────────────────────────────────── */}
         <section className="max-w-[1200px] mx-auto px-6 pb-6">
           <div className="border border-[#1E1E1E] rounded-sm p-4">
             <div className="flex items-center justify-between mb-3">
               <div>
-                <h2 className="font-mono text-[10px] uppercase tracking-[2px] text-[#555555]">
-                  Vendor Adoption Signals
-                </h2>
-                <span className="font-mono text-[10px] text-[#555555]">Mentions in enterprise data &amp; AI job postings · 90d</span>
+                <h2 className="font-mono text-[10px] uppercase tracking-[2px] text-[#555555]">Enterprise AI</h2>
+                <span className="font-mono text-[10px] text-[#555555]">What CDOs &amp; CAIOs are deploying</span>
               </div>
+              <a href="/ai-tools" className="font-mono text-[10px] uppercase tracking-[1px] text-[#555555] hover:text-[#E8E8E8] transition-colors">All →</a>
             </div>
-
-            {topVendors.length === 0 ? (
-              <p className="text-xs text-[#555555]">No vendor data yet. Check back after next ingest.</p>
-            ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
-                {topVendors.map(([vendor, count], index) => (
-                  <div
-                    key={vendor}
-                    className="flex items-center gap-3 py-1.5 px-2 border border-[#1E1E1E] rounded-sm hover:border-[#333] transition-colors"
-                  >
-                    <span className="font-mono text-[10px] text-[#555555] w-5 flex-shrink-0">
-                      #{index + 1}
-                    </span>
-                    <span className="text-sm text-[#E8E8E8] flex-1 truncate">
-                      {vendor}
-                    </span>
-                    <span className="font-mono text-xs font-semibold text-[#00FF94] flex-shrink-0">
-                      {count}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            )}
+            <p className="text-sm text-[#888888] leading-relaxed">
+              Track real-time signals on enterprise AI tools — Snowflake Cortex, Databricks AI, agentic analytics, and more.
+            </p>
+            <div className="flex flex-wrap gap-2 mt-3">
+              {["Snowflake Cortex", "Databricks AI", "Agentic Analytics", "Microsoft Copilot", "WisdomAI"].map((tool) => (
+                <a key={tool} href="/ai-tools"
+                  className="font-mono text-[10px] uppercase tracking-[1px] px-2 py-1 border border-[#1E1E1E] rounded-sm text-[#555555] hover:border-[#333] hover:text-[#888888] transition-colors">
+                  {tool}
+                </a>
+              ))}
+            </div>
           </div>
         </section>
 

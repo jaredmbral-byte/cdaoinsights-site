@@ -69,6 +69,15 @@ export interface WeeklyBrief {
   created_at: string
 }
 
+export interface Vendor {
+  id: string
+  name: string
+  slug: string
+  category: string | null
+  website_url: string | null
+  job_mention_count?: number
+}
+
 // ── Filter params ───────────────────────────────────────────────────────────
 
 export interface HiringFilters {

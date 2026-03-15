@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import type { Vendor } from '@/app/vendors/page'
+import type { Vendor } from '@/lib/types'
 
 // Category badge colors
 const CATEGORY_COLORS: Record<string, string> = {
