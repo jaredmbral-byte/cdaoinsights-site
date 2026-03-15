@@ -68,17 +68,9 @@ export default function ServicesPage() {
               </ul>
 
               <div className="mt-auto">
-                <p className="font-mono text-xs text-[#555555] mb-3">
+                <p className="font-mono text-xs text-[#555555]">
                   Contact for pricing
                 </p>
-                <a
-                  href={CALENDLY_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block w-full text-center px-4 py-2 border border-[#1E1E1E] rounded-sm text-sm text-[#E8E8E8] hover:border-[#00FF94] hover:text-[#00FF94] transition-colors"
-                >
-                  Book a 30-Min Call
-                </a>
               </div>
             </div>
 
@@ -118,17 +110,9 @@ export default function ServicesPage() {
               </ul>
 
               <div className="mt-auto">
-                <p className="font-mono text-xs text-[#555555] mb-3">
+                <p className="font-mono text-xs text-[#555555]">
                   Contact for pricing
                 </p>
-                <a
-                  href={CALENDLY_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block w-full text-center px-4 py-2 border border-[#1E1E1E] rounded-sm text-sm text-[#E8E8E8] hover:border-[#00FF94] hover:text-[#00FF94] transition-colors"
-                >
-                  Book a 30-Min Call
-                </a>
               </div>
             </div>
 
@@ -168,17 +152,9 @@ export default function ServicesPage() {
               </ul>
 
               <div className="mt-auto">
-                <p className="font-mono text-xs text-[#555555] mb-3">
+                <p className="font-mono text-xs text-[#555555]">
                   Contact for pricing
                 </p>
-                <a
-                  href={CALENDLY_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block w-full text-center px-4 py-2 border border-[#1E1E1E] rounded-sm text-sm text-[#E8E8E8] hover:border-[#00FF94] hover:text-[#00FF94] transition-colors"
-                >
-                  Book a 30-Min Call
-                </a>
               </div>
             </div>
           </div>
