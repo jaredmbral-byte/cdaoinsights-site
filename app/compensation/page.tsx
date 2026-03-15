@@ -2,6 +2,7 @@ import { createServerClient } from '@/lib/supabase-server'
 import { compBenchmarkSchema, compFaqSchema } from '@/lib/schema'
 import type { CompBenchmark } from '@/lib/types'
 import type { Metadata } from 'next'
+import FaqAccordion from '@/components/FaqAccordion'
 
 export const metadata: Metadata = {
   title: 'CDO & CAIO Compensation Benchmarks | CDAO Insights',
@@ -67,7 +68,35 @@ export default async function CompensationPage({
 
   const benchmarks = await getBenchmarks(role, industry)
 
-  const industries = ['All Industries', ...new Set(benchmarks.map((b) => b.industry).filter(Boolean) as string[])]
+  // Deduplicate benchmarks by role + industry
+  const seenBenchmarks = new Set<string>()
+  const dedupedBenchmarks = benchmarks.filter(b => {
+    const key = `${b.role_title}|${b.industry}`
+    if (seenBenchmarks.has(key)) return false
+    seenBenchmarks.add(key)
+    return true
+  })
+
+  const industries = ['All Industries', ...new Set(
+    benchmarks
+      .map((b) => b.industry)
+      .filter((ind): ind is string => Boolean(ind) && ind !== 'All Industries')
+  )]
+
+  const compFaqs = [
+    {
+      q: 'What is the average salary for a Chief Data Officer in 2026?',
+      a: 'The median total cash compensation for a Chief Data Officer in the United States is approximately $295,000 across all industries. In Financial Services, the median rises to $350,000. In Technology, the median is approximately $335,000. These figures include base salary and bonus but exclude equity compensation.',
+    },
+    {
+      q: 'How does Chief AI Officer compensation compare to Chief Data Officer pay?',
+      a: 'Chief AI Officers typically earn a 10-15% premium over Chief Data Officers. The median CAIO total cash compensation is approximately $325,000 across all industries, compared to $295,000 for CDOs. In Financial Services, the CAIO median reaches $385,000.',
+    },
+    {
+      q: 'Where does CDAO Insights compensation data come from?',
+      a: 'Compensation benchmarks are aggregated from BLS Occupational Employment Statistics, Glassdoor, Levels.fyi, and public company filings. Figures represent total cash compensation (base + bonus). Equity varies significantly and is excluded. Data is refreshed quarterly.',
+    },
+  ]
 
   return (
     <main className="flex-1 max-w-[1200px] mx-auto px-6 pt-16 pb-24 w-full">
@@ -118,24 +147,24 @@ export default async function CompensationPage({
       </div>
 
       {/* Results */}
-      {benchmarks.length > 0 ? (
+      {dedupedBenchmarks.length > 0 ? (
         <div className="border border-[#1E1E1E] rounded-sm overflow-hidden">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-[#1E1E1E] bg-[#111111]">
-                <th className="text-left font-mono text-xs font-medium uppercase tracking-[1px] text-[#555555] px-4 py-3">
+                <th className="text-left font-mono text-xs font-medium uppercase tracking-[1px] text-[#888888] px-4 py-3">
                   Role
                 </th>
                 <th className="text-left font-mono text-xs font-medium uppercase tracking-[1px] text-[#555555] px-4 py-3 hidden sm:table-cell">
                   Industry
                 </th>
-                <th className="text-right font-mono text-xs font-medium uppercase tracking-[1px] text-[#555555] px-4 py-3">
+                <th className="text-right font-mono text-xs font-medium uppercase tracking-[1px] text-[#888888] px-4 py-3">
                   25th
                 </th>
-                <th className="text-right font-mono text-xs font-medium uppercase tracking-[1px] text-[#555555] px-4 py-3">
+                <th className="text-right font-mono text-xs font-medium uppercase tracking-[1px] text-[#888888] px-4 py-3">
                   Median
                 </th>
-                <th className="text-right font-mono text-xs font-medium uppercase tracking-[1px] text-[#555555] px-4 py-3">
+                <th className="text-right font-mono text-xs font-medium uppercase tracking-[1px] text-[#888888] px-4 py-3">
                   75th
                 </th>
                 <th className="text-right font-mono text-xs font-medium uppercase tracking-[1px] text-[#555555] px-4 py-3 hidden md:table-cell">
@@ -144,7 +173,7 @@ export default async function CompensationPage({
               </tr>
             </thead>
             <tbody>
-              {benchmarks.map((b) => (
+              {dedupedBenchmarks.map((b) => (
                 <tr
                   key={b.id}
                   className="border-b border-[#1E1E1E] last:border-b-0 hover:bg-[#111111] transition-colors"
@@ -189,41 +218,7 @@ export default async function CompensationPage({
         <h2 className="text-xl font-semibold text-[#E8E8E8] mb-8">
           Frequently asked questions
         </h2>
-        <div className="space-y-6 max-w-3xl">
-          <div>
-            <h3 className="text-sm font-medium text-[#E8E8E8] mb-2">
-              What is the average salary for a Chief Data Officer in 2026?
-            </h3>
-            <p className="text-sm text-[#888888] leading-relaxed">
-              The median total cash compensation for a Chief Data Officer in the United States
-              is approximately $295,000 across all industries. In Financial Services, the
-              median rises to $350,000. In Technology, the median is approximately $335,000.
-              These figures include base salary and bonus but exclude equity compensation.
-            </p>
-          </div>
-          <div>
-            <h3 className="text-sm font-medium text-[#E8E8E8] mb-2">
-              How does Chief AI Officer compensation compare to Chief Data Officer pay?
-            </h3>
-            <p className="text-sm text-[#888888] leading-relaxed">
-              Chief AI Officers typically earn a 10-15% premium over Chief Data Officers. The
-              median CAIO total cash compensation is approximately $325,000 across all
-              industries, compared to $295,000 for CDOs. In Financial Services, the CAIO
-              median reaches $385,000.
-            </p>
-          </div>
-          <div>
-            <h3 className="text-sm font-medium text-[#E8E8E8] mb-2">
-              Where does CDAO Insights compensation data come from?
-            </h3>
-            <p className="text-sm text-[#888888] leading-relaxed">
-              Compensation benchmarks are aggregated from BLS Occupational Employment
-              Statistics, Glassdoor, Levels.fyi, and public company filings. Figures represent
-              total cash compensation (base + bonus). Equity varies significantly and is
-              excluded. Data is refreshed quarterly.
-            </p>
-          </div>
-        </div>
+        <FaqAccordion items={compFaqs} />
       </section>
 
       <script

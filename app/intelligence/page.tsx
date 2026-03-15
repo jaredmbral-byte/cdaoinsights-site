@@ -108,6 +108,18 @@ export default async function IntelligencePage({
     .sort(([, a], [, b]) => b - a)
     .slice(0, 8)
 
+  // Deduplicate articles by normalized title
+  function normalizeTitle(t: string) {
+    return t.toLowerCase().replace(/[^a-z0-9]/g, '')
+  }
+  const seenTitles = new Set<string>()
+  const dedupedArticles = filteredArticles.filter(a => {
+    const norm = normalizeTitle(a.title)
+    if (seenTitles.has(norm)) return false
+    seenTitles.add(norm)
+    return true
+  })
+
   return (
     <main className="flex-1 max-w-[1200px] mx-auto px-6 pt-10 pb-24 w-full">
       {/* Compact header */}
@@ -120,6 +132,11 @@ export default async function IntelligencePage({
       <p className="text-sm text-[#888888] leading-relaxed max-w-2xl mb-6">
         Aggregated market signals for enterprise data &amp; AI leaders. {allArticles.length} articles tracked across {Object.keys(topicCounts).length} topics.
       </p>
+      {dedupedArticles[0]?.published_at && (
+        <p className="font-mono text-[10px] text-[#555555] mt-1 mb-6">
+          Last signal: {new Date(dedupedArticles[0].published_at).toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}
+        </p>
+      )}
 
       {/* ── Dashboard Grid ─────────────────────────────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-4">
@@ -182,17 +199,17 @@ export default async function IntelligencePage({
               {activeTopic ? (TOPIC_META[activeTopic]?.label || activeTopic) + ' Signals' : 'Latest Signals'}
             </h2>
             <span className="font-mono text-[10px] text-[#555555]">
-              {filteredArticles.length} results
+              {dedupedArticles.length} results
             </span>
           </div>
 
-          {filteredArticles.length === 0 ? (
+          {dedupedArticles.length === 0 ? (
             <div className="p-8 text-center">
               <p className="text-xs text-[#555555]">No signals found for this topic. Try a different filter.</p>
             </div>
           ) : (
             <div className="divide-y divide-[#1E1E1E]">
-              {filteredArticles.map((article) => (
+              {dedupedArticles.map((article) => (
                 <a
                   key={article.id}
                   href={article.source_url}
@@ -238,7 +255,7 @@ export default async function IntelligencePage({
       {/* JSON-LD for AEO — preserved */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleListSchema(filteredArticles)) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleListSchema(dedupedArticles)) }}
       />
     </main>
   )

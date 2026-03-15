@@ -2,6 +2,7 @@ import { createServerClient } from '@/lib/supabase-server'
 import { hiringListSchema, hiringFaqSchema } from '@/lib/schema'
 import type { HiringSignal } from '@/lib/types'
 import type { Metadata } from 'next'
+import FaqAccordion from '@/components/FaqAccordion'
 
 export const metadata: Metadata = {
   title: 'CDO & CAIO Job Openings | CDAO Insights',
@@ -67,6 +68,21 @@ export default async function HiringPage({
       )
     : signals
 
+  const hiringFaqs = [
+    {
+      q: 'What roles does the CDAO Insights hiring tracker cover?',
+      a: 'The hiring tracker monitors Chief Data Officer (CDO), Chief AI Officer (CAIO), Chief Data and AI Officer (CDAIO), VP of Data, VP of Analytics, Head of Data, Head of AI, and Director-level data leadership roles at enterprise organizations. Job postings are sourced from Indeed and Firecrawl search.',
+    },
+    {
+      q: 'How often is the hiring data updated?',
+      a: 'The hiring feed is refreshed every 6 hours from Indeed RSS feeds and Firecrawl web search. Listings are deduplicated by job title and company name to prevent duplicates.',
+    },
+    {
+      q: 'What industries are tracked for data and AI executive hiring?',
+      a: 'Roles are classified across Financial Services, Healthcare, Technology, Retail, Manufacturing, Energy, Insurance, Media & Telecom, Government, Education, and Consulting. Industry classification is based on company name and job description keywords.',
+    },
+  ]
+
   return (
     <main className="flex-1 max-w-[1200px] mx-auto px-6 pt-16 pb-24 w-full">
       {/* Page header */}
@@ -74,11 +90,10 @@ export default async function HiringPage({
         Executive Hiring Tracker
       </p>
       <h1 className="text-3xl sm:text-4xl font-semibold leading-[1.15] tracking-[-0.5px] text-[#E8E8E8] mb-3">
-        New CDO, CAIO &amp; data leadership appointments
+        Open CDO, CAIO &amp; data leadership roles
       </h1>
       <p className="text-base text-[#888888] leading-relaxed max-w-2xl mb-10">
-        Real-time tracking of CDO, CAIO, VP Data, and senior leadership roles
-        at large enterprises. Updated every 6 hours.
+        Open job postings for CDO, CAIO, VP Data, and senior data leadership roles at large enterprises. Updated every 6 hours.
       </p>
 
       {/* Time window */}
@@ -109,10 +124,10 @@ export default async function HiringPage({
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-[#1E1E1E] bg-[#111111]">
-                <th className="text-left font-mono text-xs font-medium uppercase tracking-[1px] text-[#555555] px-4 py-3">
+                <th className="text-left font-mono text-xs font-medium uppercase tracking-[1px] text-[#888888] px-4 py-3">
                   Role
                 </th>
-                <th className="text-left font-mono text-xs font-medium uppercase tracking-[1px] text-[#555555] px-4 py-3">
+                <th className="text-left font-mono text-xs font-medium uppercase tracking-[1px] text-[#888888] px-4 py-3">
                   Company
                 </th>
                 <th className="text-left font-mono text-xs font-medium uppercase tracking-[1px] text-[#555555] px-4 py-3 hidden md:table-cell">
@@ -121,7 +136,7 @@ export default async function HiringPage({
                 <th className="text-left font-mono text-xs font-medium uppercase tracking-[1px] text-[#555555] px-4 py-3 hidden md:table-cell">
                   Level
                 </th>
-                <th className="text-right font-mono text-xs font-medium uppercase tracking-[1px] text-[#555555] px-4 py-3">
+                <th className="text-right font-mono text-xs font-medium uppercase tracking-[1px] text-[#888888] px-4 py-3">
                   Posted
                 </th>
               </tr>
@@ -182,40 +197,7 @@ export default async function HiringPage({
         <h2 className="text-xl font-semibold text-[#E8E8E8] mb-8">
           Frequently asked questions
         </h2>
-        <div className="space-y-6 max-w-3xl">
-          <div>
-            <h3 className="text-sm font-medium text-[#E8E8E8] mb-2">
-              What roles does the CDAO Insights hiring tracker cover?
-            </h3>
-            <p className="text-sm text-[#888888] leading-relaxed">
-              The hiring tracker monitors Chief Data Officer (CDO), Chief AI Officer (CAIO),
-              Chief Data and AI Officer (CDAIO), VP of Data, VP of Analytics, Head of Data,
-              Head of AI, and Director-level data leadership roles at enterprise organizations.
-              Job postings are sourced from Indeed and Firecrawl search.
-            </p>
-          </div>
-          <div>
-            <h3 className="text-sm font-medium text-[#E8E8E8] mb-2">
-              How often is the hiring data updated?
-            </h3>
-            <p className="text-sm text-[#888888] leading-relaxed">
-              The hiring feed is refreshed every 6 hours from Indeed RSS feeds and Firecrawl
-              web search. Listings are deduplicated by job title and company name to prevent
-              duplicates.
-            </p>
-          </div>
-          <div>
-            <h3 className="text-sm font-medium text-[#E8E8E8] mb-2">
-              What industries are tracked for data and AI executive hiring?
-            </h3>
-            <p className="text-sm text-[#888888] leading-relaxed">
-              Roles are classified across Financial Services, Healthcare, Technology, Retail,
-              Manufacturing, Energy, Insurance, Media &amp; Telecom, Government, Education,
-              and Consulting. Industry classification is based on company name and job
-              description keywords.
-            </p>
-          </div>
-        </div>
+        <FaqAccordion items={hiringFaqs} />
       </section>
 
       {/* AEO: Structured data */}

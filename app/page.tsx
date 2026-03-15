@@ -1,5 +1,6 @@
 import HiringTicker from '@/components/HiringTicker'
 import MovesTicker from '@/components/MovesTicker'
+import FaqAccordion from '@/components/FaqAccordion'
 import { createServerClient } from '@/lib/supabase-server'
 import { cleanTitle, cleanSummary } from '@/lib/text'
 import type { ExecutiveMove, CompBenchmark } from '@/lib/types'
@@ -363,7 +364,7 @@ export default async function Home() {
                             {move.company_name && (
                               <span className="text-[#888888]">{move.company_name}</span>
                             )}
-                            {move.published_at && (
+                            {move.published_at && !isNaN(new Date(move.published_at).getTime()) && (
                               <>
                                 {move.company_name && <span className="text-[#333]">|</span>}
                                 <span className="font-mono">{timeAgo(move.published_at)}</span>
@@ -482,18 +483,7 @@ export default async function Home() {
           >
             Context
           </h2>
-          <dl className="space-y-10">
-            {faqs.map((item, i) => (
-              <div key={i}>
-                <dt className="text-base font-medium text-[#E8E8E8] mb-3">
-                  {item.q}
-                </dt>
-                <dd className="text-sm text-[#888888] leading-relaxed max-w-2xl">
-                  {item.a}
-                </dd>
-              </div>
-            ))}
-          </dl>
+          <FaqAccordion items={faqs} />
         </section>
       </main>
     </div>
