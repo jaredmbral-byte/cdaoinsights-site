@@ -2,6 +2,8 @@ import { createServerClient } from '@/lib/supabase-server'
 import { cleanTitle } from '@/lib/text'
 import type { Metadata } from 'next'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'New CDO & CAIO Appointments This Week | CDAO Insights',
   description: 'Weekly list of new Chief Data Officer and Chief AI Officer appointments at enterprise companies. Get the full list delivered to your inbox.',
