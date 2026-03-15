@@ -96,7 +96,7 @@ export default async function NewCdoListPage() {
           <h2 className="font-mono text-[10px] uppercase tracking-[2px] text-[#555555]">
             Preview — Last 7 Days
           </h2>
-          <span className="font-mono text-[10px] text-[#555555]">Showing 5 of {preview.length}+</span>
+          <span className="font-mono text-[10px] text-[#555555]">Showing {Math.min(preview.length, 5)} of {totalThisMonth}+</span>
         </div>
         <div className="border border-[#1E1E1E] rounded-sm overflow-hidden">
           {preview.length === 0 ? (
@@ -109,9 +109,9 @@ export default async function NewCdoListPage() {
                 <div key={move.id} className="px-4 py-3 flex items-start justify-between gap-4">
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2 mb-0.5">
-                      {move.person_name && (
-                        <span className="text-sm font-medium text-[#E8E8E8]">{move.person_name}</span>
-                      )}
+                      <span className="text-sm font-medium text-[#E8E8E8]">
+                        {move.person_name || cleanTitle(move.headline).slice(0, 60)}
+                      </span>
                       {move.title && (
                         <span className="font-mono text-[10px] uppercase tracking-[1px] px-1.5 py-0.5 border border-[#00FF94]/30 text-[#00FF94] rounded-sm">
                           {move.title}

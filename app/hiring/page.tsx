@@ -30,12 +30,13 @@ const TIME_WINDOWS = [
   { label: '90 days', value: '90' },
 ]
 
-async function getHiringSignals(days?: number): Promise<HiringSignal[]> {
+async function getHiringSignals(days?: number, seniority?: string): Promise<HiringSignal[]> {
   const supabase = createServerClient()
 
   let query = supabase
     .from('hiring_signals')
     .select('*')
+    .eq('is_featured', true)
     .order('posted_at', { ascending: false })
     .limit(100)
 
@@ -45,6 +46,10 @@ async function getHiringSignals(days?: number): Promise<HiringSignal[]> {
     query = query.gte('posted_at', cutoff.toISOString())
   }
 
+  if (seniority) {
+    query = query.eq('seniority', seniority)
+  }
+
   const { data } = await query
   return (data as HiringSignal[]) || []
 }
@@ -52,13 +57,14 @@ async function getHiringSignals(days?: number): Promise<HiringSignal[]> {
 export default async function HiringPage({
   searchParams,
 }: {
-  searchParams: Promise<{ days?: string; q?: string }>
+  searchParams: Promise<{ days?: string; q?: string; seniority?: string }>
 }) {
   const params = await searchParams
   const days = params.days ? parseInt(params.days) : 90
   const search = params.q
+  const seniority = params.seniority
 
-  const signals = await getHiringSignals(days)
+  const signals = await getHiringSignals(days, seniority)
 
   const filtered = search
     ? signals.filter(
@@ -97,11 +103,11 @@ export default async function HiringPage({
       </p>
 
       {/* Time window */}
-      <div className="flex gap-2 mb-10">
+      <div className="flex gap-2 mb-6">
         {TIME_WINDOWS.map((tw) => (
           <a
             key={tw.value}
-            href={`/hiring?days=${tw.value}${search ? `&q=${search}` : ''}`}
+            href={`/hiring?days=${tw.value}${search ? `&q=${search}` : ''}${seniority ? `&seniority=${seniority}` : ''}`}
             className={`font-mono text-xs uppercase tracking-[1px] px-3 py-1.5 border-b-2 transition-colors ${
               String(days) === tw.value
                 ? 'border-[#00FF94] text-[#E8E8E8]'
@@ -109,6 +115,33 @@ export default async function HiringPage({
             }`}
           >
             {tw.label}
+          </a>
+        ))}
+      </div>
+
+      {/* Seniority filter */}
+      <div className="flex gap-2 mb-10">
+        <a
+          href={`/hiring?days=${days}${search ? `&q=${search}` : ''}`}
+          className={`font-mono text-[10px] uppercase tracking-[1px] px-3 py-1.5 rounded-sm transition-colors ${
+            !seniority
+              ? 'bg-[#E8E8E8] text-[#0A0A0A]'
+              : 'text-[#555555] hover:text-[#E8E8E8] border border-[#1E1E1E]'
+          }`}
+        >
+          All
+        </a>
+        {['C-Suite', 'SVP', 'VP', 'Director+'].map((level) => (
+          <a
+            key={level}
+            href={`/hiring?days=${days}${search ? `&q=${search}` : ''}&seniority=${level}`}
+            className={`font-mono text-[10px] uppercase tracking-[1px] px-3 py-1.5 rounded-sm transition-colors ${
+              seniority === level
+                ? 'bg-[#E8E8E8] text-[#0A0A0A]'
+                : 'text-[#555555] hover:text-[#E8E8E8] border border-[#1E1E1E]'
+            }`}
+          >
+            {level}
           </a>
         ))}
       </div>

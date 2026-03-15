@@ -79,6 +79,9 @@ export default async function Home() {
   const cutoff30 = new Date()
   cutoff30.setDate(cutoff30.getDate() - 30)
 
+  const cutoff7 = new Date()
+  cutoff7.setDate(cutoff7.getDate() - 7)
+
   // Parallel data fetch — dashboard panels
   const [
     movesResult,
@@ -89,6 +92,7 @@ export default async function Home() {
     hiringSeniorityResult,
     movesTypeResult,
     marketTopicsResult,
+    aiToolsCountResult,
   ] = await Promise.all([
     // Latest 5 executive moves
     supabase
@@ -134,6 +138,12 @@ export default async function Home() {
       .from('market_articles')
       .select('topics')
       .gte('published_at', cutoff30.toISOString()),
+    // AI tools count (last 7 days)
+    supabase
+      .from('market_articles')
+      .select('id', { count: 'exact', head: true })
+      .or('topics.cs.{enterprise-ai-tools},topics.cs.{agentic-ai}')
+      .gte('published_at', cutoff7.toISOString()),
   ])
 
   const latestMoves = (movesResult.data || []) as ExecutiveMove[]
@@ -180,6 +190,9 @@ export default async function Home() {
   const topTopics = Object.entries(topicCounts)
     .sort((a, b) => b[1] - a[1])
     .slice(0, 5)
+
+  // AI tools count
+  const aiToolsCount = aiToolsCountResult.count ?? 0
 
   return (
     <div className="flex flex-col min-h-screen font-sans">
@@ -257,14 +270,18 @@ export default async function Home() {
               {/* Seniority breakdown */}
               <div>
                 <h3 className="font-mono text-[10px] uppercase tracking-[1px] text-[#555555] mb-2">By Seniority</h3>
-                {['C-Suite', 'SVP', 'VP', 'Director+', 'Other'].map((level) => (
-                  <a key={level} href="/hiring" className="flex items-center justify-between py-1.5 border-b border-[#1E1E1E] last:border-0 hover:bg-[#111111] transition-colors">
-                    <span className="text-xs text-[#888888]">{level}</span>
-                    <span className="font-mono text-sm font-semibold text-[#E8E8E8]">
-                      {seniorityCounts[level] || 0}
-                    </span>
-                  </a>
-                ))}
+                {['C-Suite', 'SVP', 'VP', 'Director+', 'Other'].map((level) => {
+                  const count = seniorityCounts[level] || 0
+                  if (count === 0) return null
+                  return (
+                    <a key={level} href="/hiring" className="flex items-center justify-between py-1.5 border-b border-[#1E1E1E] last:border-0 hover:bg-[#111111] transition-colors">
+                      <span className="text-xs text-[#888888]">{level}</span>
+                      <span className="font-mono text-sm font-semibold text-[#E8E8E8]">
+                        {count}
+                      </span>
+                    </a>
+                  )
+                })}
               </div>
 
               <p className="font-mono text-[10px] text-[#555555] mt-3">90-day window</p>
@@ -397,7 +414,8 @@ export default async function Home() {
               <a href="/ai-tools" className="font-mono text-[10px] uppercase tracking-[1px] text-[#555555] hover:text-[#E8E8E8] transition-colors">All →</a>
             </div>
             <p className="text-sm text-[#888888] leading-relaxed">
-              Track real-time signals on enterprise AI tools — Snowflake Cortex, Databricks AI, agentic analytics, and more.
+              <span className="text-[#00FF94] font-semibold">{aiToolsCount}</span> enterprise AI signals tracked this week.
+              Snowflake Cortex, Databricks AI, agentic analytics, and more.
             </p>
             <div className="flex flex-wrap gap-2 mt-3">
               {["Snowflake Cortex", "Databricks AI", "Agentic Analytics", "Microsoft Copilot", "WisdomAI"].map((tool) => (

@@ -213,10 +213,12 @@ export default async function MovesPage({
                         {move.company_name && (
                           <span className="text-[#888888]">{move.company_name}</span>
                         )}
-                        {move.company_name && move.source_name && (
-                          <span className="text-[#333]">|</span>
+                        {(move.source_name && move.source_name !== 'Google News') && (
+                          <>
+                            {move.company_name && <span className="text-[#333]">|</span>}
+                            <span>{move.source_name}</span>
+                          </>
                         )}
-                        {move.source_name && <span>{move.source_name}</span>}
                         {move.published_at && (
                           <>
                             <span className="text-[#333]">|</span>
@@ -231,13 +233,13 @@ export default async function MovesPage({
                           {move.person_name}
                         </span>
                       )}
-                      {move.move_type && (
+                      {move.move_type && MOVE_TYPE_LABELS[move.move_type] && (
                         <span className={`font-mono text-[10px] uppercase tracking-[1px] px-2 py-0.5 rounded-sm border ${
                           move.move_type === 'leaves'
                             ? 'border-red-500/30 text-[#EF4444]'
                             : 'border-[#1E1E1E] text-[#888888]'
                         }`}>
-                          {MOVE_TYPE_LABELS[move.move_type] || move.move_type}
+                          {MOVE_TYPE_LABELS[move.move_type]}
                         </span>
                       )}
                     </div>

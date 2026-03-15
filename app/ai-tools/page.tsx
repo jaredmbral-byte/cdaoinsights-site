@@ -58,8 +58,8 @@ export default async function AiToolsPage({
   cutoff30.setDate(cutoff30.getDate() - 30);
 
   const spotlightFilter = [
-    ...SPOTLIGHT_SOURCES.map((s) => `source_name.eq.${s}`),
     ...SPOTLIGHT_KEYWORDS.map((k) => `title.ilike.%${k}%`),
+    ...SPOTLIGHT_SOURCES.map((s) => `source_name.eq.${s}`),
   ].join(",");
 
   const [spotlightResult, allToolsResult, fundingResult, dynamicTopicsResult] = await Promise.all([
