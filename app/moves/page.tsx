@@ -117,13 +117,6 @@ export default async function MovesPage({
             6 hours.
           </p>
 
-          {/* Product callout */}
-          <div className="border border-[#1E1E1E] rounded-sm px-4 py-2.5 mb-6 flex items-center justify-between max-w-xl">
-            <p className="text-xs text-[#888888]">Want the full weekly appointment list as a CSV?</p>
-            <a href="/intelligence/new-cdo-list" className="font-mono text-[10px] uppercase tracking-[1px] text-[#00FF94] hover:text-[#00CC77] transition-colors whitespace-nowrap ml-4">
-              Learn more →
-            </a>
-          </div>
 
           {/* ── Filters ────────────────────────────────────────────────────── */}
           <div className="flex flex-wrap gap-3 mb-8">
