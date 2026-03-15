@@ -1,6 +1,43 @@
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase-admin'
 import { passesNegativeFilter } from '@/lib/filters'
+import Anthropic from '@anthropic-ai/sdk'
+
+const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+
+async function extractMoveDetails(headline: string): Promise<{ person_name: string | null; title: string | null; company_name: string | null; move_type: string | null }> {
+  try {
+    const response = await anthropic.messages.create({
+      model: 'claude-haiku-4-5',
+      max_tokens: 150,
+      messages: [{
+        role: 'user',
+        content: `Extract from this executive appointment headline. Return ONLY valid JSON with these fields:
+- person_name: full name of the person (or null)
+- title: their new job title (or null)
+- company_name: the company they joined (or null)
+- move_type: one of "appointed", "named", "joins", "leaves", "promoted" (or null)
+
+Headline: "${headline}"
+
+JSON:`
+      }]
+    })
+    const content = response.content[0]
+    if (content.type !== 'text') return { person_name: null, title: null, company_name: null, move_type: null }
+    const match = content.text.match(/\{[\s\S]*?\}/)
+    if (!match) return { person_name: null, title: null, company_name: null, move_type: null }
+    const parsed = JSON.parse(match[0])
+    return {
+      person_name: parsed.person_name || null,
+      title: parsed.title || null,
+      company_name: parsed.company_name || null,
+      move_type: parsed.move_type || null,
+    }
+  } catch {
+    return { person_name: null, title: null, company_name: null, move_type: null }
+  }
+}
 
 // Cron-triggered: pull C-Suite executive move announcements
 // (CDO/CAIO/CDAIO/CAO appointments and departures only)
@@ -295,11 +332,20 @@ export async function POST(request: Request) {
           continue
         }
 
-        const moveType = classifyMoveType(item.title) || classifyMoveType(item.description)
-        const personName = extractPersonName(item.title)
-        const companyName = extractCompanyName(item.title)
-        const execTitle = extractTitle(item.title) || extractTitle(item.description)
+        let moveType = classifyMoveType(item.title) || classifyMoveType(item.description)
+        let personName = extractPersonName(item.title)
+        let companyName = extractCompanyName(item.title)
+        let execTitle = extractTitle(item.title) || extractTitle(item.description)
         const publishedAt = item.pubDate ? new Date(item.pubDate).toISOString() : null
+
+        // Use Claude Haiku to extract missing fields if API key is available
+        if (!personName && process.env.ANTHROPIC_API_KEY) {
+          const extracted = await extractMoveDetails(item.title)
+          personName = personName || extracted.person_name
+          execTitle = execTitle || extracted.title
+          companyName = companyName || extracted.company_name
+          moveType = moveType || extracted.move_type
+        }
 
         // Multi-layer dedup to catch near-duplicate move announcements
         const windowStart = new Date(Date.now() - 7 * 24 * 3600_000).toISOString()

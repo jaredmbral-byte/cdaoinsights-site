@@ -23,6 +23,21 @@ export const metadata: Metadata = {
 
 export const revalidate = 900 // 15 minutes
 
+const TOPIC_DISPLAY_ORDER = [
+  'agentic-ai',
+  'enterprise-ai-tools',
+  'ai',
+  'governance',
+  'funding',
+  'infrastructure',
+  'strategy',
+  'genai',
+  'data-quality',
+  'security',
+  'layoffs',
+  'general',
+]
+
 const TOPIC_META: Record<string, { label: string; color: string }> = {
   ai: { label: 'AI', color: 'border-blue-500/30 text-blue-400' },
   genai: { label: 'GenAI', color: 'border-purple-500/30 text-purple-400' },
@@ -78,7 +93,7 @@ export default async function IntelligencePage({
         .select('id, title, source_name, source_url, published_at, topics, relevance')
         .gte('relevance', 0.5)
         .order('published_at', { ascending: false })
-        .limit(100)
+        .limit(200)
       if (activeTopic) {
         q = q.contains('topics', [activeTopic])
       }
@@ -195,60 +210,124 @@ export default async function IntelligencePage({
 
         {/* ── Right Column — Signal Table ──────────────────────────────── */}
         <div className="border border-[#1E1E1E] rounded-sm overflow-hidden">
-          <div className="flex items-center justify-between px-4 py-3 border-b border-[#1E1E1E]">
-            <h2 className="font-mono text-[10px] uppercase tracking-[2px] text-[#555555]">
-              {activeTopic ? (TOPIC_META[activeTopic]?.label || activeTopic) + ' Signals' : 'Latest Signals'}
-            </h2>
-            <span className="font-mono text-[10px] text-[#555555]">
-              {dedupedArticles.length} results
-            </span>
-          </div>
+          {activeTopic ? (
+            // ── Filtered View (topic selected) ──────────────────────────
+            <>
+              <div className="flex items-center justify-between px-4 py-3 border-b border-[#1E1E1E]">
+                <h2 className="font-mono text-[10px] uppercase tracking-[2px] text-[#555555]">
+                  {(TOPIC_META[activeTopic]?.label || activeTopic) + ' Signals'}
+                </h2>
+                <span className="font-mono text-[10px] text-[#555555]">
+                  {dedupedArticles.length} results
+                </span>
+              </div>
 
-          {dedupedArticles.length === 0 ? (
-            <div className="p-8 text-center">
-              <p className="text-xs text-[#555555]">No signals found for this topic. Try a different filter.</p>
-            </div>
-          ) : (
-            <div className="divide-y divide-[#1E1E1E]">
-              {dedupedArticles.map((article) => (
-                <a
-                  key={article.id}
-                  href={article.source_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block px-4 py-2.5 hover:bg-[#111111] transition-colors group"
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0 flex-1">
-                      <h3 className="text-sm text-[#E8E8E8] group-hover:text-[#3B82F6] leading-snug line-clamp-1">
-                        {cleanTitle(article.title)}
-                      </h3>
-                      <div className="flex items-center gap-2 mt-1">
-                        {article.topics.slice(0, 2).map((t) => {
-                          const meta = TOPIC_META[t] || TOPIC_META.general
-                          return (
-                            <span
-                              key={t}
-                              className={`font-mono text-[9px] uppercase tracking-[1px] px-1.5 py-0.5 rounded-sm border ${meta.color}`}
-                            >
-                              {meta.label}
-                            </span>
-                          )
-                        })}
-                        {article.source_name && (
-                          <span className="font-mono text-[10px] text-[#555555]">
-                            {article.source_name}
-                          </span>
-                        )}
+              {dedupedArticles.length === 0 ? (
+                <div className="p-8 text-center">
+                  <p className="text-xs text-[#555555]">No signals found for this topic. Try a different filter.</p>
+                </div>
+              ) : (
+                <div className="divide-y divide-[#1E1E1E]">
+                  {dedupedArticles.map((article) => (
+                    <a
+                      key={article.id}
+                      href={article.source_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block px-4 py-2.5 hover:bg-[#111111] transition-colors group"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0 flex-1">
+                          <h3 className="text-sm text-[#E8E8E8] group-hover:text-[#3B82F6] leading-snug line-clamp-1">
+                            {cleanTitle(article.title)}
+                          </h3>
+                          <div className="flex items-center gap-2 mt-1">
+                            {article.topics.slice(0, 2).map((t) => {
+                              const meta = TOPIC_META[t] || TOPIC_META.general
+                              return (
+                                <span
+                                  key={t}
+                                  className={`font-mono text-[9px] uppercase tracking-[1px] px-1.5 py-0.5 rounded-sm border ${meta.color}`}
+                                >
+                                  {meta.label}
+                                </span>
+                              )
+                            })}
+                            {article.source_name && (
+                              <span className="font-mono text-[10px] text-[#555555]">
+                                {article.source_name}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        <span className="font-mono text-[10px] text-[#555555] whitespace-nowrap mt-1 flex-shrink-0">
+                          {article.published_at ? timeAgo(article.published_at) : '\u2014'}
+                        </span>
                       </div>
-                    </div>
-                    <span className="font-mono text-[10px] text-[#555555] whitespace-nowrap mt-1 flex-shrink-0">
-                      {article.published_at ? timeAgo(article.published_at) : '\u2014'}
-                    </span>
-                  </div>
-                </a>
-              ))}
-            </div>
+                    </a>
+                  ))}
+                </div>
+              )}
+            </>
+          ) : (
+            // ── Grouped View (no topic filter) ──────────────────────────
+            <>
+              <div className="flex items-center justify-between px-4 py-3 border-b border-[#1E1E1E]">
+                <h2 className="font-mono text-[10px] uppercase tracking-[2px] text-[#555555]">
+                  Intelligence by Topic
+                </h2>
+                <span className="font-mono text-[10px] text-[#555555]">
+                  {dedupedArticles.length} total
+                </span>
+              </div>
+
+              {dedupedArticles.length === 0 ? (
+                <div className="p-8 text-center">
+                  <p className="text-xs text-[#555555]">No signals available.</p>
+                </div>
+              ) : (
+                <div>
+                  {TOPIC_DISPLAY_ORDER.map(topic => {
+                    const topicArticles = dedupedArticles.filter(a => a.topics.includes(topic)).slice(0, 5)
+                    if (topicArticles.length === 0) return null
+                    const meta = TOPIC_META[topic] || TOPIC_META.general
+                    return (
+                      <div key={topic} className="mb-6 last:mb-0">
+                        {/* Topic header */}
+                        <div className="flex items-center justify-between px-4 py-2 border-b border-[#1E1E1E]">
+                          <span className={`font-mono text-[10px] uppercase tracking-[2px] px-2 py-0.5 rounded-sm border ${meta.color}`}>
+                            {meta.label}
+                          </span>
+                          <a href={`/intelligence?topic=${topic}`} className="font-mono text-[10px] text-[#555555] hover:text-[#E8E8E8] transition-colors">
+                            View all →
+                          </a>
+                        </div>
+                        {/* Articles in this topic */}
+                        {topicArticles.map(article => (
+                          <a key={article.id} href={article.source_url} target="_blank" rel="noopener noreferrer"
+                            className="block px-4 py-2.5 hover:bg-[#111111] transition-colors group border-b border-[#1E1E1E] last:border-0">
+                            <div className="flex items-start justify-between gap-3">
+                              <div className="min-w-0 flex-1">
+                                <h3 className="text-sm text-[#E8E8E8] group-hover:text-[#3B82F6] leading-snug line-clamp-1">
+                                  {cleanTitle(article.title)}
+                                </h3>
+                                {article.source_name && (
+                                  <span className="font-mono text-[10px] text-[#555555]">{article.source_name}</span>
+                                )}
+                              </div>
+                              <span className="font-mono text-[10px] text-[#555555] whitespace-nowrap mt-1 flex-shrink-0">
+                                {article.published_at && !isNaN(new Date(article.published_at).getTime())
+                                  ? timeAgo(article.published_at) : '—'}
+                              </span>
+                            </div>
+                          </a>
+                        ))}
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>

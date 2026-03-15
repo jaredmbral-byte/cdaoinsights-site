@@ -3,6 +3,7 @@
     { "path": "/api/ingest/hiring", "schedule": "0 6 * * *" },
     { "path": "/api/ingest/news", "schedule": "0 9 * * *" },
     { "path": "/api/ingest/moves", "schedule": "0 8 * * *" },
-    { "path": "/api/ingest/compensation", "schedule": "0 0 1 * *" }
+    { "path": "/api/ingest/compensation", "schedule": "0 0 1 * *" },
+    { "path": "/api/digest/weekly", "schedule": "0 8 * * 1" }
   ]
 }
