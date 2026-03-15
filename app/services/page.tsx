@@ -22,16 +22,16 @@ export default function ServicesPage() {
         {/* Hero */}
         <section className="max-w-[1200px] mx-auto px-6 pt-12 pb-10 border-b border-[#1E1E1E]">
           <h1 className="text-3xl font-semibold leading-tight tracking-[-0.5px] text-[#E8E8E8] mb-4 max-w-2xl">
-            Your competitors are already in the room with the buyers you need.
+            The executives you need are already in someone else's pipeline.
           </h1>
           <p className="text-sm text-[#888888] leading-relaxed max-w-xl mb-3">
-            Enterprise data and AI leaders — Chief Data Officers, Chief AI Officers, Chief Data and AI Officers, VPs of Data, VPs of AI, and VPs of Analytics — delete 50 cold emails before lunch. They take meetings from people they trust. Most vendors never figure out how to become one of those people.
+            Senior data and AI leaders get dozens of cold pitches a week. They respond to almost none of them. The vendors winning their attention built real relationships — or hired someone who already had them.
           </p>
           <p className="text-sm text-[#888888] leading-relaxed max-w-xl mb-3">
-            That gap is widening fast. AI is changing how top GTM teams build pipeline. If your outreach still looks the same as it did two years ago, you are already behind.
+            I specialize in reaching CDOs, CAIOs, VPs of Data, and VPs of Analytics. I also help startups and early-stage companies build pipeline into broader technology buyers: CIOs, CTOs, CMOs, and CISOs.
           </p>
-          <p className="text-sm text-[#555555] leading-relaxed max-w-xl">
-            Also work with startups and early-stage companies building pipeline into broader technology buyers: CIOs, CTOs, CMOs, and CISOs.
+          <p className="text-sm text-[#888888] leading-relaxed max-w-xl">
+            AI is making the gap wider. Fast.
           </p>
         </section>
 
