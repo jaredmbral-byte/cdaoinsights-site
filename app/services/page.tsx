@@ -165,7 +165,7 @@ export default function ServicesPage() {
             </div>
             <div className="border-l-2 border-[#00FF94] pl-4">
               <p className="text-sm text-[#888888] leading-relaxed">
-                Enterprise sales background spanning Global 2000 accounts, government identity management with the DoD, FBI, and Navy, and financial services. Knows how complex buying decisions get made.
+                Enterprise sales background spanning Global 2000 accounts in spatial computing and augmented reality, and government identity management with the DoD, FBI, and Navy. Knows how complex buying decisions get made.
               </p>
             </div>
             <div className="border-l-2 border-[#00FF94] pl-4">
