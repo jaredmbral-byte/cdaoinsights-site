@@ -25,10 +25,13 @@ export default function ServicesPage() {
             Your competitors are already in the room with the buyers you need.
           </h1>
           <p className="text-sm text-[#888888] leading-relaxed max-w-xl mb-3">
-            CDOs, CIOs, CISOs, and CAIOs delete 50 cold emails before lunch. They take meetings from people they trust. Most vendors never figure out how to become one of those people.
+            Enterprise data and AI leaders — Chief Data Officers, Chief AI Officers, Chief Data and AI Officers, VPs of Data, VPs of AI, and VPs of Analytics — delete 50 cold emails before lunch. They take meetings from people they trust. Most vendors never figure out how to become one of those people.
           </p>
-          <p className="text-sm text-[#888888] leading-relaxed max-w-xl">
+          <p className="text-sm text-[#888888] leading-relaxed max-w-xl mb-3">
             That gap is widening fast. AI is changing how top GTM teams build pipeline. If your outreach still looks the same as it did two years ago, you are already behind.
+          </p>
+          <p className="text-sm text-[#555555] leading-relaxed max-w-xl">
+            Also work with startups and early-stage companies building pipeline into broader technology buyers: CIOs, CTOs, CMOs, and CISOs.
           </p>
         </section>
 
@@ -74,7 +77,11 @@ export default function ServicesPage() {
               <ul className="space-y-2 flex-1">
                 <li className="text-sm text-[#888888] flex items-start">
                   <span className="text-[#00FF94] mr-2 shrink-0">•</span>
-                  Targeted outreach into CDO, CAIO, CIO, CISO, and CMO audiences
+                  Specializes in enterprise data and AI leaders: CDOs, CAIOs, CDAIOs, VPs of Data, AI, and Analytics
+                </li>
+                <li className="text-sm text-[#888888] flex items-start">
+                  <span className="text-[#00FF94] mr-2 shrink-0">•</span>
+                  Also builds outbound into broader tech buyers: CIOs, CTOs, CMOs, CISOs
                 </li>
                 <li className="text-sm text-[#888888] flex items-start">
                   <span className="text-[#00FF94] mr-2 shrink-0">•</span>
