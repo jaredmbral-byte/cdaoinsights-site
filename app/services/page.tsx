@@ -183,7 +183,7 @@ export default function ServicesPage() {
             </div>
             <div className="border-l-2 border-[#00FF94] pl-4">
               <p className="text-sm text-[#888888] leading-relaxed">
-                Not an agency. No account managers, no overhead, no fluff. You work directly with the person who knows this market. Backed by AI tools that deliver enterprise-quality output at a fraction of the cost.
+                You work directly with Jared. One person, full accountability. Powered by best-in-class AI tools that make a lean engagement punch at enterprise scale.
               </p>
             </div>
           </div>
