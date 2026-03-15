@@ -89,3 +89,21 @@ Ace (Jared's Telegram agent) reads this file from:
 https://raw.githubusercontent.com/jaredmbral-byte/cdaoinsights-site/main/CLAUDE.md
 When Jared makes decisions via Telegram, Ace drafts updates here.
 Jared pastes them into Claude Code → commits → Ace stays in sync.
+
+---
+
+## gstack
+
+Use the `/browse` skill from gstack for all web browsing. Never use `mcp__claude-in-chrome__*` tools.
+
+Available skills:
+- `/plan-ceo-review` — Founder/CEO mode: rethink the problem, find the 10-star product
+- `/plan-eng-review` — Eng manager mode: architecture, data flow, diagrams, edge cases, tests
+- `/review` — Paranoid staff engineer: find bugs that pass CI but blow up in production
+- `/ship` — Release engineer: sync main, run tests, push, open PR
+- `/browse` — QA engineer: give the agent eyes to click through the live app and take screenshots
+- `/qa` — QA lead: systematic testing, diff-aware on feature branches, full/quick/regression modes
+- `/setup-browser-cookies` — Import cookies from your real browser for authenticated testing
+- `/retro` — Engineering manager: team-aware retrospectives with metrics
+
+If skills aren't working, run `cd .claude/skills/gstack && ./setup` to rebuild.
