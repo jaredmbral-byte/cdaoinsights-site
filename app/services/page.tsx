@@ -1,13 +1,13 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'GTM Services for the CDAO Market | CDAO Insights',
+  title: 'GTM Services | CDAO Insights',
   description:
-    'Cold outreach systems, ICP research, and AI-powered GTM workflows for data and AI vendors targeting CDO and CAIO buyers. Built by Jared Bral.',
+    'Cold outreach systems, ICP research, and AI-powered GTM workflows for companies targeting C-suite buyers: CDOs, CAIOs, CIOs, CISOs, and CMOs. Built by Jared Bral.',
   alternates: { canonical: 'https://cdaoinsights.com/services' },
   openGraph: {
-    title: 'GTM Services for the CDAO Market | CDAO Insights',
-    description: 'Cold outreach systems, ICP research, and AI-powered GTM workflows for data and AI vendors targeting CDO and CAIO buyers.',
+    title: 'GTM Services | CDAO Insights',
+    description: 'Cold outreach systems, ICP research, and AI-powered GTM workflows for companies targeting C-suite buyers. Built by Jared Bral.',
     url: 'https://cdaoinsights.com/services',
   },
 }
@@ -21,10 +21,10 @@ export default function ServicesPage() {
         {/* Hero */}
         <section className="max-w-[1200px] mx-auto px-6 pt-12 pb-8 border-b border-[#1E1E1E]">
           <h1 className="text-3xl font-semibold leading-tight tracking-[-0.5px] text-[#E8E8E8] mb-3">
-            GTM for the CDAO Market
+            GTM for C-Suite Markets
           </h1>
           <p className="text-sm text-[#888888] leading-relaxed max-w-xl">
-            Cold outreach systems, ICP research, and AI-powered GTM workflows for data and AI vendors targeting enterprise CDO, CAIO, and VP Data buyers. No agency overhead. Practitioner execution.
+            Cold outreach systems, ICP research, and AI-powered GTM workflows for companies targeting C-suite buyers — CDOs, CAIOs, CIOs, CISOs, and CMOs. No agency overhead. Practitioner execution.
           </p>
         </section>
 
@@ -44,7 +44,7 @@ export default function ServicesPage() {
                   </span>
                 </div>
                 <p className="text-xs text-[#888888] mb-4">
-                  For data/AI vendors and startups who need a repeatable pipeline into senior data and AI executives
+                  For companies who need a repeatable pipeline into senior executives: CDOs, CAIOs, CIOs, CISOs, CMOs
                 </p>
               </div>
 
@@ -63,7 +63,7 @@ export default function ServicesPage() {
                 </li>
                 <li className="text-sm text-[#888888] flex items-start">
                   <span className="text-[#00FF94] mr-2">•</span>
-                  Direct access to a network of senior CDO and CAIO contacts
+                  Paired with deep knowledge of how C-suite buyers actually think and buy
                 </li>
               </ul>
 
@@ -94,7 +94,7 @@ export default function ServicesPage() {
                   </span>
                 </div>
                 <p className="text-xs text-[#888888] mb-4">
-                  For vendors, VCs, and PE firms who need to understand the CDAO buyer and sharpen their market positioning
+                  For vendors, VCs, PE firms, and consultancies who need to understand C-suite buyers and sharpen their market positioning
                 </p>
               </div>
 
@@ -192,22 +192,22 @@ export default function ServicesPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl">
             <div className="border-l-2 border-[#00FF94] pl-4">
               <p className="text-sm text-[#888888] leading-relaxed">
-                10+ years building GTM and community programs for the enterprise data and AI market. Started at Evanta (a Gartner company) in 2017 selling $25k–$50k thought leadership sponsorships to vendors like Alation, Fivetran, and Monte Carlo.
+                4x Winners Circle Achiever at Gartner (Evanta). Helped build the Chief Data Officer brand from scratch and led one of Gartner's fastest-growing C-suite programs three years running.
               </p>
             </div>
             <div className="border-l-2 border-[#00FF94] pl-4">
               <p className="text-sm text-[#888888] leading-relaxed">
-                Not an agency. No account managers, no overhead, no fluff. You work directly with the person who knows this market cold.
+                Trusted connector across CDAO, CIO, CISO, and CMO networks. Built peer forums, executive roundtables, and speaker programs that turn relationships into pipeline.
               </p>
             </div>
             <div className="border-l-2 border-[#00FF94] pl-4">
               <p className="text-sm text-[#888888] leading-relaxed">
-                Runs cdaoinsights.com — a real-time intelligence platform for senior data and AI executives. Direct access to the exact buyers your team is trying to reach.
+                Enterprise sales background spanning Global 2000 construction tech, government identity management (DoD, FBI, Navy), and financial services. Knows how complex buying decisions actually get made.
               </p>
             </div>
             <div className="border-l-2 border-[#00FF94] pl-4">
               <p className="text-sm text-[#888888] leading-relaxed">
-                Uses best-in-class AI tools to deliver enterprise-quality GTM output at a fraction of the cost. Lean teams, big results.
+                Not an agency. No account managers, no overhead, no fluff. You work directly with the person who knows this market. Backed by AI tools that deliver enterprise-quality output at a fraction of the cost.
               </p>
             </div>
           </div>
