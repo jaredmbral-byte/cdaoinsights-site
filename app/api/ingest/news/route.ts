@@ -1,9 +1,37 @@
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase-admin'
 import { passesNegativeFilter } from '@/lib/filters'
+import Anthropic from '@anthropic-ai/sdk'
 
 // Cron-triggered: pull news from RSS feeds (free, no Firecrawl credits)
 // Vercel Cron calls this every 15 minutes
+
+const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+
+async function extractToolsFromArticle(title: string, summary: string): Promise<string[]> {
+  try {
+    const text = `${title} ${summary}`.slice(0, 800)
+    const response = await anthropic.messages.create({
+      model: 'claude-haiku-4-5',
+      max_tokens: 100,
+      messages: [{
+        role: 'user',
+        content: `Extract specific enterprise AI software tool or product names from this text. Return ONLY a JSON array of product names (e.g. ["Snowflake Cortex", "WisdomAI"]). Return [] if none found. Only include actual named products, not generic terms like "AI" or "machine learning".\n\nText: ${text}`
+      }]
+    })
+    const content = response.content[0]
+    if (content.type !== 'text') return []
+    const match = content.text.match(/\[[\s\S]*?\]/)
+    if (!match) return []
+    const tools = JSON.parse(match[0]) as string[]
+    return tools
+      .filter((t): t is string => typeof t === 'string' && t.length > 1 && t.length < 50)
+      .map(t => `tool:${t.toLowerCase().replace(/[^a-z0-9]/g, '-')}`)
+      .slice(0, 5)
+  } catch {
+    return []
+  }
+}
 
 const RSS_FEEDS = [
   // Google News — targeted enterprise data/AI queries
@@ -86,6 +114,13 @@ const RSS_FEEDS = [
   { url: 'https://news.google.com/rss/search?q="agentic+analytics"+OR+"conversational+BI"+enterprise+when:14d&hl=en-US&gl=US&ceid=US:en', name: 'Google News' },
   { url: 'https://news.google.com/rss/search?q=Databricks+AI+release+OR+announcement+when:7d&hl=en-US&gl=US&ceid=US:en', name: 'Google News' },
   { url: 'https://news.google.com/rss/search?q=Snowflake+Cortex+OR+"Snowflake+AI"+release+when:7d&hl=en-US&gl=US&ceid=US:en', name: 'Google News' },
+
+  // Funding & market signals — enterprise AI
+  { url: 'https://techcrunch.com/category/artificial-intelligence/feed/', name: 'TechCrunch AI' },
+  { url: 'https://venturebeat.com/category/ai/feed/', name: 'VentureBeat AI' },
+  { url: 'https://news.google.com/rss/search?q=enterprise+AI+startup+raises+million+Series+when:14d&hl=en-US&gl=US&ceid=US:en', name: 'Google News' },
+  { url: 'https://news.google.com/rss/search?q="data+AI"+startup+funding+raises+2026+when:14d&hl=en-US&gl=US&ceid=US:en', name: 'Google News' },
+  { url: 'https://news.google.com/rss/search?q=CDO+CAIO+enterprise+AI+tool+launch+when:7d&hl=en-US&gl=US&ceid=US:en', name: 'Google News' },
 ]
 
 import { stripHtml } from '@/lib/text'
@@ -252,7 +287,30 @@ export async function POST(request: Request) {
             { onConflict: 'source_url', ignoreDuplicates: true },
           )
 
-        if (!error) totalInserted++
+        if (!error) {
+          totalInserted++
+          // Extract AI tools from high-relevance articles (async, best-effort)
+          if (relevance >= 0.6 && process.env.ANTHROPIC_API_KEY) {
+            extractToolsFromArticle(item.title, item.description).then(async (toolTopics) => {
+              if (toolTopics.length === 0) return
+              // Fetch the article to get its id and existing topics
+              const { data: existing } = await supabaseAdmin
+                .from('market_articles')
+                .select('id, topics')
+                .eq('source_url', item.link)
+                .single()
+              if (!existing) return
+              const existingTopics: string[] = existing.topics || []
+              const hasToolTopics = existingTopics.some((t: string) => t.startsWith('tool:'))
+              if (hasToolTopics) return // already extracted
+              const merged = [...new Set([...existingTopics, ...toolTopics])]
+              await supabaseAdmin
+                .from('market_articles')
+                .update({ topics: merged })
+                .eq('id', existing.id)
+            }).catch(() => {}) // silent fail — don't block ingest
+          }
+        }
       }
     } catch (err) {
       console.error(`Failed to fetch RSS feed ${feed.url}:`, err)

@@ -62,7 +62,7 @@ export default async function AiToolsPage({
     ...SPOTLIGHT_KEYWORDS.map((k) => `title.ilike.%${k}%`),
   ].join(",");
 
-  const [spotlightResult, allToolsResult] = await Promise.all([
+  const [spotlightResult, allToolsResult, fundingResult, dynamicTopicsResult] = await Promise.all([
     supabase
       .from("market_articles")
       .select("id, title, source_name, source_url, published_at, topics, relevance")
@@ -87,9 +87,25 @@ export default async function AiToolsPage({
       }
       return q;
     })(),
+    // Funding rounds — enterprise AI startups
+    supabase
+      .from("market_articles")
+      .select("id, title, source_name, source_url, published_at, topics")
+      .contains("topics", ["funding"])
+      .or("title.ilike.%AI%,title.ilike.%data%,title.ilike.%analytics%")
+      .order("published_at", { ascending: false })
+      .limit(5),
+    // Fetch dynamic tool mentions from extracted topics
+    supabase
+      .from("market_articles")
+      .select("topics")
+      .gte("published_at", cutoff30.toISOString())
+      .gte("relevance", 0.4)
+      .limit(500),
   ]);
 
   const spotlightArticles = (spotlightResult.data || []) as MarketArticle[];
+  const fundingArticles = (fundingResult.data || []) as MarketArticle[];
 
   const seenTitles = new Set<string>();
   const allToolsArticles = ((allToolsResult.data || []) as MarketArticle[]).filter((a) => {
@@ -99,6 +115,25 @@ export default async function AiToolsPage({
     return true;
   });
 
+  // Compute dynamic tool counts from extracted topics
+  const topicsRows = (dynamicTopicsResult.data || []) as Array<{ topics: string[] }>;
+  const dynamicToolCounts: Record<string, number> = {};
+  for (const row of topicsRows) {
+    for (const topic of row.topics || []) {
+      if (topic.startsWith("tool:")) {
+        // Convert tool:wisdomai back to display name
+        const toolName = topic
+          .replace("tool:", "")
+          .replace(/-/g, " ")
+          .split(" ")
+          .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+          .join(" ");
+        dynamicToolCounts[toolName] = (dynamicToolCounts[toolName] || 0) + 1;
+      }
+    }
+  }
+
+  // Merge with hardcoded counts (fallback for manual tracking)
   const ALL_TRACKED_TOOLS = [
     "Snowflake", "Databricks", "WisdomAI", "Glean", "ThoughtSpot",
     "Hex", "Sigma", "Microsoft Copilot", "GitHub Copilot",
@@ -111,10 +146,26 @@ export default async function AiToolsPage({
       a.title.toLowerCase().includes(tool.toLowerCase())
     ).length;
   }
-  const topTools = Object.entries(toolCounts)
+
+  // Merge dynamic counts, prefer dynamic if higher
+  const mergedToolCounts: Record<string, number> = { ...toolCounts };
+  for (const [tool, count] of Object.entries(dynamicToolCounts)) {
+    // Check if it matches an existing tracked tool (fuzzy)
+    const existing = ALL_TRACKED_TOOLS.find(
+      (t) => t.toLowerCase().replace(/[^a-z]/g, "") === tool.toLowerCase().replace(/[^a-z]/g, "")
+    );
+    if (existing) {
+      mergedToolCounts[existing] = Math.max(mergedToolCounts[existing] || 0, count);
+    } else if (count >= 2) {
+      // New tool discovered with 2+ mentions — surface it
+      mergedToolCounts[tool] = count;
+    }
+  }
+
+  const topTools = Object.entries(mergedToolCounts)
     .filter(([, count]) => count > 0)
     .sort((a, b) => b[1] - a[1])
-    .slice(0, 8);
+    .slice(0, 10);
 
   return (
     <main className="flex-1 max-w-[1200px] mx-auto px-6 pt-10 pb-24 w-full">
@@ -162,13 +213,51 @@ export default async function AiToolsPage({
         )}
       </section>
 
+      {/* Funding Rounds */}
+      {fundingArticles.length > 0 && (
+        <section className="mb-8">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="font-mono text-[10px] uppercase tracking-[2px] text-[#555555]">
+              Recent Funding
+            </h2>
+            <a href="/intelligence?topic=funding" className="font-mono text-[10px] uppercase tracking-[1px] text-[#555555] hover:text-[#E8E8E8] transition-colors">
+              All →
+            </a>
+          </div>
+          <div className="border border-[#1E1E1E] rounded-sm divide-y divide-[#1E1E1E]">
+            {fundingArticles.map((article) => (
+              <a
+                key={article.id}
+                href={article.source_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-start justify-between gap-3 px-4 py-2.5 hover:bg-[#111111] transition-colors group"
+              >
+                <div className="min-w-0 flex-1">
+                  <h3 className="text-sm text-[#E8E8E8] group-hover:text-[#3B82F6] leading-snug line-clamp-1">
+                    {cleanTitle(article.title)}
+                  </h3>
+                  {article.source_name && (
+                    <span className="font-mono text-[10px] text-[#555555]">{article.source_name}</span>
+                  )}
+                </div>
+                <span className="font-mono text-[10px] text-[#555555] whitespace-nowrap mt-1 flex-shrink-0">
+                  {article.published_at && !isNaN(new Date(article.published_at).getTime())
+                    ? timeAgo(article.published_at) : "—"}
+                </span>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* Scoreboard */}
       {topTools.length > 0 && (
         <section className="mb-8">
           <div className="border border-[#1E1E1E] rounded-sm p-4">
             <div className="flex items-center justify-between mb-3">
               <h2 className="font-mono text-[10px] uppercase tracking-[2px] text-[#555555]">Trending Tools</h2>
-              <span className="font-mono text-[10px] text-[#555555]">by article mentions</span>
+              <span className="font-mono text-[10px] text-[#555555]">auto-discovered · 30d</span>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               {topTools.map(([tool, count], i) => (

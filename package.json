@@ -12,6 +12,7 @@
     "backfill": "tsx scripts/backfill-tech-stack.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.78.0",
     "@mendable/firecrawl-js": "^4.15.1",
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.98.0",
