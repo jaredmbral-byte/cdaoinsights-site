@@ -338,17 +338,6 @@
 **Effort:** XS
 **Priority:** P2
 
-### Auto-upgrade mode (zero-prompt)
-
-**What:** `GSTACK_AUTO_UPGRADE=1` env var or `~/.gstack/config` option that skips the AskUserQuestion prompt and upgrades automatically.
-
-**Why:** Power users and CI environments want zero-friction upgrades.
-
-**Context:** Current upgrade system (v0.3.4) always prompts. This adds opt-in bypass. ~10 lines in preamble instructions.
-
-**Effort:** S
-**Priority:** P3
-
 ### Eval web dashboard
 
 **What:** `bun run eval:dashboard` serves local HTML with charts: cost trending, detection rate, pass/fail history.
@@ -360,6 +349,30 @@
 **Effort:** M
 **Priority:** P3
 **Depends on:** Eval persistence (shipped in v0.3.6)
+
+### CI/CD QA quality gate
+
+**What:** Run `/qa` as a GitHub Action step, fail PR if health score drops below threshold.
+
+**Why:** Automated quality gate catches regressions before merge. Currently QA is manual — CI integration makes it part of the standard workflow.
+
+**Context:** Requires headless browse binary available in CI. The `/qa` skill already produces `baseline.json` with health scores — CI step would compare against the main branch baseline and fail if score drops. Would need `ANTHROPIC_API_KEY` in CI secrets since `/qa` uses Claude.
+
+**Effort:** M
+**Priority:** P2
+**Depends on:** None
+
+### CDP-based DOM mutation detection for ref staleness
+
+**What:** Use Chrome DevTools Protocol `DOM.documentUpdated` / MutationObserver events to proactively invalidate stale refs when the DOM changes, without requiring an explicit `snapshot` call.
+
+**Why:** Current ref staleness detection (async count() check) only catches stale refs at action time. CDP mutation detection would proactively warn when refs become stale, preventing the 5-second timeout entirely for SPA re-renders.
+
+**Context:** Parts 1+2 of ref staleness fix (RefEntry metadata + eager validation via count()) are shipped. This is Part 3 — the most ambitious piece. Requires CDP session alongside Playwright, MutationObserver bridge, and careful performance tuning to avoid overhead on every DOM change.
+
+**Effort:** L
+**Priority:** P3
+**Depends on:** Ref staleness Parts 1+2 (shipped)
 
 ## Completed
 
@@ -395,3 +408,7 @@
 ### E2E test cost tracking
 - Track cumulative API spend, warn if over threshold
 **Completed:** v0.3.6
+
+### Auto-upgrade mode + smart update check
+- Config CLI (`bin/gstack-config`), auto-upgrade via `~/.gstack/config.yaml`, 12h cache TTL, exponential snooze backoff (24h→48h→1wk), "never ask again" option, vendored copy sync on upgrade
+**Completed:** v0.3.8
