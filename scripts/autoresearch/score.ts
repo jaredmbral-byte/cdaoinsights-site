@@ -91,6 +91,7 @@ export function scoreRelevance(title: string, description: string): number {
   if (t.includes('palantir')) score += 0.15
   if (t.includes('google cloud') || t.includes('bigquery')) score += 0.1
   if (t.includes('looker') || t.includes('tableau') || t.includes('qlik')) score += 0.1
+  if (t.includes('informatica') || t.includes('talend') || t.includes('matillion')) score += 0.1
 
   // ── MEDIUM SIGNALS: broader data/AI ecosystem ─────────────────────────
   if (t.includes('generative ai') || t.includes('genai') || t.includes('llm')) score += 0.1
