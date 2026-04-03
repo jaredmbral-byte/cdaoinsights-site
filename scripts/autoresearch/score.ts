@@ -39,7 +39,7 @@ export function scoreRelevance(title: string, description: string): number {
   if (t.includes('chief data officer') || t.includes('chief data and analytics officer')) score += 0.35
   if (t.includes('chief ai officer') || t.includes('caio')) score += 0.35
   if (t.includes('data leader') || t.includes('data executive')) score += 0.25
-  if (t.includes('cdao') || t.includes('cdaio')) score += 0.3
+  if (t.includes('cdao') || t.includes('cdaio')) score += 0.35
   if (t.includes('vp of data') || t.includes('vp, data') || t.includes('vp of analytics') || t.includes('vp of ai')) score += 0.25
   if (t.includes('head of data') || t.includes('head of ai') || t.includes('head of analytics')) score += 0.2
 
@@ -64,11 +64,13 @@ export function scoreRelevance(title: string, description: string): number {
 
   // ── HIGH-VALUE SIGNALS: enterprise context ───────────────────────────
   if (t.includes('enterprise') && (t.includes('data') || t.includes('ai') || t.includes('analytics'))) score += 0.15
-  if (t.includes('enterprise') && (t.includes('deploy') || t.includes('case study') || t.includes('production'))) score += 0.15
+  if (t.includes('enterprise') && (t.includes('deploy') || t.includes('case study') || t.includes('production'))) score += 0.2
   if (t.includes('fortune 500') || t.includes('fortune 1000')) score += 0.15
+  if (t.includes('case study') && (t.includes('data team') || t.includes('ai') || t.includes('personalize'))) score += 0.2
 
   // ── HIGH-VALUE SIGNALS: tracked vendors ──────────────────────────────
-  if (t.includes('snowflake cortex') || t.includes('snowflake ai')) score += 0.3
+  if (t.includes('snowflake cortex') || t.includes('snowflake ai')) score += 0.35
+  if (t.includes('snowflake') && (t.includes('analyst') || t.includes('natural language'))) score += 0.15
   if (t.includes('databricks ai') || t.includes('databricks lakehouse') || t.includes('databricks ai/bi')) score += 0.3
   if (t.includes('collibra')) score += 0.25
   if (t.includes('alation')) score += 0.25
@@ -87,6 +89,7 @@ export function scoreRelevance(title: string, description: string): number {
   // ── MEDIUM SIGNALS: broader data/AI ecosystem ─────────────────────────
   if (t.includes('generative ai') || t.includes('genai') || t.includes('llm')) score += 0.1
   if (t.includes('analyst') && (t.includes('gartner') || t.includes('forrester') || t.includes('idc'))) score += 0.15
+  if ((t.includes('gartner') || t.includes('forrester')) && (t.includes('predict') || t.includes('forecast'))) score += 0.2
   if (t.includes('funding') || t.includes('raises') || t.includes('series') || t.includes('acquisition')) score += 0.05
   if (t.includes('layoff') || t.includes('laid off') || t.includes('workforce reduction')) score += 0.05
   if (t.includes('cloud') && (t.includes('data') || t.includes('analytics'))) score += 0.05
