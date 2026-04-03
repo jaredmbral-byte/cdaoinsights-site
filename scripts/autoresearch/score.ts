@@ -54,6 +54,7 @@ export function scoreRelevance(title: string, description: string): number {
   if (t.includes('data mesh') || t.includes('data fabric')) score += 0.2
   if (t.includes('mdm') || t.includes('master data')) score += 0.15
   if (t.includes('data lineage') || t.includes('data observability')) score += 0.2
+  if (t.includes('compliance') && (t.includes('data') || t.includes('ai') || t.includes('gdpr') || t.includes('fda') || t.includes('sox'))) score += 0.15
 
   // ── HIGH-VALUE SIGNALS: agentic AI (Gartner #1 theme 2026) ───────────
   if (t.includes('agentic ai') || t.includes('ai agent') || t.includes('ai agents')) score += 0.25
