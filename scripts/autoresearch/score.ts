@@ -88,13 +88,16 @@ export function scoreRelevance(title: string, description: string): number {
   if (t.includes('dataiku')) score += 0.15
   if (t.includes('weights & biases') || t.includes('wandb')) score += 0.1
   if (t.includes('dbt') && (t.includes('enterprise') || t.includes('semantic'))) score += 0.15
+  if (t.includes('palantir')) score += 0.15
 
   // ── MEDIUM SIGNALS: broader data/AI ecosystem ─────────────────────────
   if (t.includes('generative ai') || t.includes('genai') || t.includes('llm')) score += 0.1
   if (t.includes('analyst') && (t.includes('gartner') || t.includes('forrester') || t.includes('idc'))) score += 0.15
   if ((t.includes('gartner') || t.includes('forrester')) && (t.includes('predict') || t.includes('forecast'))) score += 0.2
-  if (t.includes('funding') || t.includes('raises') || t.includes('series') || t.includes('acquisition')) score += 0.05
-  if (t.includes('layoff') || t.includes('laid off') || t.includes('workforce reduction')) score += 0.05
+  if (t.includes('funding') || t.includes('raises') || t.includes('series') || t.includes('acquisition')) score += 0.1
+  if (t.includes('layoff') || t.includes('laid off') || t.includes('workforce reduction')) score += 0.1
+  if (t.includes('survey') && (t.includes('data') || t.includes('engineering') || t.includes('practitioner'))) score += 0.15
+  if (t.includes('aws') && (t.includes('sagemaker') || t.includes('data') || t.includes('ml'))) score += 0.15
   if (t.includes('cloud') && (t.includes('data') || t.includes('analytics'))) score += 0.05
 
   // ── NEGATIVE SIGNALS: penalize false positives ────────────────────────
