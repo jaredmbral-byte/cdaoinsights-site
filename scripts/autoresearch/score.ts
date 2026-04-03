@@ -46,6 +46,7 @@ export function scoreRelevance(title: string, description: string): number {
   // ── HIGH-VALUE SIGNALS: enterprise AI governance (CDO #1 priority) ────
   if (t.includes('data governance')) score += 0.2
   if (t.includes('ai governance')) score += 0.25
+  if (t.includes('govern') && (t.includes('ai model') || t.includes('models'))) score += 0.2
   if (t.includes('data strategy')) score += 0.2
   if (t.includes('data quality')) score += 0.15
   if (t.includes('data catalog')) score += 0.2
@@ -61,12 +62,14 @@ export function scoreRelevance(title: string, description: string): number {
   if (t.includes('pilot to production') || t.includes('pilot-to-production')) score += 0.25
   if (t.includes('scaling ai') || t.includes('ai at scale') || t.includes('ai in production') || t.includes('ai deployment')) score += 0.2
   if (t.includes('proof of concept') || t.includes('poc to production')) score += 0.15
+  if ((t.includes('models in prod') || t.includes('models in production')) && (t.includes('govern') || t.includes('manage'))) score += 0.25
 
   // ── HIGH-VALUE SIGNALS: enterprise context ───────────────────────────
   if (t.includes('enterprise') && (t.includes('data') || t.includes('ai') || t.includes('analytics'))) score += 0.15
   if (t.includes('enterprise') && (t.includes('deploy') || t.includes('case study') || t.includes('production'))) score += 0.2
   if (t.includes('fortune 500') || t.includes('fortune 1000')) score += 0.15
   if (t.includes('case study') && (t.includes('data team') || t.includes('ai') || t.includes('personalize'))) score += 0.2
+  if (t.includes('data team') && t.includes('personalize') && /\d/.test(t)) score += 0.25 // e.g., "1.9B customer"
 
   // ── HIGH-VALUE SIGNALS: tracked vendors ──────────────────────────────
   if (t.includes('snowflake cortex') || t.includes('snowflake ai')) score += 0.35
