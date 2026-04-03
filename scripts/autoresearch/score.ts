@@ -42,6 +42,7 @@ export function scoreRelevance(title: string, description: string): number {
   if (t.includes('cdao') || t.includes('cdaio')) score += 0.35
   if (t.includes('vp of data') || t.includes('vp, data') || t.includes('vp of analytics') || t.includes('vp of ai')) score += 0.25
   if (t.includes('head of data') || t.includes('head of ai') || t.includes('head of analytics')) score += 0.2
+  if ((t.includes('appoint') || t.includes('named') || t.includes('joins')) && (t.includes('cdo') || t.includes('chief') || t.includes('vp of'))) score += 0.15
 
   // ── HIGH-VALUE SIGNALS: enterprise AI governance (CDO #1 priority) ────
   if (t.includes('data governance')) score += 0.2
