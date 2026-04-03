@@ -1,0 +1,182 @@
+[
+  {
+    "title": "Pfizer CDO on Scaling AI Governance Across 100+ Data Domains",
+    "summary": "Chief Data Officer shares how Pfizer built enterprise-wide data governance framework to support AI deployment across regulated environments. Key challenges: data quality at scale, compliance with FDA requirements, and enabling self-service analytics for 80,000 employees.",
+    "expected": "HIGH",
+    "reason": "Direct CDO mention, enterprise AI governance, large-scale data org"
+  },
+  {
+    "title": "Chief AI Officer Role Surges: 35% of Fortune 500 Now Have CAIO",
+    "summary": "New survey finds Chief AI Officer appointments accelerating, with 35% of Fortune 500 companies naming dedicated CAIOs in 2025, up from 12% in 2023. Role scope varies widely from technical to strategic.",
+    "expected": "HIGH",
+    "reason": "CAIO role trend, enterprise executive audience"
+  },
+  {
+    "title": "Snowflake Cortex Analyst: Natural Language to SQL for Enterprise Data Teams",
+    "summary": "Snowflake launches Cortex Analyst, enabling data teams to query Snowflake using natural language. Product targets CDOs and analytics leaders looking to democratize data access without BI tool overhead.",
+    "expected": "HIGH",
+    "reason": "Major vendor product directly targeting CDO/analytics buyers"
+  },
+  {
+    "title": "Why Most Enterprise AI Pilots Never Reach Production",
+    "summary": "Gartner research reveals 85% of enterprise AI pilot projects fail to reach production. Root causes: data quality gaps, lack of governance frameworks, and misalignment between data teams and business stakeholders.",
+    "expected": "HIGH",
+    "reason": "CDO pain point #1 per Gartner Summit, directly actionable for our audience"
+  },
+  {
+    "title": "Databricks AI/BI Genie: Conversational Analytics for the Enterprise",
+    "summary": "Databricks announces AI/BI Genie, a conversational analytics layer built into the Databricks Lakehouse. Chief Data Officers can now give non-technical executives natural language access to governed data.",
+    "expected": "HIGH",
+    "reason": "Major vendor, CDO-relevant product launch"
+  },
+  {
+    "title": "Monte Carlo Data Raises $135M to Expand Data Observability Platform",
+    "summary": "Data observability startup Monte Carlo Data closes $135M Series D, valuing the company at $1.6B. The platform monitors data pipelines for quality issues, a top priority for enterprise CDOs managing complex data stacks.",
+    "expected": "HIGH",
+    "reason": "Vendor we track, funding signal, CDO-relevant category"
+  },
+  {
+    "title": "CDAO at JPMorgan: How We Govern 500 Active AI Models in Production",
+    "summary": "JPMorgan's Chief Data & Analytics Officer details the governance framework supporting 500+ production AI models. Topics: model risk management, lineage tracking, explainability requirements under OCC guidance.",
+    "expected": "HIGH",
+    "reason": "CDAO title, specific enterprise AI governance at scale, financial sector"
+  },
+  {
+    "title": "Agentic AI in the Enterprise: What CDOs Need to Know in 2026",
+    "summary": "As autonomous AI agents move from prototype to production, Chief Data Officers face new governance challenges: agent access to sensitive data, audit trails for agent decisions, and integration with existing data catalogs.",
+    "expected": "HIGH",
+    "reason": "Agentic AI + CDO governance — intersection of top 2 themes at Gartner Summit"
+  },
+  {
+    "title": "Alation Named Leader in Gartner Magic Quadrant for Data Catalogs",
+    "summary": "Alation retains Leader position in Gartner 2025 Magic Quadrant for Metadata Management Solutions. Platform used by CDOs at over 500 enterprises including AstraZeneca, Nasdaq, and Pfizer.",
+    "expected": "HIGH",
+    "reason": "Vendor we track, Gartner recognition = major buying signal for CDOs"
+  },
+  {
+    "title": "Enterprise AI Strategy 2026: From Pilot to Production at Scale",
+    "summary": "MIT Sloan Management Review survey of 650 data executives finds organizations with dedicated Chief AI Officers are 3x more likely to successfully scale AI beyond pilot stage. Data governance investment is the #1 predictor.",
+    "expected": "HIGH",
+    "reason": "Executive audience, data governance, AI scaling — all core themes"
+  },
+  {
+    "title": "Google Cloud Next: BigQuery AI Updates and Gemini Integration",
+    "summary": "Google announces BigQuery AI capabilities at Next conference, including Gemini-powered data insights and natural language query features. Enterprise pricing available Q3 2025.",
+    "expected": "MEDIUM",
+    "reason": "Enterprise data platform but not CDO-specific. Good signal, not perfect fit."
+  },
+  {
+    "title": "The State of Data Engineering 2026: Survey of 1,200 Practitioners",
+    "summary": "Annual survey covers tooling preferences, salary trends, and priorities for data engineers. dbt, Spark, and Airflow remain dominant. 67% report increasing AI/ML workloads.",
+    "expected": "MEDIUM",
+    "reason": "Data ecosystem signal, but audience is practitioners not executives"
+  },
+  {
+    "title": "Fivetran Acquires HVR to Strengthen CDC Capabilities",
+    "summary": "Data integration platform Fivetran acquires HVR, a change data capture specialist, to expand enterprise real-time data movement capabilities. Deal valued at $700M.",
+    "expected": "MEDIUM",
+    "reason": "Vendor we track, M&A signal, but use case is technical not executive"
+  },
+  {
+    "title": "AWS Re:Invent: SageMaker Canvas Updates for Business Users",
+    "summary": "Amazon announces updates to SageMaker Canvas enabling no-code ML model building for business analysts. Part of broader AWS strategy to democratize AI.",
+    "expected": "MEDIUM",
+    "reason": "Relevant to data/AI tooling but not executive-level enough"
+  },
+  {
+    "title": "dbt Semantic Layer: Unifying Metrics Across Your Data Stack",
+    "summary": "dbt Labs releases updated semantic layer enabling centralized metric definitions across BI tools. Data engineers can now define metrics once and serve them everywhere.",
+    "expected": "MEDIUM",
+    "reason": "Important for data teams but more engineering than CDO-level strategy"
+  },
+  {
+    "title": "UFC 300 Fight Card Preview: Jon Jones vs Stipe Miocic",
+    "summary": "Full fight card preview for UFC 300 including main event, co-main, and prelims. Jones defending heavyweight title against former champion Miocic.",
+    "expected": "LOW",
+    "reason": "Completely off-topic sports content"
+  },
+  {
+    "title": "CDO Financial Group Q3 Earnings Miss Estimates",
+    "summary": "CDO Financial Group reported Q3 earnings of $0.42 per share, missing analyst estimates of $0.51. Revenue declined 8% year-over-year amid rising interest rates.",
+    "expected": "LOW",
+    "reason": "CDO = financial instrument, not Chief Data Officer — classic false positive"
+  },
+  {
+    "title": "Python 3.12 Release Notes: What Developers Need to Know",
+    "summary": "Python 3.12 ships with performance improvements, new syntax features, and deprecation of legacy APIs. Migration guide for teams still on 3.10.",
+    "expected": "LOW",
+    "reason": "Developer content, no enterprise data leadership angle"
+  },
+  {
+    "title": "10 Healthy Meal Prep Ideas for Busy Professionals",
+    "summary": "Save time and eat well with these easy meal prep recipes. From overnight oats to sheet pan dinners, these meals take under 30 minutes of active prep time.",
+    "expected": "LOW",
+    "reason": "Completely off-topic lifestyle content"
+  },
+  {
+    "title": "The Best AI Chatbots for Customer Service in 2026",
+    "summary": "Roundup of the top AI chatbot platforms for small and medium businesses, including Intercom, Drift, and Tidio. Comparison of pricing, integrations, and use cases.",
+    "expected": "LOW",
+    "reason": "SMB customer service angle, not enterprise data leadership"
+  },
+  {
+    "title": "Collibra Launches AI Governance Module for Enterprise Data Catalog",
+    "summary": "Collibra announces new AI governance features in its enterprise data catalog, enabling CDOs to track AI model metadata, lineage, and risk assessments alongside traditional data assets.",
+    "expected": "HIGH",
+    "reason": "Vendor we track, CDO-targeted, AI governance = top priority"
+  },
+  {
+    "title": "Nationwide Insurance Names New Chief Data Officer from Humana",
+    "summary": "Nationwide Insurance has appointed Sarah Chen as Chief Data Officer, effective January 2026. Chen joins from Humana where she led enterprise data strategy and analytics modernization.",
+    "expected": "HIGH",
+    "reason": "Executive move, CDO title, large enterprise — directly relevant"
+  },
+  {
+    "title": "Data Fabric vs Data Mesh: Which Architecture Is Right for Your Enterprise?",
+    "summary": "Analyst comparison of data fabric and data mesh approaches for enterprise data leaders. Covers governance implications, vendor landscape, and case studies from financial services and healthcare CDOs.",
+    "expected": "HIGH",
+    "reason": "Strategic architecture decision for CDOs, analyst framing"
+  },
+  {
+    "title": "Microsoft Fabric: One Year Later — CDO Perspectives",
+    "summary": "Survey of 200 enterprise data leaders on Microsoft Fabric adoption. 34% running pilots, 12% in production. Top blockers: migration complexity from Power BI and Azure Synapse.",
+    "expected": "HIGH",
+    "reason": "Microsoft Fabric is tracked, CDO perspectives, adoption data"
+  },
+  {
+    "title": "How Target's Data Team Uses AI to Personalize 1.9B Customer Touchpoints",
+    "summary": "Target's VP of Data Science details AI personalization infrastructure serving 1.9 billion customer interactions monthly. Stack includes Databricks, dbt, and custom recommendation models.",
+    "expected": "HIGH",
+    "reason": "Senior data executive, specific AI deployment at scale, enterprise case study"
+  },
+  {
+    "title": "OpenAI Raises $40B at $300B Valuation",
+    "summary": "OpenAI closes its largest fundraising round yet, $40 billion at a $300 billion valuation. Led by SoftBank Vision Fund with participation from Microsoft.",
+    "expected": "MEDIUM",
+    "reason": "AI ecosystem signal, but enterprise CDO relevance is indirect"
+  },
+  {
+    "title": "Layoffs Hit Palantir's Commercial Team as Focus Shifts to Government",
+    "summary": "Palantir lays off 12% of its commercial sales team as the company refocuses resources on government and defense contracts. Commercial data platform product line unaffected.",
+    "expected": "MEDIUM",
+    "reason": "Vendor we track, but commercial team layoffs not directly CDO-relevant"
+  },
+  {
+    "title": "Machine Learning Engineer Salary Guide 2026",
+    "summary": "Comprehensive salary data for ML engineers across company sizes, geographies, and experience levels. Median total comp $185k in SF, $145k in Austin.",
+    "expected": "LOW",
+    "reason": "Practitioner comp data, not executive-level content"
+  },
+  {
+    "title": "5 Ways CDOs Are Using Generative AI to Accelerate Data Catalog Adoption",
+    "summary": "Chief Data Officers at enterprise organizations share how generative AI features in platforms like Atlan and Collibra are reducing time-to-value for data catalog deployments. Real case studies from pharma and financial services.",
+    "expected": "HIGH",
+    "reason": "CDO title, genAI + data catalog intersection, practitioner case studies"
+  },
+  {
+    "title": "Gartner Predicts: By 2027, 40% of CDOs Will Own AI P&L Responsibility",
+    "summary": "Gartner forecast projects rapid expansion of Chief Data Officer authority to include direct AI profit and loss accountability, fundamentally changing the CDO role from infrastructure to revenue driver.",
+    "expected": "HIGH",
+    "reason": "Gartner CDO role evolution prediction — high signal for our executive audience"
+  }
+]
