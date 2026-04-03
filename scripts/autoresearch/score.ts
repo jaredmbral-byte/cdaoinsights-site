@@ -71,6 +71,7 @@ export function scoreRelevance(title: string, description: string): number {
   if (t.includes('fortune 500') || t.includes('fortune 1000')) score += 0.15
   if (t.includes('case study') && (t.includes('data team') || t.includes('ai') || t.includes('personalize'))) score += 0.2
   if (t.includes('data team') && t.includes('personalize') && /\d/.test(t)) score += 0.25 // e.g., "1.9B customer"
+  if ((t.includes('financial services') || t.includes('healthcare') || t.includes('pharma') || t.includes('retail') || t.includes('insurance')) && (t.includes('data') || t.includes('ai'))) score += 0.1
 
   // ── HIGH-VALUE SIGNALS: tracked vendors ──────────────────────────────
   if (t.includes('snowflake cortex') || t.includes('snowflake ai')) score += 0.35
