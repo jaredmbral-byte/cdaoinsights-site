@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter, Inconsolata } from 'next/font/google'
+import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
 const inter = Inter({
@@ -152,6 +153,7 @@ export default function RootLayout({
         </header>
 
         {children}
+        <Analytics />
 
         {/* ── Footer ───────────────────────────────────────────────────────── */}
         <footer className="border-t border-[#1E1E1E]">
