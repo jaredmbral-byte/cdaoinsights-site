@@ -449,13 +449,12 @@ export default async function Home() {
                 Why this exists
               </h2>
               <p className="text-sm text-[#888888] leading-relaxed mb-4">
-                Built after 7 years running Gartner's fastest-growing C-suite program. 
-                I watched CDOs waste hours sifting through vendor hype to find out what 
-                their peers were actually doing.
+                CDAO Insights tracks 500+ signals weekly from public sources — executive 
+                moves, hiring patterns, tool adoption — so data leaders know what's 
+                happening before their next board meeting.
               </p>
               <p className="text-sm text-[#888888] leading-relaxed">
-                This tracks 500+ signals weekly — executive moves, hiring patterns, 
-                tool adoption — so you know what's happening before your next board meeting.
+                No vendor sponsorship. No paid placements. Just data.
               </p>
             </div>
             <div>
