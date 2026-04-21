@@ -3,15 +3,15 @@
 @tailwind utilities;
 
 :root {
-  --bg: #0A0A0A;
-  --surface: #111111;
-  --border: #1E1E1E;
-  --text: #E8E8E8;
-  --text-muted: #888888;
-  --text-subtle: #555555;
-  --accent: #00FF94;
-  --link: #3B82F6;
-  --danger: #EF4444;
+  --bg: #F5F3EE;
+  --surface: #EDEAE2;
+  --border: #C9C4BB;
+  --text: #0A0A0A;
+  --text-muted: #6B6864;
+  --text-subtle: #6B6864;
+  --accent: #0A0A0A;
+  --link: #0A0A0A;
+  --danger: #DC2626;
 }
 
 * {
@@ -41,8 +41,8 @@ iframe[src*="tally.so"] {
 
 /* Selection color */
 ::selection {
-  background: rgba(0, 255, 148, 0.2);
-  color: #E8E8E8;
+  background: rgba(0, 0, 0, 0.08);
+  color: #0A0A0A;
 }
 
 /* Scrollbar styling */
@@ -51,12 +51,12 @@ iframe[src*="tally.so"] {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0A0A0A;
+  background: #F5F3EE;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1E1E1E;
+  background: #C9C4BB;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #333;
+  background: #6B6864;
 }

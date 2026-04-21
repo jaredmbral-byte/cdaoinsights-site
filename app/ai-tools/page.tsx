@@ -20,11 +20,11 @@ export const metadata: Metadata = {
 export const revalidate = 900;
 
 const AI_TOOL_CATEGORIES = [
-  { key: "platforms", label: "Data & AI Platforms", tools: ["Snowflake", "Databricks", "Google Vertex", "Azure AI"], color: "border-blue-500/30 text-blue-400" },
-  { key: "agentic-analytics", label: "Agentic Analytics", tools: ["WisdomAI", "ThoughtSpot", "Hex", "Sigma", "Glean"], color: "border-emerald-500/30 text-emerald-400" },
-  { key: "ai-governance", label: "AI Governance & Ops", tools: ["Dataiku", "Weights & Biases", "Fiddler", "Arthur AI", "Domino"], color: "border-amber-500/30 text-amber-400" },
-  { key: "enterprise-assistants", label: "Enterprise AI Assistants", tools: ["Microsoft Copilot", "GitHub Copilot", "Glean", "Notion AI"], color: "border-violet-500/30 text-violet-400" },
-  { key: "agentic-frameworks", label: "Agentic Frameworks", tools: ["LangChain", "CrewAI", "LangGraph", "AutoGen"], color: "border-indigo-500/30 text-indigo-400" },
+  { key: "platforms", label: "Data & AI Platforms", tools: ["Snowflake", "Databricks", "Google Vertex", "Azure AI"], color: "border-[#C9C4BB] text-[#6B6864]" },
+  { key: "agentic-analytics", label: "Agentic Analytics", tools: ["WisdomAI", "ThoughtSpot", "Hex", "Sigma", "Glean"], color: "border-[#C9C4BB] text-[#6B6864]" },
+  { key: "ai-governance", label: "AI Governance & Ops", tools: ["Dataiku", "Weights & Biases", "Fiddler", "Arthur AI", "Domino"], color: "border-[#C9C4BB] text-[#6B6864]" },
+  { key: "enterprise-assistants", label: "Enterprise AI Assistants", tools: ["Microsoft Copilot", "GitHub Copilot", "Glean", "Notion AI"], color: "border-[#C9C4BB] text-[#6B6864]" },
+  { key: "agentic-frameworks", label: "Agentic Frameworks", tools: ["LangChain", "CrewAI", "LangGraph", "AutoGen"], color: "border-[#C9C4BB] text-[#6B6864]" },
 ];
 
 const SPOTLIGHT_SOURCES = ["Databricks Blog", "Snowflake Blog"];
@@ -169,11 +169,11 @@ export default async function AiToolsPage({
 
   return (
     <main className="flex-1 max-w-[1200px] mx-auto px-6 pt-10 pb-24 w-full">
-      <p className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#555555] mb-2">Enterprise AI</p>
-      <h1 className="text-2xl sm:text-3xl font-semibold leading-[1.15] tracking-[-0.5px] text-[#E8E8E8] mb-2">
+      <p className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#6B6864] mb-2">Enterprise AI</p>
+      <h1 className="text-2xl sm:text-3xl font-semibold leading-[1.15] tracking-[-0.5px] text-[#0A0A0A] mb-2">
         AI Tools in the Wild
       </h1>
-      <p className="text-sm text-[#888888] leading-relaxed max-w-2xl mb-8">
+      <p className="text-sm text-[#6B6864] leading-relaxed max-w-2xl mb-8">
         Real-time tracking of AI tools enterprise CDOs and CAIOs are evaluating and deploying.
         Case studies, releases, and signals — updated continuously.
       </p>
@@ -181,12 +181,12 @@ export default async function AiToolsPage({
       {/* Platform Spotlights */}
       <section className="mb-8">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="font-mono text-[10px] uppercase tracking-[2px] text-[#555555]">Platform AI — Databricks & Snowflake</h2>
-          <span className="font-mono text-[10px] text-[#555555]">30d</span>
+          <h2 className="font-mono text-[10px] uppercase tracking-[2px] text-[#6B6864]">Platform AI — Databricks & Snowflake</h2>
+          <span className="font-mono text-[10px] text-[#6B6864]">30d</span>
         </div>
         {spotlightArticles.length === 0 ? (
-          <div className="border border-[#1E1E1E] rounded-sm p-6 text-center">
-            <p className="text-xs text-[#555555]">No platform articles yet — check back after next ingest.</p>
+          <div className="border border-[#C9C4BB] rounded-sm p-6 text-center">
+            <p className="text-xs text-[#6B6864]">No platform articles yet — check back after next ingest.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -194,16 +194,16 @@ export default async function AiToolsPage({
               const isDatabricks = article.source_name === "Databricks Blog" || article.title.toLowerCase().includes("databricks");
               return (
                 <a key={article.id} href={article.source_url} target="_blank" rel="noopener noreferrer"
-                  className="block border border-[#1E1E1E] rounded-sm p-3 hover:border-[#333] hover:bg-[#111111] transition-colors group">
+                  className="block border border-[#C9C4BB] rounded-sm p-3 hover:border-[#8A8782] hover:bg-[#EDEAE2] transition-colors group">
                   <div className="flex items-center gap-1.5 mb-2">
-                    <span className={`font-mono text-[9px] uppercase tracking-[1px] px-1.5 py-0.5 rounded-sm border ${isDatabricks ? "border-orange-500/30 text-orange-400" : "border-blue-500/30 text-blue-400"}`}>
+                    <span className={`font-mono text-[9px] uppercase tracking-[1px] px-1.5 py-0.5 rounded-sm border ${isDatabricks ? "border-[#C9C4BB] text-[#6B6864]" : "border-[#C9C4BB] text-[#6B6864]"}`}>
                       {isDatabricks ? "Databricks" : "Snowflake"}
                     </span>
                     {article.published_at && (
-                      <span className="font-mono text-[9px] text-[#555555]">{timeAgo(article.published_at)}</span>
+                      <span className="font-mono text-[9px] text-[#6B6864]">{timeAgo(article.published_at)}</span>
                     )}
                   </div>
-                  <h3 className="text-sm text-[#E8E8E8] group-hover:text-[#3B82F6] leading-snug line-clamp-2">
+                  <h3 className="text-sm text-[#0A0A0A] group-hover:text-[#0A0A0A] leading-snug line-clamp-2">
                     {cleanTitle(article.title)}
                   </h3>
                 </a>
@@ -217,31 +217,31 @@ export default async function AiToolsPage({
       {fundingArticles.length > 0 && (
         <section className="mb-8">
           <div className="flex items-center justify-between mb-3">
-            <h2 className="font-mono text-[10px] uppercase tracking-[2px] text-[#555555]">
+            <h2 className="font-mono text-[10px] uppercase tracking-[2px] text-[#6B6864]">
               Recent Funding
             </h2>
-            <a href="/intelligence?topic=funding" className="font-mono text-[10px] uppercase tracking-[1px] text-[#555555] hover:text-[#E8E8E8] transition-colors">
+            <a href="/intelligence?topic=funding" className="font-mono text-[10px] uppercase tracking-[1px] text-[#6B6864] hover:text-[#0A0A0A] transition-colors">
               All →
             </a>
           </div>
-          <div className="border border-[#1E1E1E] rounded-sm divide-y divide-[#1E1E1E]">
+          <div className="border border-[#C9C4BB] rounded-sm divide-y divide-[#C9C4BB]">
             {fundingArticles.map((article) => (
               <a
                 key={article.id}
                 href={article.source_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-start justify-between gap-3 px-4 py-2.5 hover:bg-[#111111] transition-colors group"
+                className="flex items-start justify-between gap-3 px-4 py-2.5 hover:bg-[#EDEAE2] transition-colors group"
               >
                 <div className="min-w-0 flex-1">
-                  <h3 className="text-sm text-[#E8E8E8] group-hover:text-[#3B82F6] leading-snug line-clamp-1">
+                  <h3 className="text-sm text-[#0A0A0A] group-hover:text-[#0A0A0A] leading-snug line-clamp-1">
                     {cleanTitle(article.title)}
                   </h3>
                   {article.source_name && (
-                    <span className="font-mono text-[10px] text-[#555555]">{article.source_name}</span>
+                    <span className="font-mono text-[10px] text-[#6B6864]">{article.source_name}</span>
                   )}
                 </div>
-                <span className="font-mono text-[10px] text-[#555555] whitespace-nowrap mt-1 flex-shrink-0">
+                <span className="font-mono text-[10px] text-[#6B6864] whitespace-nowrap mt-1 flex-shrink-0">
                   {article.published_at && !isNaN(new Date(article.published_at).getTime())
                     ? timeAgo(article.published_at) : "—"}
                 </span>
@@ -254,17 +254,17 @@ export default async function AiToolsPage({
       {/* Scoreboard */}
       {topTools.length > 0 && (
         <section className="mb-8">
-          <div className="border border-[#1E1E1E] rounded-sm p-4">
+          <div className="border border-[#C9C4BB] rounded-sm p-4">
             <div className="flex items-center justify-between mb-3">
-              <h2 className="font-mono text-[10px] uppercase tracking-[2px] text-[#555555]">Trending Tools</h2>
-              <span className="font-mono text-[10px] text-[#555555]">auto-discovered · 30d</span>
+              <h2 className="font-mono text-[10px] uppercase tracking-[2px] text-[#6B6864]">Trending Tools</h2>
+              <span className="font-mono text-[10px] text-[#6B6864]">auto-discovered · 30d</span>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               {topTools.map(([tool, count], i) => (
-                <div key={tool} className="flex items-center gap-2 py-1.5 px-2 border border-[#1E1E1E] rounded-sm">
-                  <span className="font-mono text-[10px] text-[#555555] w-4 flex-shrink-0">#{i + 1}</span>
-                  <span className="text-sm text-[#E8E8E8] flex-1 truncate">{tool}</span>
-                  <span className="font-mono text-xs font-semibold text-[#00FF94] flex-shrink-0">{count}</span>
+                <div key={tool} className="flex items-center gap-2 py-1.5 px-2 border border-[#C9C4BB] rounded-sm">
+                  <span className="font-mono text-[10px] text-[#6B6864] w-4 flex-shrink-0">#{i + 1}</span>
+                  <span className="text-sm text-[#0A0A0A] flex-1 truncate">{tool}</span>
+                  <span className="font-mono text-xs font-semibold text-[#0A0A0A] flex-shrink-0">{count}</span>
                 </div>
               ))}
             </div>
@@ -274,42 +274,42 @@ export default async function AiToolsPage({
 
       {/* Category filters */}
       <div className="flex flex-wrap gap-2 mb-6">
-        <a href="/ai-tools" className={`font-mono text-[10px] uppercase tracking-[1px] px-2.5 py-1 rounded-sm border transition-colors ${!activeCategory ? "bg-[#E8E8E8] text-[#0A0A0A] border-[#E8E8E8]" : "text-[#555555] border-[#1E1E1E] hover:border-[#555555] hover:text-[#888888]"}`}>
+        <a href="/ai-tools" className={`font-mono text-[10px] uppercase tracking-[1px] px-2.5 py-1 rounded-sm border transition-colors ${!activeCategory ? "bg-[#0A0A0A] text-[#F5F3EE] border-[#0A0A0A]" : "text-[#6B6864] border-[#C9C4BB] hover:border-[#6B6864] hover:text-[#6B6864]"}`}>
           All Tools
         </a>
         {AI_TOOL_CATEGORIES.map((cat) => (
           <a key={cat.key} href={`/ai-tools?category=${cat.key}`}
-            className={`font-mono text-[10px] uppercase tracking-[1px] px-2.5 py-1 rounded-sm border transition-colors ${activeCategory === cat.key ? "bg-[#E8E8E8] text-[#0A0A0A] border-[#E8E8E8]" : "text-[#555555] border-[#1E1E1E] hover:border-[#555555] hover:text-[#888888]"}`}>
+            className={`font-mono text-[10px] uppercase tracking-[1px] px-2.5 py-1 rounded-sm border transition-colors ${activeCategory === cat.key ? "bg-[#0A0A0A] text-[#F5F3EE] border-[#0A0A0A]" : "text-[#6B6864] border-[#C9C4BB] hover:border-[#6B6864] hover:text-[#6B6864]"}`}>
             {cat.label}
           </a>
         ))}
       </div>
 
       {/* Article Feed */}
-      <div className="border border-[#1E1E1E] rounded-sm overflow-hidden">
-        <div className="flex items-center justify-between px-4 py-3 border-b border-[#1E1E1E]">
-          <h2 className="font-mono text-[10px] uppercase tracking-[2px] text-[#555555]">Latest Signals</h2>
-          <span className="font-mono text-[10px] text-[#555555]">{allToolsArticles.length} articles</span>
+      <div className="border border-[#C9C4BB] rounded-sm overflow-hidden">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-[#C9C4BB]">
+          <h2 className="font-mono text-[10px] uppercase tracking-[2px] text-[#6B6864]">Latest Signals</h2>
+          <span className="font-mono text-[10px] text-[#6B6864]">{allToolsArticles.length} articles</span>
         </div>
         {allToolsArticles.length === 0 ? (
           <div className="p-8 text-center">
-            <p className="text-xs text-[#555555]">No articles yet for this category. Check back after next ingest.</p>
+            <p className="text-xs text-[#6B6864]">No articles yet for this category. Check back after next ingest.</p>
           </div>
         ) : (
-          <div className="divide-y divide-[#1E1E1E]">
+          <div className="divide-y divide-[#C9C4BB]">
             {allToolsArticles.slice(0, 100).map((article) => (
               <a key={article.id} href={article.source_url} target="_blank" rel="noopener noreferrer"
-                className="block px-4 py-2.5 hover:bg-[#111111] transition-colors group">
+                className="block px-4 py-2.5 hover:bg-[#EDEAE2] transition-colors group">
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0 flex-1">
-                    <h3 className="text-sm text-[#E8E8E8] group-hover:text-[#3B82F6] leading-snug line-clamp-1">
+                    <h3 className="text-sm text-[#0A0A0A] group-hover:text-[#0A0A0A] leading-snug line-clamp-1">
                       {cleanTitle(article.title)}
                     </h3>
                     {article.source_name && (
-                      <span className="font-mono text-[10px] text-[#555555] mt-0.5 block">{article.source_name}</span>
+                      <span className="font-mono text-[10px] text-[#6B6864] mt-0.5 block">{article.source_name}</span>
                     )}
                   </div>
-                  <span className="font-mono text-[10px] text-[#555555] whitespace-nowrap mt-1 flex-shrink-0">
+                  <span className="font-mono text-[10px] text-[#6B6864] whitespace-nowrap mt-1 flex-shrink-0">
                     {article.published_at && !isNaN(new Date(article.published_at).getTime()) ? timeAgo(article.published_at) : "—"}
                   </span>
                 </div>

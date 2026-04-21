@@ -1,18 +1,19 @@
 import type { Metadata } from 'next'
-import { Inter, Inconsolata } from 'next/font/google'
+import { Inter_Tight, JetBrains_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
-const inter = Inter({
+const interTight = Inter_Tight({
   subsets: ['latin'],
   variable: '--font-inter',
+  weight: ['300', '400', '500', '600', '700'],
   display: 'swap',
 })
 
-const inconsolata = Inconsolata({
+const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
   variable: '--font-inconsolata',
-  weight: ['400', '500', '700'],
+  weight: ['400', '500'],
   display: 'swap',
 })
 
@@ -108,46 +109,61 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${inconsolata.variable}`}>
+    <html lang="en" className={`${interTight.variable} ${jetbrainsMono.variable}`}>
       <head>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
       </head>
-      <body className="bg-[#0A0A0A] text-[#E8E8E8]">
-        {/* ── Sticky Nav ─────────────────────────────────────────────────── */}
-        <header className="sticky top-0 z-50 bg-[#0A0A0A]/95 backdrop-blur-sm border-b border-[#1E1E1E]">
+      <body className="bg-[#F5F3EE] text-[#0A0A0A]">
+        {/* ── Sticky Nav (Brand Guide: mono uppercase, 0.06em tracking) ── */}
+        <header className="sticky top-0 z-50 bg-[#F5F3EE] border-b border-[#C9C4BB]">
           <nav
-            className="max-w-[1200px] mx-auto px-6 h-14 flex items-center justify-between"
+            className="max-w-[1400px] mx-auto px-5 lg:px-12 h-[52px] flex items-center justify-between"
             aria-label="Main navigation"
           >
             <a
               href="/"
-              className="font-mono font-bold text-sm tracking-[3px] text-[#E8E8E8] uppercase"
+              className="flex items-center gap-2.5 text-[#0A0A0A]"
               aria-label="CDAO Insights home"
             >
-              CDAO INSIGHTS
+              <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" className="shrink-0">
+                <line x1="0" y1="16" x2="16" y2="16" stroke="currentColor" strokeWidth="1.4" />
+                <line x1="0" y1="2" x2="0" y2="16" stroke="currentColor" strokeWidth="1.4" />
+                <rect x="2.5" y="11" width="2" height="5" fill="currentColor" />
+                <rect x="6.5" y="7" width="2" height="9" fill="currentColor" />
+                <rect x="10.5" y="3" width="2" height="13" fill="currentColor" />
+                <circle cx="11.5" cy="1.5" r="1.2" fill="currentColor" />
+              </svg>
+              <span className="font-mono text-[11px] uppercase tracking-[0.06em] text-[#0A0A0A]">
+                CDAO Insights
+              </span>
             </a>
-            <div className="flex items-center gap-6">
-              <a href="/moves" className="font-mono text-xs uppercase tracking-[2px] text-[#888888] hover:text-[#E8E8E8] transition-colors">
+            <div className="hidden md:flex items-center gap-7">
+              <a href="/moves" className="font-mono text-[11px] uppercase tracking-[0.06em] text-[#6B6864] hover:text-[#0A0A0A] transition-colors">
                 Moves
               </a>
-              <a href="/hiring" className="font-mono text-xs uppercase tracking-[2px] text-[#888888] hover:text-[#E8E8E8] transition-colors">
+              <a href="/hiring" className="font-mono text-[11px] uppercase tracking-[0.06em] text-[#6B6864] hover:text-[#0A0A0A] transition-colors">
                 Hiring
               </a>
-              <a href="/intelligence" className="font-mono text-xs uppercase tracking-[2px] text-[#888888] hover:text-[#E8E8E8] transition-colors">
+              <a href="/intelligence" className="font-mono text-[11px] uppercase tracking-[0.06em] text-[#6B6864] hover:text-[#0A0A0A] transition-colors">
                 Intelligence
               </a>
-              <a href="/ai-tools" className="font-mono text-xs uppercase tracking-[2px] text-[#888888] hover:text-[#E8E8E8] transition-colors">
+              <a href="/ai-tools" className="font-mono text-[11px] uppercase tracking-[0.06em] text-[#6B6864] hover:text-[#0A0A0A] transition-colors">
                 AI Tools
               </a>
-              <a href="/compensation" className="font-mono text-xs uppercase tracking-[2px] text-[#888888] hover:text-[#E8E8E8] transition-colors">
+              <a href="/compensation" className="font-mono text-[11px] uppercase tracking-[0.06em] text-[#6B6864] hover:text-[#0A0A0A] transition-colors">
                 Compensation
               </a>
-              {/* <a href="/services" className="font-mono text-xs uppercase tracking-[2px] text-[#888888] hover:text-[#E8E8E8] transition-colors">
-                Services
-              </a> */}
+            </div>
+            <div className="flex md:hidden items-center gap-4">
+              <a href="/moves" className="font-mono text-[10px] uppercase tracking-[0.06em] text-[#0A0A0A]">Moves</a>
+              <a href="/hiring" className="font-mono text-[10px] uppercase tracking-[0.06em] text-[#0A0A0A]">Hiring</a>
+              <a href="/intelligence" className="font-mono text-[10px] uppercase tracking-[0.06em] text-[#0A0A0A]">Intel</a>
+            </div>
+            <div className="hidden lg:block font-mono text-[10px] uppercase tracking-[0.06em] text-[#6B6864]">
+              V1.0
             </div>
           </nav>
         </header>
@@ -155,15 +171,21 @@ export default function RootLayout({
         {children}
         <Analytics />
 
-        {/* ── Footer ───────────────────────────────────────────────────────── */}
-        <footer className="border-t border-[#1E1E1E]">
-          <div className="max-w-[1200px] mx-auto px-6 py-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <span className="font-mono text-xs uppercase tracking-[2px] text-[#555555]">
-              CDAO Insights — Enterprise data &amp; AI leaders
-            </span>
-            <span className="font-mono text-xs uppercase tracking-[2px] text-[#555555]">
-              &copy; {new Date().getFullYear()} CDAO Insights
-            </span>
+        {/* ── Footer (Brand Guide: ink bg, paper text) ─────────────────── */}
+        <footer className="bg-[#0A0A0A] text-[#F5F3EE] mt-24">
+          <div className="max-w-[1400px] mx-auto px-5 lg:px-12 py-12 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-8">
+            <div className="max-w-xl">
+              <p className="font-mono text-[10px] uppercase tracking-[0.06em] text-[#8A8782] mb-5">
+                End of document
+              </p>
+              <h3 className="font-sans font-medium text-2xl sm:text-4xl leading-[1.05] tracking-[-0.025em] text-balance">
+                Field notes for the people making the architecture calls.
+              </h3>
+            </div>
+            <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[#8A8782] sm:text-right">
+              CDAO Insights · V1.0<br />
+              &copy; {new Date().getFullYear()} · cdaoinsights.com
+            </div>
           </div>
         </footer>
       </body>

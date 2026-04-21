@@ -25,17 +25,17 @@ export default function FaqAccordion({ items }: FaqAccordionProps) {
       {items.map((item, i) => (
         <div
           key={i}
-          className="border-b border-[#1E1E1E] last:border-0"
+          className="border-b border-[#C9C4BB] last:border-0"
         >
           <button
             onClick={() => toggleItem(i)}
-            className="w-full flex items-start justify-between gap-4 py-4 text-left hover:bg-[#111111] transition-colors px-2 -mx-2"
+            className="w-full flex items-start justify-between gap-4 py-4 text-left hover:bg-[#EDEAE2] transition-colors px-2 -mx-2"
           >
-            <span className="text-sm font-medium text-[#E8E8E8]">
+            <span className="text-sm font-medium text-[#0A0A0A]">
               {item.q}
             </span>
             <span
-              className={`text-[#555555] text-sm flex-shrink-0 transition-transform ${
+              className={`text-[#6B6864] text-sm flex-shrink-0 transition-transform ${
                 openStates[i] ? 'rotate-90' : ''
               }`}
             >
@@ -44,7 +44,7 @@ export default function FaqAccordion({ items }: FaqAccordionProps) {
           </button>
           {openStates[i] && (
             <div className="pb-4 px-2">
-              <p className="text-sm text-[#888888] leading-relaxed max-w-2xl">
+              <p className="text-sm text-[#6B6864] leading-relaxed max-w-2xl">
                 {item.a}
               </p>
             </div>

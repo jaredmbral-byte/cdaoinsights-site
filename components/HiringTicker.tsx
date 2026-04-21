@@ -39,13 +39,13 @@ export default function HiringTicker() {
 
   return (
     <div className="flex items-center gap-2">
-      <span className="font-mono text-[11px] uppercase tracking-[1px] text-[#555555]">
+      <span className="font-mono text-[11px] uppercase tracking-[1px] text-[#6B6864]">
         Appointments
       </span>
-      <span className="font-mono text-[11px] text-[#00FF94] tabular-nums">
+      <span className="font-mono text-[11px] text-[#0A0A0A] tabular-nums">
         {stats.hiring.last90}
       </span>
-      <span className="font-mono text-[11px] text-[#555555]">/ 90d</span>
+      <span className="font-mono text-[11px] text-[#6B6864]">/ 90d</span>
     </div>
   )
 }
