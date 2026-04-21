@@ -58,24 +58,24 @@ function generateDigestHtml({ moves, articles, hiring, weekLabel }: {
 }): string {
   const moveRows = moves.map(m => `
     <tr>
-      <td style="padding: 12px 16px; border-bottom: 1px solid #1E1E1E;">
-        <a href="${m.source_url}" style="color: #E8E8E8; text-decoration: none; font-size: 14px;">${m.person_name || m.headline?.slice(0, 60) || 'Unknown'}</a>
+      <td style="padding: 12px 16px; border-bottom: 1px solid #C9C4BB;">
+        <a href="${m.source_url}" style="color: #0A0A0A; text-decoration: none; font-size: 14px;">${m.person_name || m.headline?.slice(0, 60) || 'Unknown'}</a>
         <div style="color: #888; font-size: 12px; margin-top: 2px;">${m.title || ''} ${m.company_name ? '· ' + m.company_name : ''}</div>
       </td>
     </tr>`).join('')
 
   const articleRows = articles.map(a => `
     <tr>
-      <td style="padding: 10px 16px; border-bottom: 1px solid #1E1E1E;">
-        <a href="${a.source_url}" style="color: #E8E8E8; text-decoration: none; font-size: 14px;">${a.title?.slice(0, 100) || ''}</a>
+      <td style="padding: 10px 16px; border-bottom: 1px solid #C9C4BB;">
+        <a href="${a.source_url}" style="color: #0A0A0A; text-decoration: none; font-size: 14px;">${a.title?.slice(0, 100) || ''}</a>
         <div style="color: #888; font-size: 11px; margin-top: 2px;">${a.source_name || ''}</div>
       </td>
     </tr>`).join('')
 
   const hiringRows = hiring.map(h => `
     <tr>
-      <td style="padding: 10px 16px; border-bottom: 1px solid #1E1E1E;">
-        <a href="${h.source_url || '#'}" style="color: #00FF94; text-decoration: none; font-size: 13px;">${h.job_title}</a>
+      <td style="padding: 10px 16px; border-bottom: 1px solid #C9C4BB;">
+        <a href="${h.source_url || '#'}" style="color: #0A0A0A; text-decoration: none; font-size: 13px;">${h.job_title}</a>
         <div style="color: #888; font-size: 12px; margin-top: 2px;">${h.company_name} ${h.location ? '· ' + h.location : ''}</div>
       </td>
     </tr>`).join('')
@@ -83,13 +83,13 @@ function generateDigestHtml({ moves, articles, hiring, weekLabel }: {
   return `<!DOCTYPE html>
 <html>
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head>
-<body style="margin: 0; padding: 0; background: #0A0A0A; color: #E8E8E8; font-family: 'Courier New', monospace;">
+<body style="margin: 0; padding: 0; background: #F5F3EE; color: #0A0A0A; font-family: 'Courier New', monospace;">
   <div style="max-width: 600px; margin: 0 auto; padding: 32px 16px;">
 
     <!-- Header -->
-    <div style="border-bottom: 1px solid #1E1E1E; padding-bottom: 24px; margin-bottom: 24px;">
+    <div style="border-bottom: 1px solid #C9C4BB; padding-bottom: 24px; margin-bottom: 24px;">
       <div style="font-size: 11px; letter-spacing: 3px; color: #555; text-transform: uppercase; margin-bottom: 8px;">CDAO INSIGHTS</div>
-      <h1 style="margin: 0; font-size: 20px; font-weight: 600; color: #E8E8E8;">Weekly Intelligence Brief</h1>
+      <h1 style="margin: 0; font-size: 20px; font-weight: 600; color: #0A0A0A;">Weekly Intelligence Brief</h1>
       <div style="font-size: 12px; color: #555; margin-top: 4px;">Week of ${weekLabel}</div>
     </div>
 
@@ -97,7 +97,7 @@ function generateDigestHtml({ moves, articles, hiring, weekLabel }: {
     ${moves.length > 0 ? `
     <div style="margin-bottom: 32px;">
       <div style="font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #555; margin-bottom: 12px;">Executive Moves</div>
-      <table style="width: 100%; border-collapse: collapse; border: 1px solid #1E1E1E; border-radius: 4px;">
+      <table style="width: 100%; border-collapse: collapse; border: 1px solid #C9C4BB; border-radius: 4px;">
         ${moveRows}
       </table>
     </div>` : ''}
@@ -106,7 +106,7 @@ function generateDigestHtml({ moves, articles, hiring, weekLabel }: {
     ${articles.length > 0 ? `
     <div style="margin-bottom: 32px;">
       <div style="font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #555; margin-bottom: 12px;">Top Market Signals</div>
-      <table style="width: 100%; border-collapse: collapse; border: 1px solid #1E1E1E; border-radius: 4px;">
+      <table style="width: 100%; border-collapse: collapse; border: 1px solid #C9C4BB; border-radius: 4px;">
         ${articleRows}
       </table>
     </div>` : ''}
@@ -115,15 +115,15 @@ function generateDigestHtml({ moves, articles, hiring, weekLabel }: {
     ${hiring.length > 0 ? `
     <div style="margin-bottom: 32px;">
       <div style="font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #555; margin-bottom: 12px;">Leadership Roles Open</div>
-      <table style="width: 100%; border-collapse: collapse; border: 1px solid #1E1E1E; border-radius: 4px;">
+      <table style="width: 100%; border-collapse: collapse; border: 1px solid #C9C4BB; border-radius: 4px;">
         ${hiringRows}
       </table>
     </div>` : ''}
 
     <!-- CTA -->
-    <div style="text-align: center; padding: 24px; border: 1px solid #1E1E1E; border-radius: 4px; margin-bottom: 32px;">
+    <div style="text-align: center; padding: 24px; border: 1px solid #C9C4BB; border-radius: 4px; margin-bottom: 32px;">
       <div style="font-size: 12px; color: #888; margin-bottom: 12px;">Full dashboard at</div>
-      <a href="https://cdaoinsights.com" style="color: #00FF94; text-decoration: none; font-size: 14px; letter-spacing: 1px;">CDAOINSIGHTS.COM →</a>
+      <a href="https://cdaoinsights.com" style="color: #0A0A0A; text-decoration: none; font-size: 14px; letter-spacing: 1px;">CDAOINSIGHTS.COM →</a>
     </div>
 
     <!-- Footer -->

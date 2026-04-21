@@ -101,13 +101,13 @@ export default async function CompensationPage({
   return (
     <main className="flex-1 max-w-[1200px] mx-auto px-6 pt-16 pb-24 w-full">
       {/* Page header */}
-      <p className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#555555] mb-4">
+      <p className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#6B6864] mb-4">
         Compensation Benchmarks
       </p>
-      <h1 className="text-3xl sm:text-4xl font-semibold leading-[1.15] tracking-[-0.5px] text-[#E8E8E8] mb-3">
+      <h1 className="text-3xl sm:text-4xl font-semibold leading-[1.15] tracking-[-0.5px] text-[#0A0A0A] mb-3">
         What data &amp; AI leaders earn
       </h1>
-      <p className="text-base text-[#888888] leading-relaxed max-w-2xl mb-10">
+      <p className="text-base text-[#6B6864] leading-relaxed max-w-2xl mb-10">
         Salary benchmarks for CDO, CAIO, and senior data leadership roles.
         Percentile breakdowns by industry. Updated quarterly.
       </p>
@@ -120,8 +120,8 @@ export default async function CompensationPage({
             href={`/compensation?role=${encodeURIComponent(r)}${industry ? `&industry=${encodeURIComponent(industry)}` : ''}`}
             className={`font-mono text-xs uppercase tracking-[1px] px-3 py-1.5 rounded-sm border transition-colors ${
               (role === r || (!role && r === 'All Roles'))
-                ? 'bg-[#E8E8E8] text-[#0A0A0A] border-[#E8E8E8]'
-                : 'bg-transparent text-[#888888] border-[#1E1E1E] hover:border-[#555555] hover:text-[#E8E8E8]'
+                ? 'bg-[#0A0A0A] text-[#F5F3EE] border-[#0A0A0A]'
+                : 'bg-transparent text-[#6B6864] border-[#C9C4BB] hover:border-[#6B6864] hover:text-[#0A0A0A]'
             }`}
           >
             {r}
@@ -137,8 +137,8 @@ export default async function CompensationPage({
             href={`/compensation?industry=${encodeURIComponent(ind)}${role ? `&role=${encodeURIComponent(role)}` : ''}`}
             className={`font-mono text-[10px] uppercase tracking-[1px] px-2.5 py-1 rounded-sm border transition-colors ${
               (industry === ind || (!industry && ind === 'All Industries'))
-                ? 'bg-[#888888] text-[#0A0A0A] border-[#888888]'
-                : 'bg-transparent text-[#555555] border-[#1E1E1E] hover:border-[#555555] hover:text-[#888888]'
+                ? 'bg-[#6B6864] text-[#F5F3EE] border-[#6B6864]'
+                : 'bg-transparent text-[#6B6864] border-[#C9C4BB] hover:border-[#6B6864] hover:text-[#6B6864]'
             }`}
           >
             {ind}
@@ -148,26 +148,26 @@ export default async function CompensationPage({
 
       {/* Results */}
       {dedupedBenchmarks.length > 0 ? (
-        <div className="border border-[#1E1E1E] rounded-sm overflow-hidden">
+        <div className="border border-[#C9C4BB] rounded-sm overflow-hidden">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-[#1E1E1E] bg-[#111111]">
-                <th className="text-left font-mono text-xs font-medium uppercase tracking-[1px] text-[#888888] px-4 py-3">
+              <tr className="border-b border-[#C9C4BB] bg-[#EDEAE2]">
+                <th className="text-left font-mono text-xs font-medium uppercase tracking-[1px] text-[#6B6864] px-4 py-3">
                   Role
                 </th>
-                <th className="text-left font-mono text-xs font-medium uppercase tracking-[1px] text-[#555555] px-4 py-3 hidden sm:table-cell">
+                <th className="text-left font-mono text-xs font-medium uppercase tracking-[1px] text-[#6B6864] px-4 py-3 hidden sm:table-cell">
                   Industry
                 </th>
-                <th className="text-right font-mono text-xs font-medium uppercase tracking-[1px] text-[#888888] px-4 py-3">
+                <th className="text-right font-mono text-xs font-medium uppercase tracking-[1px] text-[#6B6864] px-4 py-3">
                   25th
                 </th>
-                <th className="text-right font-mono text-xs font-medium uppercase tracking-[1px] text-[#888888] px-4 py-3">
+                <th className="text-right font-mono text-xs font-medium uppercase tracking-[1px] text-[#6B6864] px-4 py-3">
                   Median
                 </th>
-                <th className="text-right font-mono text-xs font-medium uppercase tracking-[1px] text-[#888888] px-4 py-3">
+                <th className="text-right font-mono text-xs font-medium uppercase tracking-[1px] text-[#6B6864] px-4 py-3">
                   75th
                 </th>
-                <th className="text-right font-mono text-xs font-medium uppercase tracking-[1px] text-[#555555] px-4 py-3 hidden md:table-cell">
+                <th className="text-right font-mono text-xs font-medium uppercase tracking-[1px] text-[#6B6864] px-4 py-3 hidden md:table-cell">
                   90th
                 </th>
               </tr>
@@ -176,36 +176,36 @@ export default async function CompensationPage({
               {dedupedBenchmarks.map((b) => (
                 <tr
                   key={b.id}
-                  className="border-b border-[#1E1E1E] last:border-b-0 hover:bg-[#111111] transition-colors"
+                  className="border-b border-[#C9C4BB] last:border-b-0 hover:bg-[#EDEAE2] transition-colors"
                 >
                   <td className="px-4 py-3">
-                    <span className="text-[#E8E8E8]">{b.role_title}</span>
+                    <span className="text-[#0A0A0A]">{b.role_title}</span>
                   </td>
-                  <td className="px-4 py-3 text-[#888888] hidden sm:table-cell">{b.industry || 'All'}</td>
-                  <td className="px-4 py-3 text-right font-mono text-[#555555]">{formatSalary(b.p25)}</td>
-                  <td className="px-4 py-3 text-right font-mono font-medium text-[#00FF94]">{formatSalary(b.p50)}</td>
-                  <td className="px-4 py-3 text-right font-mono text-[#888888]">{formatSalary(b.p75)}</td>
-                  <td className="px-4 py-3 text-right font-mono text-[#555555] hidden md:table-cell">{formatSalary(b.p90)}</td>
+                  <td className="px-4 py-3 text-[#6B6864] hidden sm:table-cell">{b.industry || 'All'}</td>
+                  <td className="px-4 py-3 text-right font-mono text-[#6B6864]">{formatSalary(b.p25)}</td>
+                  <td className="px-4 py-3 text-right font-mono font-medium text-[#0A0A0A]">{formatSalary(b.p50)}</td>
+                  <td className="px-4 py-3 text-right font-mono text-[#6B6864]">{formatSalary(b.p75)}</td>
+                  <td className="px-4 py-3 text-right font-mono text-[#6B6864] hidden md:table-cell">{formatSalary(b.p90)}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
       ) : (
-        <div className="border border-[#1E1E1E] rounded-sm p-12 text-center">
-          <p className="text-[#888888] mb-2">No compensation data yet</p>
-          <p className="text-sm text-[#555555]">
+        <div className="border border-[#C9C4BB] rounded-sm p-12 text-center">
+          <p className="text-[#6B6864] mb-2">No compensation data yet</p>
+          <p className="text-sm text-[#6B6864]">
             Benchmark data is refreshed monthly. Run the initial data load to populate.
           </p>
         </div>
       )}
 
       {/* Methodology note */}
-      <div className="mt-8 p-4 bg-[#111111] border border-[#1E1E1E] rounded-sm">
-        <p className="font-mono text-[10px] uppercase tracking-[1px] text-[#555555] mb-2">
+      <div className="mt-8 p-4 bg-[#EDEAE2] border border-[#C9C4BB] rounded-sm">
+        <p className="font-mono text-[10px] uppercase tracking-[1px] text-[#6B6864] mb-2">
           Methodology
         </p>
-        <p className="text-xs text-[#888888] leading-relaxed">
+        <p className="text-xs text-[#6B6864] leading-relaxed">
           Compensation data is aggregated from BLS Occupational Employment Statistics,
           Glassdoor, Levels.fyi, and public company filings. Figures represent total
           cash compensation (base + bonus). Equity compensation varies significantly
@@ -214,8 +214,8 @@ export default async function CompensationPage({
       </div>
 
       {/* FAQ */}
-      <section className="mt-16 border-t border-[#1E1E1E] pt-12">
-        <h2 className="text-xl font-semibold text-[#E8E8E8] mb-8">
+      <section className="mt-16 border-t border-[#C9C4BB] pt-12">
+        <h2 className="text-xl font-semibold text-[#0A0A0A] mb-8">
           Frequently asked questions
         </h2>
         <FaqAccordion items={compFaqs} />

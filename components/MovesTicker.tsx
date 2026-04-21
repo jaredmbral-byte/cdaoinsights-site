@@ -35,13 +35,13 @@ export default function MovesTicker() {
 
   return (
     <div className="flex items-center gap-2">
-      <span className="font-mono text-[11px] uppercase tracking-[1px] text-[#555555]">
+      <span className="font-mono text-[11px] uppercase tracking-[1px] text-[#6B6864]">
         Moves
       </span>
-      <span className="font-mono text-[11px] text-[#00FF94] tabular-nums">
+      <span className="font-mono text-[11px] text-[#0A0A0A] tabular-nums">
         {data.counts.last90}
       </span>
-      <span className="font-mono text-[11px] text-[#555555]">/ 90d</span>
+      <span className="font-mono text-[11px] text-[#6B6864]">/ 90d</span>
     </div>
   )
 }

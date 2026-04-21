@@ -92,13 +92,13 @@ export default async function HiringPage({
   return (
     <main className="flex-1 max-w-[1200px] mx-auto px-6 pt-16 pb-24 w-full">
       {/* Page header */}
-      <p className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#555555] mb-4">
+      <p className="font-mono text-xs font-medium tracking-[2px] uppercase text-[#6B6864] mb-4">
         Executive Hiring Tracker
       </p>
-      <h1 className="text-3xl sm:text-4xl font-semibold leading-[1.15] tracking-[-0.5px] text-[#E8E8E8] mb-3">
+      <h1 className="text-3xl sm:text-4xl font-semibold leading-[1.15] tracking-[-0.5px] text-[#0A0A0A] mb-3">
         Open CDO, CAIO &amp; data leadership roles
       </h1>
-      <p className="text-base text-[#888888] leading-relaxed max-w-2xl mb-10">
+      <p className="text-base text-[#6B6864] leading-relaxed max-w-2xl mb-10">
         Open job postings for CDO, CAIO, VP Data, and senior data leadership roles at large enterprises. Updated every 6 hours.
       </p>
 
@@ -110,8 +110,8 @@ export default async function HiringPage({
             href={`/hiring?days=${tw.value}${search ? `&q=${search}` : ''}${seniority ? `&seniority=${seniority}` : ''}`}
             className={`font-mono text-xs uppercase tracking-[1px] px-3 py-1.5 border-b-2 transition-colors ${
               String(days) === tw.value
-                ? 'border-[#00FF94] text-[#E8E8E8]'
-                : 'border-transparent text-[#555555] hover:text-[#E8E8E8]'
+                ? 'border-[#0A0A0A] text-[#0A0A0A]'
+                : 'border-transparent text-[#6B6864] hover:text-[#0A0A0A]'
             }`}
           >
             {tw.label}
@@ -125,8 +125,8 @@ export default async function HiringPage({
           href={`/hiring?days=${days}${search ? `&q=${search}` : ''}`}
           className={`font-mono text-[10px] uppercase tracking-[1px] px-3 py-1.5 rounded-sm transition-colors ${
             !seniority
-              ? 'bg-[#E8E8E8] text-[#0A0A0A]'
-              : 'text-[#555555] hover:text-[#E8E8E8] border border-[#1E1E1E]'
+              ? 'bg-[#0A0A0A] text-[#F5F3EE]'
+              : 'text-[#6B6864] hover:text-[#0A0A0A] border border-[#C9C4BB]'
           }`}
         >
           All
@@ -137,8 +137,8 @@ export default async function HiringPage({
             href={`/hiring?days=${days}${search ? `&q=${search}` : ''}&seniority=${level}`}
             className={`font-mono text-[10px] uppercase tracking-[1px] px-3 py-1.5 rounded-sm transition-colors ${
               seniority === level
-                ? 'bg-[#E8E8E8] text-[#0A0A0A]'
-                : 'text-[#555555] hover:text-[#E8E8E8] border border-[#1E1E1E]'
+                ? 'bg-[#0A0A0A] text-[#F5F3EE]'
+                : 'text-[#6B6864] hover:text-[#0A0A0A] border border-[#C9C4BB]'
             }`}
           >
             {level}
@@ -147,29 +147,29 @@ export default async function HiringPage({
       </div>
 
       {/* Results count */}
-      <p className="font-mono text-xs text-[#555555] mb-6">
+      <p className="font-mono text-xs text-[#6B6864] mb-6">
         {filtered.length} {filtered.length === 1 ? 'role' : 'roles'} found
       </p>
 
       {/* Table */}
       {filtered.length > 0 ? (
-        <div className="border border-[#1E1E1E] rounded-sm overflow-hidden">
+        <div className="border border-[#C9C4BB] rounded-sm overflow-hidden">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-[#1E1E1E] bg-[#111111]">
-                <th className="text-left font-mono text-xs font-medium uppercase tracking-[1px] text-[#888888] px-4 py-3">
+              <tr className="border-b border-[#C9C4BB] bg-[#EDEAE2]">
+                <th className="text-left font-mono text-xs font-medium uppercase tracking-[1px] text-[#6B6864] px-4 py-3">
                   Role
                 </th>
-                <th className="text-left font-mono text-xs font-medium uppercase tracking-[1px] text-[#888888] px-4 py-3">
+                <th className="text-left font-mono text-xs font-medium uppercase tracking-[1px] text-[#6B6864] px-4 py-3">
                   Company
                 </th>
-                <th className="text-left font-mono text-xs font-medium uppercase tracking-[1px] text-[#555555] px-4 py-3 hidden md:table-cell">
+                <th className="text-left font-mono text-xs font-medium uppercase tracking-[1px] text-[#6B6864] px-4 py-3 hidden md:table-cell">
                   Location
                 </th>
-                <th className="text-left font-mono text-xs font-medium uppercase tracking-[1px] text-[#555555] px-4 py-3 hidden md:table-cell">
+                <th className="text-left font-mono text-xs font-medium uppercase tracking-[1px] text-[#6B6864] px-4 py-3 hidden md:table-cell">
                   Level
                 </th>
-                <th className="text-right font-mono text-xs font-medium uppercase tracking-[1px] text-[#888888] px-4 py-3">
+                <th className="text-right font-mono text-xs font-medium uppercase tracking-[1px] text-[#6B6864] px-4 py-3">
                   Posted
                 </th>
               </tr>
@@ -178,7 +178,7 @@ export default async function HiringPage({
               {filtered.map((signal) => (
                 <tr
                   key={signal.id}
-                  className="border-b border-[#1E1E1E] last:border-b-0 hover:bg-[#111111] transition-colors"
+                  className="border-b border-[#C9C4BB] last:border-b-0 hover:bg-[#EDEAE2] transition-colors"
                 >
                   <td className="px-4 py-3">
                     {signal.source_url ? (
@@ -186,24 +186,24 @@ export default async function HiringPage({
                         href={signal.source_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-[#E8E8E8] hover:text-[#3B82F6]"
+                        className="text-[#0A0A0A] hover:text-[#0A0A0A]"
                       >
                         {signal.job_title}
                       </a>
                     ) : (
-                      <span className="text-[#E8E8E8]">{signal.job_title}</span>
+                      <span className="text-[#0A0A0A]">{signal.job_title}</span>
                     )}
                   </td>
-                  <td className="px-4 py-3 text-[#888888]">{signal.company_name}</td>
-                  <td className="px-4 py-3 text-[#555555] hidden md:table-cell">{signal.location || '—'}</td>
+                  <td className="px-4 py-3 text-[#6B6864]">{signal.company_name}</td>
+                  <td className="px-4 py-3 text-[#6B6864] hidden md:table-cell">{signal.location || '—'}</td>
                   <td className="px-4 py-3 hidden md:table-cell">
                     {signal.seniority && (
-                      <span className="font-mono text-xs uppercase tracking-[1px] px-2 py-0.5 rounded-sm border border-[#1E1E1E] text-[#888888]">
+                      <span className="font-mono text-xs uppercase tracking-[1px] px-2 py-0.5 rounded-sm border border-[#C9C4BB] text-[#6B6864]">
                         {signal.seniority}
                       </span>
                     )}
                   </td>
-                  <td className="px-4 py-3 text-right text-[#555555] font-mono text-xs">
+                  <td className="px-4 py-3 text-right text-[#6B6864] font-mono text-xs">
                     {signal.posted_at
                       ? new Date(signal.posted_at).toLocaleDateString('en-US', {
                           month: 'short',
@@ -217,17 +217,17 @@ export default async function HiringPage({
           </table>
         </div>
       ) : (
-        <div className="border border-[#1E1E1E] rounded-sm p-12 text-center">
-          <p className="text-[#888888] mb-2">No hiring signals yet</p>
-          <p className="text-sm text-[#555555]">
+        <div className="border border-[#C9C4BB] rounded-sm p-12 text-center">
+          <p className="text-[#6B6864] mb-2">No hiring signals yet</p>
+          <p className="text-sm text-[#6B6864]">
             Data is ingested every 6 hours. Check back soon or adjust your filters.
           </p>
         </div>
       )}
 
       {/* FAQ */}
-      <section className="mt-16 border-t border-[#1E1E1E] pt-12">
-        <h2 className="text-xl font-semibold text-[#E8E8E8] mb-8">
+      <section className="mt-16 border-t border-[#C9C4BB] pt-12">
+        <h2 className="text-xl font-semibold text-[#0A0A0A] mb-8">
           Frequently asked questions
         </h2>
         <FaqAccordion items={hiringFaqs} />

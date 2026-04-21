@@ -41,7 +41,7 @@ const TOPIC_COLORS: Record<string, string> = {
   layoffs: 'border-red-500/30 text-red-400',
   'ai-deployment': 'border-violet-500/30 text-violet-400',
   'microsoft-fabric': 'border-blue-400/30 text-blue-300',
-  general: 'border-[#333] text-[#888888]',
+  general: 'border-[#8A8782] text-[#6B6864]',
 }
 
 
@@ -179,11 +179,11 @@ export default async function Home() {
       <main className="flex-1">
 
         {/* ── Live Stat Bar ─────────────────────────────────────────────── */}
-        <div className="border-b border-[#1E1E1E] overflow-x-auto">
+        <div className="border-b border-[#C9C4BB] overflow-x-auto">
           <div className="max-w-[1200px] mx-auto px-6 h-10 flex items-center gap-8 whitespace-nowrap">
             <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#00FF94] animate-pulse" />
-              <span className="font-mono text-[11px] uppercase tracking-[1px] text-[#555555]">Live</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-[#0A0A0A] animate-pulse" />
+              <span className="font-mono text-[11px] uppercase tracking-[1px] text-[#6B6864]">Live</span>
             </div>
             <HiringTicker />
             <MovesTicker />
@@ -197,11 +197,11 @@ export default async function Home() {
         >
           <h1
             id="hero-heading"
-            className="text-2xl sm:text-3xl font-semibold leading-[1.2] tracking-[-0.5px] text-[#E8E8E8] mb-2"
+            className="text-2xl sm:text-3xl font-semibold leading-[1.2] tracking-[-0.5px] text-[#0A0A0A] mb-2"
           >
             Know what your peers are doing before your next board meeting
           </h1>
-          <p className="text-sm text-[#888888] leading-relaxed max-w-xl">
+          <p className="text-sm text-[#6B6864] leading-relaxed max-w-xl">
             Real-time intelligence for CDOs and CAIOs. Track executive moves, hiring patterns, and what tools enterprises are actually deploying — not what vendors say they're deploying.
           </p>
         </section>
@@ -209,25 +209,25 @@ export default async function Home() {
         {/* ── Stat Panels ────────────────────────────────────────────────── */}
         <section className="max-w-[1200px] mx-auto px-6 pb-6">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <a href="/hiring" className="border border-[#1E1E1E] rounded-sm p-4 hover:border-[#333] transition-colors group">
-              <p className="font-mono text-[10px] uppercase tracking-[1px] text-[#555555] mb-1">Open Positions</p>
-              <p className="text-2xl font-semibold text-[#00FF94]">{hiringCount.toLocaleString()}</p>
-              <p className="font-mono text-[10px] text-[#555555] mt-0.5">Job postings · 90d</p>
+            <a href="/hiring" className="border border-[#C9C4BB] rounded-sm p-4 hover:border-[#8A8782] transition-colors group">
+              <p className="font-mono text-[10px] uppercase tracking-[1px] text-[#6B6864] mb-1">Open Positions</p>
+              <p className="text-2xl font-semibold text-[#0A0A0A]">{hiringCount.toLocaleString()}</p>
+              <p className="font-mono text-[10px] text-[#6B6864] mt-0.5">Job postings · 90d</p>
             </a>
-            <a href="/moves" className="border border-[#1E1E1E] rounded-sm p-4 hover:border-[#333] transition-colors group">
-              <p className="font-mono text-[10px] uppercase tracking-[1px] text-[#555555] mb-1">C-Suite Moves</p>
-              <p className="text-2xl font-semibold text-[#00FF94]">{movesCount.toLocaleString()}</p>
-              <p className="font-mono text-[10px] text-[#555555] mt-0.5">Appointments &amp; departures · 90d</p>
+            <a href="/moves" className="border border-[#C9C4BB] rounded-sm p-4 hover:border-[#8A8782] transition-colors group">
+              <p className="font-mono text-[10px] uppercase tracking-[1px] text-[#6B6864] mb-1">C-Suite Moves</p>
+              <p className="text-2xl font-semibold text-[#0A0A0A]">{movesCount.toLocaleString()}</p>
+              <p className="font-mono text-[10px] text-[#6B6864] mt-0.5">Appointments &amp; departures · 90d</p>
             </a>
-            <a href="/intelligence" className="border border-[#1E1E1E] rounded-sm p-4 hover:border-[#333] transition-colors group">
-              <p className="font-mono text-[10px] uppercase tracking-[1px] text-[#555555] mb-1">Market Signals</p>
-              <p className="text-2xl font-semibold text-[#00FF94]">{articlesCount.toLocaleString()}</p>
-              <p className="font-mono text-[10px] text-[#555555] mt-0.5">Tracked articles</p>
+            <a href="/intelligence" className="border border-[#C9C4BB] rounded-sm p-4 hover:border-[#8A8782] transition-colors group">
+              <p className="font-mono text-[10px] uppercase tracking-[1px] text-[#6B6864] mb-1">Market Signals</p>
+              <p className="text-2xl font-semibold text-[#0A0A0A]">{articlesCount.toLocaleString()}</p>
+              <p className="font-mono text-[10px] text-[#6B6864] mt-0.5">Tracked articles</p>
             </a>
-            <a href="/compensation" className="border border-[#1E1E1E] rounded-sm p-4 hover:border-[#333] transition-colors group">
-              <p className="font-mono text-[10px] uppercase tracking-[1px] text-[#555555] mb-1">CDO Median Comp</p>
-              <p className="text-2xl font-semibold text-[#00FF94]">{cdoP50 ? formatCurrency(cdoP50) : '\u2014'}</p>
-              <p className="font-mono text-[10px] text-[#555555] mt-0.5">Base (P50)</p>
+            <a href="/compensation" className="border border-[#C9C4BB] rounded-sm p-4 hover:border-[#8A8782] transition-colors group">
+              <p className="font-mono text-[10px] uppercase tracking-[1px] text-[#6B6864] mb-1">CDO Median Comp</p>
+              <p className="text-2xl font-semibold text-[#0A0A0A]">{cdoP50 ? formatCurrency(cdoP50) : '\u2014'}</p>
+              <p className="font-mono text-[10px] text-[#6B6864] mt-0.5">Base (P50)</p>
             </a>
           </div>
         </section>
@@ -237,26 +237,26 @@ export default async function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr_300px] gap-4">
 
             {/* Panel A — Hiring Intel */}
-            <div className="border border-[#1E1E1E] rounded-sm p-4">
+            <div className="border border-[#C9C4BB] rounded-sm p-4">
               <div className="flex items-center justify-between mb-3">
-                <h2 className="font-mono text-[10px] uppercase tracking-[2px] text-[#555555]">
+                <h2 className="font-mono text-[10px] uppercase tracking-[2px] text-[#6B6864]">
                   Hiring Intel
                 </h2>
-                <a href="/hiring" className="font-mono text-[10px] uppercase tracking-[1px] text-[#555555] hover:text-[#E8E8E8] transition-colors">
+                <a href="/hiring" className="font-mono text-[10px] uppercase tracking-[1px] text-[#6B6864] hover:text-[#0A0A0A] transition-colors">
                   All →
                 </a>
               </div>
 
               {/* Seniority breakdown */}
               <div>
-                <h3 className="font-mono text-[10px] uppercase tracking-[1px] text-[#555555] mb-2">By Seniority</h3>
+                <h3 className="font-mono text-[10px] uppercase tracking-[1px] text-[#6B6864] mb-2">By Seniority</h3>
                 {['C-Suite', 'SVP', 'VP', 'Director+', 'Other'].map((level) => {
                   const count = seniorityCounts[level] || 0
                   if (count === 0) return null
                   return (
-                    <a key={level} href="/hiring" className="flex items-center justify-between py-1.5 border-b border-[#1E1E1E] last:border-0 hover:bg-[#111111] transition-colors">
-                      <span className="text-xs text-[#888888]">{level}</span>
-                      <span className="font-mono text-sm font-semibold text-[#E8E8E8]">
+                    <a key={level} href="/hiring" className="flex items-center justify-between py-1.5 border-b border-[#C9C4BB] last:border-0 hover:bg-[#111111] transition-colors">
+                      <span className="text-xs text-[#6B6864]">{level}</span>
+                      <span className="font-mono text-sm font-semibold text-[#0A0A0A]">
                         {count}
                       </span>
                     </a>
@@ -264,36 +264,36 @@ export default async function Home() {
                 })}
               </div>
 
-              <p className="font-mono text-[10px] text-[#555555] mt-3">90-day window</p>
+              <p className="font-mono text-[10px] text-[#6B6864] mt-3">90-day window</p>
             </div>
 
             {/* Panel B — Exec Moves (center, wider) */}
-            <div className="border border-[#1E1E1E] rounded-sm overflow-hidden">
-              <div className="flex items-center justify-between px-4 py-3 border-b border-[#1E1E1E]">
+            <div className="border border-[#C9C4BB] rounded-sm overflow-hidden">
+              <div className="flex items-center justify-between px-4 py-3 border-b border-[#C9C4BB]">
                 <div>
-                  <h2 className="font-mono text-[10px] uppercase tracking-[2px] text-[#555555]">
+                  <h2 className="font-mono text-[10px] uppercase tracking-[2px] text-[#6B6864]">
                     Exec Moves
                   </h2>
                   <div className="flex items-center gap-3 mt-1">
-                    <span className="text-xs text-[#888888]">
-                      <span className="text-[#00FF94] font-semibold">{appointedCount}</span> appointed
+                    <span className="text-xs text-[#6B6864]">
+                      <span className="text-[#0A0A0A] font-semibold">{appointedCount}</span> appointed
                     </span>
-                    <span className="text-[#333]">|</span>
-                    <span className="text-xs text-[#888888]">
+                    <span className="text-[#8A8782]">|</span>
+                    <span className="text-xs text-[#6B6864]">
                       <span className="text-[#EF4444] font-semibold">{departedCount}</span> departed
                     </span>
                   </div>
                 </div>
-                <a href="/moves" className="font-mono text-[10px] uppercase tracking-[1px] text-[#555555] hover:text-[#E8E8E8] transition-colors">
+                <a href="/moves" className="font-mono text-[10px] uppercase tracking-[1px] text-[#6B6864] hover:text-[#0A0A0A] transition-colors">
                   View all →
                 </a>
               </div>
               {latestMoves.length === 0 ? (
                 <div className="p-6 text-center">
-                  <p className="text-xs text-[#555555]">No recent executive moves. Feed refreshes every 6 hours.</p>
+                  <p className="text-xs text-[#6B6864]">No recent executive moves. Feed refreshes every 6 hours.</p>
                 </div>
               ) : (
-                <div className="divide-y divide-[#1E1E1E]">
+                <div className="divide-y divide-[#C9C4BB]">
                   {latestMoves.map((move) => (
                     <article
                       key={move.id}
@@ -305,17 +305,17 @@ export default async function Home() {
                             href={move.source_url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-sm text-[#E8E8E8] hover:text-[#3B82F6] leading-snug block"
+                            className="text-sm text-[#0A0A0A] hover:text-[#3B82F6] leading-snug block"
                           >
                             {cleanTitle(move.headline)}
                           </a>
-                          <div className="flex flex-wrap items-center gap-2 text-[11px] text-[#555555] mt-0.5">
+                          <div className="flex flex-wrap items-center gap-2 text-[11px] text-[#6B6864] mt-0.5">
                             {move.company_name && (
-                              <span className="text-[#888888]">{move.company_name}</span>
+                              <span className="text-[#6B6864]">{move.company_name}</span>
                             )}
                             {move.published_at && !isNaN(new Date(move.published_at).getTime()) && (
                               <>
-                                {move.company_name && <span className="text-[#333]">|</span>}
+                                {move.company_name && <span className="text-[#8A8782]">|</span>}
                                 <span className="font-mono">{timeAgo(move.published_at)}</span>
                               </>
                             )}
@@ -323,7 +323,7 @@ export default async function Home() {
                         </div>
                         <div className="flex items-center gap-1.5 flex-shrink-0">
                           {move.person_name && (
-                            <span className="font-mono text-[10px] uppercase tracking-[1px] px-1.5 py-0.5 rounded-sm border border-[#1E1E1E] text-[#888888]">
+                            <span className="font-mono text-[10px] uppercase tracking-[1px] px-1.5 py-0.5 rounded-sm border border-[#C9C4BB] text-[#6B6864]">
                               {move.person_name}
                             </span>
                           )}
@@ -331,7 +331,7 @@ export default async function Home() {
                             <span className={`font-mono text-[10px] uppercase tracking-[1px] px-1.5 py-0.5 rounded-sm border ${
                               move.move_type === 'leaves'
                                 ? 'border-red-500/30 text-[#EF4444]'
-                                : 'border-[#1E1E1E] text-[#888888]'
+                                : 'border-[#C9C4BB] text-[#6B6864]'
                             }`}>
                               {MOVE_TYPE_LABELS[move.move_type] || move.move_type}
                             </span>
@@ -345,32 +345,32 @@ export default async function Home() {
             </div>
 
             {/* Panel C — Market Pulse */}
-            <div className="border border-[#1E1E1E] rounded-sm p-4">
+            <div className="border border-[#C9C4BB] rounded-sm p-4">
               <div className="flex items-center justify-between mb-3">
-                <h2 className="font-mono text-[10px] uppercase tracking-[2px] text-[#555555]">
+                <h2 className="font-mono text-[10px] uppercase tracking-[2px] text-[#6B6864]">
                   Market Pulse
                 </h2>
-                <a href="/intelligence" className="font-mono text-[10px] uppercase tracking-[1px] text-[#555555] hover:text-[#E8E8E8] transition-colors">
+                <a href="/intelligence" className="font-mono text-[10px] uppercase tracking-[1px] text-[#6B6864] hover:text-[#0A0A0A] transition-colors">
                   All →
                 </a>
               </div>
 
               {/* Top topics */}
               <div>
-                <h3 className="font-mono text-[10px] uppercase tracking-[1px] text-[#555555] mb-2">Top Topics</h3>
+                <h3 className="font-mono text-[10px] uppercase tracking-[1px] text-[#6B6864] mb-2">Top Topics</h3>
                 {topTopics.length === 0 ? (
-                  <p className="text-xs text-[#555555]">No topics tracked yet.</p>
+                  <p className="text-xs text-[#6B6864]">No topics tracked yet.</p>
                 ) : (
                   topTopics.map(([topic, count]) => (
                     <a
                       key={topic}
                       href="/intelligence"
-                      className="flex items-center justify-between py-1.5 border-b border-[#1E1E1E] last:border-0 hover:bg-[#111111] transition-colors group"
+                      className="flex items-center justify-between py-1.5 border-b border-[#C9C4BB] last:border-0 hover:bg-[#111111] transition-colors group"
                     >
                       <span className={`font-mono text-[10px] uppercase tracking-[1px] px-1.5 py-0.5 rounded-sm border ${TOPIC_COLORS[topic] || TOPIC_COLORS.general}`}>
                         {topic.replace('-', ' ')}
                       </span>
-                      <span className="font-mono text-sm font-semibold text-[#E8E8E8]">
+                      <span className="font-mono text-sm font-semibold text-[#0A0A0A]">
                         {count}
                       </span>
                     </a>
@@ -378,29 +378,29 @@ export default async function Home() {
                 )}
               </div>
 
-              <p className="font-mono text-[10px] text-[#555555] mt-3">30-day window</p>
+              <p className="font-mono text-[10px] text-[#6B6864] mt-3">30-day window</p>
             </div>
           </div>
         </section>
 
         {/* ── AI Tools Trending ─────────────────────────────────────────── */}
         <section className="max-w-[1200px] mx-auto px-6 pb-6">
-          <div className="border border-[#1E1E1E] rounded-sm p-4">
+          <div className="border border-[#C9C4BB] rounded-sm p-4">
             <div className="flex items-center justify-between mb-3">
               <div>
-                <h2 className="font-mono text-[10px] uppercase tracking-[2px] text-[#555555]">Enterprise AI</h2>
-                <span className="font-mono text-[10px] text-[#555555]">What CDOs &amp; CAIOs are deploying</span>
+                <h2 className="font-mono text-[10px] uppercase tracking-[2px] text-[#6B6864]">Enterprise AI</h2>
+                <span className="font-mono text-[10px] text-[#6B6864]">What CDOs &amp; CAIOs are deploying</span>
               </div>
-              <a href="/ai-tools" className="font-mono text-[10px] uppercase tracking-[1px] text-[#555555] hover:text-[#E8E8E8] transition-colors">All →</a>
+              <a href="/ai-tools" className="font-mono text-[10px] uppercase tracking-[1px] text-[#6B6864] hover:text-[#0A0A0A] transition-colors">All →</a>
             </div>
-            <p className="text-sm text-[#888888] leading-relaxed">
-              <span className="text-[#00FF94] font-semibold">{aiToolsCount}</span> enterprise AI signals tracked this week.
+            <p className="text-sm text-[#6B6864] leading-relaxed">
+              <span className="text-[#0A0A0A] font-semibold">{aiToolsCount}</span> enterprise AI signals tracked this week.
               Snowflake Cortex, Databricks AI, agentic analytics, and more.
             </p>
             <div className="flex flex-wrap gap-2 mt-3">
               {["Snowflake Cortex", "Databricks AI", "Agentic Analytics", "Microsoft Copilot", "WisdomAI"].map((tool) => (
                 <a key={tool} href="/ai-tools"
-                  className="font-mono text-[10px] uppercase tracking-[1px] px-2 py-1 border border-[#1E1E1E] rounded-sm text-[#555555] hover:border-[#333] hover:text-[#888888] transition-colors">
+                  className="font-mono text-[10px] uppercase tracking-[1px] px-2 py-1 border border-[#C9C4BB] rounded-sm text-[#6B6864] hover:border-[#8A8782] hover:text-[#6B6864] transition-colors">
                   {tool}
                 </a>
               ))}
@@ -410,13 +410,13 @@ export default async function Home() {
 
 
         {/* ── Email Signup ────────────────────────────────────────────── */}
-        <section className="max-w-[1200px] mx-auto px-6 pb-12 border-t border-[#1E1E1E] pt-12">
-          <div className="border border-[#1E1E1E] rounded-sm p-6 sm:p-8">
+        <section className="max-w-[1200px] mx-auto px-6 pb-12 border-t border-[#C9C4BB] pt-12">
+          <div className="border border-[#C9C4BB] rounded-sm p-6 sm:p-8">
             <div className="max-w-2xl">
-              <h2 className="text-lg font-semibold text-[#E8E8E8] mb-2">
+              <h2 className="text-lg font-semibold text-[#0A0A0A] mb-2">
                 Get the weekly brief
               </h2>
-              <p className="text-sm text-[#888888] mb-4">
+              <p className="text-sm text-[#6B6864] mb-4">
                 One email. Five minutes. What CDOs and CAIOs are actually doing — not what vendors say they're doing.
               </p>
               <form className="flex flex-col sm:flex-row gap-3" action="https://cdn.forms-content-1.com/sf/..." method="POST">
@@ -425,16 +425,16 @@ export default async function Home() {
                   name="email"
                   placeholder="you@company.com"
                   required
-                  className="flex-1 bg-[#0A0A0A] border border-[#1E1E1E] rounded-sm px-4 py-2.5 text-sm text-[#E8E8E8] placeholder:text-[#555555] focus:outline-none focus:border-[#333]"
+                  className="flex-1 bg-[#FFFFFF] border border-[#C9C4BB] rounded-sm px-4 py-2.5 text-sm text-[#0A0A0A] placeholder:text-[#6B6864] focus:outline-none focus:border-[#0A0A0A]"
                 />
                 <button
                   type="submit"
-                  className="bg-[#00FF94] text-[#0A0A0A] font-medium text-sm px-6 py-2.5 rounded-sm hover:bg-[#00E085] transition-colors"
+                  className="bg-[#0A0A0A] text-[#F5F3EE] font-medium text-sm px-6 py-2.5 rounded-sm hover:bg-[#3A3A3A] transition-colors"
                 >
                   Subscribe
                 </button>
               </form>
-              <p className="font-mono text-[10px] text-[#555555] mt-3">
+              <p className="font-mono text-[10px] text-[#6B6864] mt-3">
                 No spam. Unsubscribe anytime. Join 200+ data leaders.
               </p>
             </div>
@@ -445,37 +445,37 @@ export default async function Home() {
         <section className="max-w-[1200px] mx-auto px-6 pb-20">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
-              <h2 className="font-mono text-[10px] uppercase tracking-[2px] text-[#555555] mb-4">
+              <h2 className="font-mono text-[10px] uppercase tracking-[2px] text-[#6B6864] mb-4">
                 Why this exists
               </h2>
-              <p className="text-sm text-[#888888] leading-relaxed mb-4">
+              <p className="text-sm text-[#6B6864] leading-relaxed mb-4">
                 CDAO Insights tracks 500+ signals weekly from public sources — executive 
                 moves, hiring patterns, tool adoption — so data leaders know what's 
                 happening before their next board meeting.
               </p>
-              <p className="text-sm text-[#888888] leading-relaxed">
+              <p className="text-sm text-[#6B6864] leading-relaxed">
                 No vendor sponsorship. No paid placements. Just data.
               </p>
             </div>
             <div>
-              <h2 className="font-mono text-[10px] uppercase tracking-[2px] text-[#555555] mb-4">
+              <h2 className="font-mono text-[10px] uppercase tracking-[2px] text-[#6B6864] mb-4">
                 Methodology
               </h2>
-              <ul className="space-y-2 text-sm text-[#888888]">
+              <ul className="space-y-2 text-sm text-[#6B6864]">
                 <li className="flex items-start gap-2">
-                  <span className="text-[#00FF94]">—</span>
+                  <span className="text-[#0A0A0A]">—</span>
                   <span>Executive moves tracked from 50+ sources, updated every 6 hours</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#00FF94]">—</span>
+                  <span className="text-[#0A0A0A]">—</span>
                   <span>Hiring signals from public job boards, filtered to director+</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#00FF94]">—</span>
+                  <span className="text-[#0A0A0A]">—</span>
                   <span>Market intelligence from 35+ RSS feeds, AI-extracted topics</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#00FF94]">—</span>
+                  <span className="text-[#0A0A0A]">—</span>
                   <span>No vendor sponsorship. No paid placements. Just data.</span>
                 </li>
               </ul>

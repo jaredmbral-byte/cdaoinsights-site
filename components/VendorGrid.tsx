@@ -5,16 +5,16 @@ import type { Vendor } from '@/lib/types'
 
 // Category badge colors
 const CATEGORY_COLORS: Record<string, string> = {
-  'Data Platform': 'border-blue-500/30 text-blue-400',
-  'Governance': 'border-amber-500/30 text-amber-400',
-  'AI & Analytics': 'border-purple-500/30 text-purple-400',
-  'Observability': 'border-cyan-500/30 text-cyan-400',
-  'Integration': 'border-emerald-500/30 text-emerald-400',
-  'Enterprise Suite': 'border-rose-500/30 text-rose-400',
-  'Data Intelligence': 'border-indigo-500/30 text-indigo-400',
-  'Data Security': 'border-red-500/30 text-red-400',
-  'Data Resilience': 'border-orange-500/30 text-orange-400',
-  'AI Governance': 'border-violet-500/30 text-violet-400',
+  'Data Platform': 'border-[#C9C4BB] text-[#6B6864]',
+  'Governance': 'border-[#C9C4BB] text-[#6B6864]',
+  'AI & Analytics': 'border-[#C9C4BB] text-[#6B6864]',
+  'Observability': 'border-[#C9C4BB] text-[#6B6864]',
+  'Integration': 'border-[#C9C4BB] text-[#6B6864]',
+  'Enterprise Suite': 'border-[#C9C4BB] text-[#6B6864]',
+  'Data Intelligence': 'border-[#C9C4BB] text-[#6B6864]',
+  'Data Security': 'border-[#C9C4BB] text-[#6B6864]',
+  'Data Resilience': 'border-[#C9C4BB] text-[#6B6864]',
+  'AI Governance': 'border-[#C9C4BB] text-[#6B6864]',
 }
 
 interface VendorGridProps {
@@ -44,7 +44,7 @@ export default function VendorGrid({ vendors }: VendorGridProps) {
   return (
     <>
       {/* Category Filter Tabs */}
-      <div className="mb-6 pb-4 border-b border-[#1E1E1E] overflow-x-auto">
+      <div className="mb-6 pb-4 border-b border-[#C9C4BB] overflow-x-auto">
         <div className="flex gap-2 min-w-max">
           {categories.map((category) => (
             <button
@@ -52,8 +52,8 @@ export default function VendorGrid({ vendors }: VendorGridProps) {
               onClick={() => setActiveCategory(category)}
               className={`font-mono text-[10px] uppercase tracking-[1px] px-3 py-1.5 rounded-sm border transition-colors whitespace-nowrap ${
                 activeCategory === category
-                  ? 'border-[#00FF94] text-[#00FF94] bg-[#00FF94]/5'
-                  : 'border-[#1E1E1E] text-[#888888] hover:border-[#333] hover:text-[#E8E8E8]'
+                  ? 'border-[#0A0A0A] text-[#0A0A0A] bg-[#0A0A0A]/5'
+                  : 'border-[#C9C4BB] text-[#6B6864] hover:border-[#8A8782] hover:text-[#0A0A0A]'
               }`}
             >
               {category}
@@ -64,7 +64,7 @@ export default function VendorGrid({ vendors }: VendorGridProps) {
 
       {/* Sort Bar */}
       <div className="flex items-center justify-between mb-6">
-        <p className="text-xs text-[#555555]">
+        <p className="text-xs text-[#6B6864]">
           {sortedVendors.length} vendor{sortedVendors.length !== 1 ? 's' : ''}
         </p>
         <div className="flex gap-2">
@@ -72,8 +72,8 @@ export default function VendorGrid({ vendors }: VendorGridProps) {
             onClick={() => setSortMode('mentions')}
             className={`font-mono text-[10px] uppercase tracking-[1px] px-3 py-1.5 rounded-sm border transition-colors ${
               sortMode === 'mentions'
-                ? 'border-[#00FF94] text-[#00FF94] bg-[#00FF94]/5'
-                : 'border-[#1E1E1E] text-[#888888] hover:border-[#333] hover:text-[#E8E8E8]'
+                ? 'border-[#0A0A0A] text-[#0A0A0A] bg-[#0A0A0A]/5'
+                : 'border-[#C9C4BB] text-[#6B6864] hover:border-[#8A8782] hover:text-[#0A0A0A]'
             }`}
           >
             Most Mentions
@@ -82,8 +82,8 @@ export default function VendorGrid({ vendors }: VendorGridProps) {
             onClick={() => setSortMode('alpha')}
             className={`font-mono text-[10px] uppercase tracking-[1px] px-3 py-1.5 rounded-sm border transition-colors ${
               sortMode === 'alpha'
-                ? 'border-[#00FF94] text-[#00FF94] bg-[#00FF94]/5'
-                : 'border-[#1E1E1E] text-[#888888] hover:border-[#333] hover:text-[#E8E8E8]'
+                ? 'border-[#0A0A0A] text-[#0A0A0A] bg-[#0A0A0A]/5'
+                : 'border-[#C9C4BB] text-[#6B6864] hover:border-[#8A8782] hover:text-[#0A0A0A]'
             }`}
           >
             A-Z
@@ -93,22 +93,22 @@ export default function VendorGrid({ vendors }: VendorGridProps) {
 
       {/* Vendor Grid */}
       {sortedVendors.length === 0 ? (
-        <div className="border border-[#1E1E1E] rounded-sm p-12 text-center">
-          <p className="text-sm text-[#555555]">No vendors found for this category.</p>
+        <div className="border border-[#C9C4BB] rounded-sm p-12 text-center">
+          <p className="text-sm text-[#6B6864]">No vendors found for this category.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {sortedVendors.map((vendor) => (
             <div
               key={vendor.id}
-              className="border border-[#1E1E1E] rounded-sm p-4 hover:border-[#333] transition-colors group"
+              className="border border-[#C9C4BB] rounded-sm p-4 hover:border-[#8A8782] transition-colors group"
             >
               <div className="flex items-start justify-between mb-2">
-                <h3 className="text-base font-semibold text-[#E8E8E8] group-hover:text-[#00FF94] transition-colors">
+                <h3 className="text-base font-semibold text-[#0A0A0A] group-hover:text-[#0A0A0A] transition-colors">
                   {vendor.name}
                 </h3>
                 {vendor.job_mention_count !== undefined && vendor.job_mention_count > 0 && (
-                  <span className="font-mono text-xs font-semibold text-[#00FF94] flex-shrink-0 ml-2">
+                  <span className="font-mono text-xs font-semibold text-[#0A0A0A] flex-shrink-0 ml-2">
                     {vendor.job_mention_count}
                   </span>
                 )}
@@ -116,7 +116,7 @@ export default function VendorGrid({ vendors }: VendorGridProps) {
 
               {vendor.category && (
                 <span className={`inline-block font-mono text-[9px] uppercase tracking-[1px] px-2 py-1 rounded-sm border mb-2 ${
-                  CATEGORY_COLORS[vendor.category] || 'border-[#333] text-[#888888]'
+                  CATEGORY_COLORS[vendor.category] || 'border-[#8A8782] text-[#6B6864]'
                 }`}>
                   {vendor.category}
                 </span>
@@ -127,7 +127,7 @@ export default function VendorGrid({ vendors }: VendorGridProps) {
                   href={vendor.website_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs text-[#555555] hover:text-[#3B82F6] transition-colors block truncate"
+                  className="text-xs text-[#6B6864] hover:text-[#0A0A0A] transition-colors block truncate"
                 >
                   {vendor.website_url.replace(/^https?:\/\//, '')}
                 </a>
