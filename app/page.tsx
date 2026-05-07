@@ -441,44 +441,90 @@ export default async function Home() {
           </div>
         </section>
 
-        {/* ── About / Why This Exists ─────────────────────────────────── */}
-        <section className="max-w-[1200px] mx-auto px-6 pb-20">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div>
-              <h2 className="font-mono text-[10px] uppercase tracking-[2px] text-[#6B6864] mb-4">
-                Why this exists
-              </h2>
-              <p className="text-sm text-[#6B6864] leading-relaxed mb-4">
-                CDAO Insights tracks 500+ signals weekly from public sources — executive 
-                moves, hiring patterns, tool adoption — so data leaders know what's 
-                happening before their next board meeting.
-              </p>
-              <p className="text-sm text-[#6B6864] leading-relaxed">
-                No vendor sponsorship. No paid placements. Just data.
-              </p>
+        {/* ── §01 Foundation — Brand Guide ─────────────────────────────── */}
+        <section
+          className="max-w-[1400px] mx-auto px-5 lg:px-12 pt-20 lg:pt-28 pb-20 lg:pb-28 border-t border-[#C9C4BB]"
+          aria-labelledby="foundation-heading"
+        >
+          {/* Section head: "01 — Foundation" + display H2 */}
+          <div className="grid grid-cols-1 md:grid-cols-[1fr_3fr] gap-6 pb-12 items-baseline">
+            <div className="font-mono text-xs tracking-[0.08em] text-[#6B6864]">
+              01 — Foundation
             </div>
+            <h2
+              id="foundation-heading"
+              className="font-sans font-medium leading-none tracking-[-0.03em] text-[#0A0A0A] text-balance"
+              style={{ fontSize: 'clamp(32px, 4.6vw, 68px)' }}
+            >
+              A practitioner&rsquo;s record of a role still being drawn.
+            </h2>
+          </div>
+
+          {/* Two-column: lead + numbered principles */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20 pt-4">
             <div>
-              <h2 className="font-mono text-[10px] uppercase tracking-[2px] text-[#6B6864] mb-4">
-                Methodology
-              </h2>
-              <ul className="space-y-2 text-sm text-[#6B6864]">
-                <li className="flex items-start gap-2">
-                  <span className="text-[#0A0A0A]">—</span>
-                  <span>Executive moves tracked from 50+ sources, updated every 6 hours</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#0A0A0A]">—</span>
-                  <span>Hiring signals from public job boards, filtered to director+</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#0A0A0A]">—</span>
-                  <span>Market intelligence from 35+ RSS feeds, AI-extracted topics</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#0A0A0A]">—</span>
-                  <span>No vendor sponsorship. No paid placements. Just data.</span>
-                </li>
-              </ul>
+              <p
+                className="font-sans font-normal leading-[1.25] tracking-[-0.015em] text-[#0A0A0A] text-pretty"
+                style={{ fontSize: 'clamp(22px, 2.4vw, 34px)' }}
+              >
+                The CDAO role is less than a decade old in most of the Fortune 500, and its boundaries are redrawn every quarter.{' '}
+                <span className="text-[#6B6864]">
+                  We exist to make that boundary legible
+                </span>{' '}
+                — to the people inside it, and to the vendors, boards and peers circling it.
+              </p>
+              <div className="mt-10">
+                <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[#6B6864]">
+                  Positioning
+                </div>
+                <p className="text-[14px] leading-[1.55] text-[#3A3A3A] mt-3 max-w-[50ch]">
+                  Not a newsletter, not an analyst firm, not a trade press outlet. An operator-run intelligence desk for Chief Data, Analytics &amp; AI Officers. Field notes, not think pieces.
+                </p>
+              </div>
+            </div>
+
+            <div>
+              {[
+                {
+                  num: '01',
+                  title: 'Ground truth over narrative.',
+                  body: "Every claim cites a practitioner, a filing, a budget line or a vendor doc. No vibes analysis. If we can't source it, we don't say it.",
+                },
+                {
+                  num: '02',
+                  title: 'Small words, load-bearing ones.',
+                  body: "We write like engineers writing to engineers. Specific verbs, plain nouns, no abstractions we can't defend in a meeting.",
+                },
+                {
+                  num: '03',
+                  title: 'Humble, not hedged.',
+                  body: "We acknowledge what's unsettled, then say what we think anyway. Uncertainty is named, not performed.",
+                },
+                {
+                  num: '04',
+                  title: 'The reader is already senior.',
+                  body: 'No 101s, no glossary pop-ups, no explaining what a data mesh is. We start at the second meeting.',
+                },
+              ].map((p, i, arr) => (
+                <div
+                  key={p.num}
+                  className={`grid grid-cols-[60px_1fr] gap-4 py-7 border-t border-[#C9C4BB] ${
+                    i === arr.length - 1 ? 'border-b' : ''
+                  }`}
+                >
+                  <div className="font-mono text-[11px] uppercase tracking-[0.04em] text-[#6B6864]">
+                    {p.num}
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-[18px] tracking-[-0.01em] text-[#0A0A0A] mb-1.5">
+                      {p.title}
+                    </h3>
+                    <p className="text-[14px] leading-[1.5] text-[#3A3A3A] max-w-[52ch]">
+                      {p.body}
+                    </p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </section>

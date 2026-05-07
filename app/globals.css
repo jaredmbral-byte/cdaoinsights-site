@@ -25,12 +25,14 @@ html {
   color: var(--text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-feature-settings: 'lnum' 1, 'tnum' 1;
+  /* Brand Guide: Inter Tight stylistic sets ss01/cv11 + lining + tabular numerals */
+  font-feature-settings: 'ss01' 1, 'cv11' 1, 'lnum' 1, 'tnum' 1;
 }
 
 body {
   background: var(--bg);
   min-height: 100vh;
+  line-height: 1.45;
 }
 
 /* Tally form override */
