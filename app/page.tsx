@@ -1,8 +1,10 @@
 import HiringTicker from '@/components/HiringTicker'
 import MovesTicker from '@/components/MovesTicker'
 import { createServerClient } from '@/lib/supabase-server'
-import { cleanTitle, cleanSummary } from '@/lib/text'
-import type { ExecutiveMove, CompBenchmark } from '@/lib/types'
+import { cleanTitle } from '@/lib/text'
+import type { ExecutiveMove } from '@/lib/types'
+import { getHomepageAnalytics } from '@/lib/homepage-analytics'
+import { StatStrip, ChartCard, TrendArea, BarList, TopicMomentumList } from '@/components/Charts'
 
 export const dynamic = 'force-dynamic' // Dashboard data — always fresh
 export const revalidate = 900 // 15 minutes ISR fallback
@@ -45,12 +47,6 @@ const TOPIC_COLORS: Record<string, string> = {
 }
 
 
-function formatCurrency(n: number): string {
-  if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`
-  if (n >= 1_000) return `$${Math.round(n / 1_000)}K`
-  return `$${n}`
-}
-
 export default async function Home() {
   const supabase = createServerClient()
   const cutoff90 = new Date()
@@ -62,13 +58,12 @@ export default async function Home() {
   const cutoff7 = new Date()
   cutoff7.setDate(cutoff7.getDate() - 7)
 
-  // Parallel data fetch — dashboard panels
+  // Analytics layer (trend series, distributions, WoW deltas) runs concurrently.
+  const analyticsPromise = getHomepageAnalytics(supabase)
+
+  // Parallel data fetch — latest-signal tables + market pulse
   const [
     movesResult,
-    hiringCountResult,
-    movesCountResult,
-    articlesCountResult,
-    compResult,
     hiringSeniorityResult,
     movesTypeResult,
     marketTopicsResult,
@@ -80,28 +75,6 @@ export default async function Home() {
       .select('id, headline, person_name, company_name, move_type, source_url, published_at')
       .order('published_at', { ascending: false })
       .limit(5),
-    // Hiring signals count (90d) — featured only
-    supabase
-      .from('hiring_signals')
-      .select('id', { count: 'exact', head: true })
-      .eq('is_featured', true)
-      .gte('posted_at', cutoff90.toISOString()),
-    // Executive moves count (90d)
-    supabase
-      .from('executive_moves')
-      .select('id', { count: 'exact', head: true })
-      .gte('published_at', cutoff90.toISOString()),
-    // Market articles count
-    supabase
-      .from('market_articles')
-      .select('id', { count: 'exact', head: true })
-      .gte('relevance', 0.5),
-    // CDO median comp (p50)
-    supabase
-      .from('comp_benchmarks')
-      .select('p50')
-      .eq('role_title', 'Chief Data Officer')
-      .limit(1),
     // Seniority breakdown (featured roles only from last 90d)
     supabase
       .from('hiring_signals')
@@ -126,13 +99,8 @@ export default async function Home() {
       .gte('published_at', cutoff7.toISOString()),
   ])
 
+  const analytics = await analyticsPromise
   const latestMoves = (movesResult.data || []) as ExecutiveMove[]
-
-  // Stat panel data
-  const hiringCount = hiringCountResult.count ?? 0
-  const movesCount = movesCountResult.count ?? 0
-  const articlesCount = articlesCountResult.count ?? 0
-  const cdoP50 = (compResult.data?.[0] as CompBenchmark | undefined)?.p50 ?? null
 
   // Seniority breakdown from DB column (not classifySeniority)
   const seniorityRows = (hiringSeniorityResult.data || []) as Array<{ seniority: string | null }>
@@ -206,34 +174,62 @@ export default async function Home() {
           </p>
         </section>
 
-        {/* ── Stat Panels ────────────────────────────────────────────────── */}
+        {/* ── Signal Brief — Week in Numbers ──────────────────────────── */}
         <section className="max-w-[1200px] mx-auto px-6 pb-6">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <a href="/hiring" className="border border-[#C9C4BB] rounded-sm p-4 hover:border-[#8A8782] transition-colors group">
-              <p className="font-mono text-[10px] uppercase tracking-[1px] text-[#6B6864] mb-1">Open Positions</p>
-              <p className="text-2xl font-semibold text-[#0A0A0A]">{hiringCount.toLocaleString()}</p>
-              <p className="font-mono text-[10px] text-[#6B6864] mt-0.5">Job postings · 90d</p>
-            </a>
-            <a href="/moves" className="border border-[#C9C4BB] rounded-sm p-4 hover:border-[#8A8782] transition-colors group">
-              <p className="font-mono text-[10px] uppercase tracking-[1px] text-[#6B6864] mb-1">C-Suite Moves</p>
-              <p className="text-2xl font-semibold text-[#0A0A0A]">{movesCount.toLocaleString()}</p>
-              <p className="font-mono text-[10px] text-[#6B6864] mt-0.5">Appointments &amp; departures · 90d</p>
-            </a>
-            <a href="/intelligence" className="border border-[#C9C4BB] rounded-sm p-4 hover:border-[#8A8782] transition-colors group">
-              <p className="font-mono text-[10px] uppercase tracking-[1px] text-[#6B6864] mb-1">Market Signals</p>
-              <p className="text-2xl font-semibold text-[#0A0A0A]">{articlesCount.toLocaleString()}</p>
-              <p className="font-mono text-[10px] text-[#6B6864] mt-0.5">Tracked articles</p>
-            </a>
-            <a href="/compensation" className="border border-[#C9C4BB] rounded-sm p-4 hover:border-[#8A8782] transition-colors group">
-              <p className="font-mono text-[10px] uppercase tracking-[1px] text-[#6B6864] mb-1">CDO Median Comp</p>
-              <p className="text-2xl font-semibold text-[#0A0A0A]">{cdoP50 ? formatCurrency(cdoP50) : '\u2014'}</p>
-              <p className="font-mono text-[10px] text-[#6B6864] mt-0.5">Base (P50)</p>
-            </a>
+          <div className="flex items-baseline justify-between mb-3">
+            <h2 className="font-mono text-[10px] uppercase tracking-[0.1em] text-[#6B6864]">
+              Signal Brief · the week in numbers
+            </h2>
+            <span className="font-mono text-[10px] text-[#8A8782]">↻ updated continuously</span>
+          </div>
+          <StatStrip stats={analytics.headlineStats} />
+        </section>
+
+        {/* ── Trends ──────────────────────────────────────────────────── */}
+        <section className="max-w-[1200px] mx-auto px-6 pb-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <div className="lg:col-span-2">
+              <ChartCard
+                title="Appointment velocity"
+                hint={`Senior data & AI exec appointments · last ${analytics.windowWeeks} weeks`}
+                href="/moves"
+              >
+                <TrendArea points={analytics.appointmentVelocity} ariaLabel="Weekly appointment velocity" />
+              </ChartCard>
+            </div>
+            <ChartCard title="Appointments by role" hint="CDO · CAIO · CDAO mix · 12 weeks" href="/moves">
+              <BarList items={analytics.personaMix} />
+            </ChartCard>
+          </div>
+        </section>
+
+        {/* ── Distributions ───────────────────────────────────────────── */}
+        <section className="max-w-[1200px] mx-auto px-6 pb-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <ChartCard title="Skills in demand" hint="Platforms named in senior job posts · 90d" href="/hiring">
+              <BarList items={analytics.skillsInDemand} />
+            </ChartCard>
+            <ChartCard title="Hiring by sector" hint="Featured roles by industry · 90d" href="/hiring">
+              <BarList items={analytics.hiringByIndustry} />
+            </ChartCard>
+            <ChartCard title="Topic momentum" hint="Article mentions · this week vs last" href="/intelligence">
+              <TopicMomentumList items={analytics.topicMomentum} />
+            </ChartCard>
+          </div>
+        </section>
+
+        {/* ── Latest Signals divider (raw feeds live below the analysis) ── */}
+        <section className="max-w-[1200px] mx-auto px-6 pb-1">
+          <div className="flex items-baseline justify-between border-t border-[#C9C4BB] pt-6">
+            <h2 className="font-mono text-[10px] uppercase tracking-[0.1em] text-[#6B6864]">
+              Latest signals · raw feed
+            </h2>
+            <span className="font-mono text-[10px] text-[#8A8782]">drill into any headline →</span>
           </div>
         </section>
 
         {/* ── Command Center Grid (3 columns) ─────────────────────────── */}
-        <section className="max-w-[1200px] mx-auto px-6 pb-6">
+        <section className="max-w-[1200px] mx-auto px-6 pt-4 pb-6">
           <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr_300px] gap-4">
 
             {/* Panel A — Hiring Intel */}
