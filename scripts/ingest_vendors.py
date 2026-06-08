@@ -71,7 +71,12 @@ def probe_columns():
     code, res = api("GET", "vendors?limit=1")
     if code == 200 and isinstance(res, list) and res:
         return set(res[0].keys())
-    return {"name", "slug", "category", "website_url", "description", "use_case", "featured"}
+    # Empty table: assume the full lake schema (the table is created with all of these).
+    return {
+        "name", "slug", "category", "sub_category", "description", "use_case",
+        "website_url", "logo_url", "domain", "source", "rss_url", "raised",
+        "country", "founded", "featured", "tracking",
+    }
 
 def existing_slugs():
     code, res = api("GET", "vendors?select=slug&limit=20000")
@@ -115,7 +120,7 @@ def main():
             try:
                 row["founded"] = int(get(r, "founded"))
             except ValueError:
-                pass
+                row["founded"] = None  # keep the key so every row has identical keys
         payload.append(row)
 
     inserted = 0

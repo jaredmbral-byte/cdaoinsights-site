@@ -45,3 +45,7 @@ create table if not exists vendor_signals (
 alter table vendors enable row level security;
 drop policy if exists "Public read vendors" on vendors;
 create policy "Public read vendors" on vendors for select using (true);
+
+alter table vendor_signals enable row level security;
+drop policy if exists "Public read vendor_signals" on vendor_signals;
+create policy "Public read vendor_signals" on vendor_signals for select using (true);
