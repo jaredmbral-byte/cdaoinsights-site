@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation'
 export const metadata: Metadata = {
   title: 'Sponsor CDAO Insights | Reach Enterprise Data & AI Leaders',
   description:
-    'Put your brand in front of 10,000+ enterprise CDOs, CAIOs, and senior data leaders. Category-exclusive sponsorship packages starting at $2,500/quarter.',
+    'Put your brand in front of enterprise CDOs, CAIOs, and senior data leaders. Category-exclusive sponsorship packages start at $2,500 per quarter.',
   robots: { index: false, follow: false },
 }
 
@@ -59,10 +59,10 @@ const CATEGORIES = [
 ]
 
 const STATS = [
-  { value: '10,000+', label: 'Weekly Readers' },
-  { value: '72%', label: 'Director+ Seniority' },
-  { value: 'Fortune 1000', label: 'Primary Audience' },
+  { value: '1,400+', label: 'Vendors Tracked' },
+  { value: 'Daily', label: 'Signal Refresh' },
   { value: '6', label: 'Sponsor Categories' },
+  { value: 'CDO · CAIO · VP', label: 'Audience' },
 ]
 
 export default async function SponsorsPage({
@@ -130,7 +130,7 @@ export default async function SponsorsPage({
                 href="mailto:sponsors@cdaoinsights.com?subject=Sponsorship Inquiry"
                 className={`mt-6 block text-center font-mono text-xs uppercase tracking-[1px] px-4 py-2.5 rounded-sm transition-colors ${
                   tier.highlight
-                    ? 'bg-[#0A0A0A] text-[#F5F3EE] hover:bg-[#00CC77]'
+                    ? 'bg-[#0A0A0A] text-[#F5F3EE] hover:bg-[#3A3A3A]'
                     : 'border border-[#C9C4BB] text-[#6B6864] hover:border-[#6B6864] hover:text-[#0A0A0A]'
                 }`}
               >
@@ -166,7 +166,7 @@ export default async function SponsorsPage({
         </p>
         <a
           href="mailto:sponsors@cdaoinsights.com?subject=Sponsorship Inquiry"
-          className="inline-block font-mono text-xs uppercase tracking-[1px] px-6 py-3 rounded-sm bg-[#0A0A0A] text-[#F5F3EE] hover:bg-[#00CC77] transition-colors"
+          className="inline-block font-mono text-xs uppercase tracking-[1px] px-6 py-3 rounded-sm bg-[#0A0A0A] text-[#F5F3EE] hover:bg-[#3A3A3A] transition-colors"
         >
           Contact sponsors@cdaoinsights.com
         </a>

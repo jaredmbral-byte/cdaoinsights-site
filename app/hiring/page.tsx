@@ -7,12 +7,12 @@ import FaqAccordion from '@/components/FaqAccordion'
 export const metadata: Metadata = {
   title: 'CDO & CAIO Job Openings | CDAO Insights',
   description:
-    'Active chief data officer and chief AI officer job postings from enterprise companies. Updated weekly.',
+    'Active chief data officer and chief AI officer job postings from enterprise companies. Updated daily.',
   keywords: 'CDO jobs, chief data officer job openings, CAIO hiring, data executive roles, CDO job board',
   alternates: { canonical: 'https://cdaoinsights.com/hiring' },
   openGraph: {
     title: 'CDO & CAIO Job Openings | CDAO Insights',
-    description: 'Active chief data officer and chief AI officer job postings from enterprise companies. Updated weekly.',
+    description: 'Active chief data officer and chief AI officer job postings from enterprise companies. Updated daily.',
     url: 'https://cdaoinsights.com/hiring',
     siteName: 'CDAO Insights',
     type: 'website',
@@ -77,11 +77,11 @@ export default async function HiringPage({
   const hiringFaqs = [
     {
       q: 'What roles does the CDAO Insights hiring tracker cover?',
-      a: 'The hiring tracker monitors Chief Data Officer (CDO), Chief AI Officer (CAIO), Chief Data and AI Officer (CDAIO), VP of Data, VP of Analytics, Head of Data, Head of AI, and Director-level data leadership roles at enterprise organizations. Job postings are sourced from Indeed and Firecrawl search.',
+      a: 'The hiring tracker monitors Chief Data Officer (CDO), Chief AI Officer (CAIO), Chief Data and AI Officer (CDAIO), VP of Data, VP of Analytics, Head of Data, Head of AI, and Director-level data leadership roles at enterprise organizations. Postings are pulled daily from public job boards and company careers pages, then filtered to senior data and AI leadership roles.',
     },
     {
       q: 'How often is the hiring data updated?',
-      a: 'The hiring feed is refreshed every 6 hours from Indeed RSS feeds and Firecrawl web search. Listings are deduplicated by job title and company name to prevent duplicates.',
+      a: 'The hiring feed is refreshed daily from public job boards and company careers pages. Listings are deduplicated by job title and company name to prevent duplicates.',
     },
     {
       q: 'What industries are tracked for data and AI executive hiring?',
@@ -99,7 +99,7 @@ export default async function HiringPage({
         Open CDO, CAIO &amp; data leadership roles
       </h1>
       <p className="text-base text-[#6B6864] leading-relaxed max-w-2xl mb-10">
-        Open job postings for CDO, CAIO, VP Data, and senior data leadership roles at large enterprises. Updated every 6 hours.
+        Open job postings for CDO, CAIO, VP Data, and senior data leadership roles at large enterprises. Updated daily.
       </p>
 
       {/* Time window */}
@@ -220,7 +220,7 @@ export default async function HiringPage({
         <div className="border border-[#C9C4BB] rounded-sm p-12 text-center">
           <p className="text-[#6B6864] mb-2">No hiring signals yet</p>
           <p className="text-sm text-[#6B6864]">
-            Data is ingested every 6 hours. Check back soon or adjust your filters.
+            Data is ingested daily. Check back soon or adjust your filters.
           </p>
         </div>
       )}

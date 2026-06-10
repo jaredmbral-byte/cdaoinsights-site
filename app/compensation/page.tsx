@@ -85,16 +85,16 @@ export default async function CompensationPage({
 
   const compFaqs = [
     {
-      q: 'What is the average salary for a Chief Data Officer in 2026?',
-      a: 'The median total cash compensation for a Chief Data Officer in the United States is approximately $295,000 across all industries. In Financial Services, the median rises to $350,000. In Technology, the median is approximately $335,000. These figures include base salary and bonus but exclude equity compensation.',
+      q: 'What does a Chief Data Officer earn?',
+      a: 'Benchmarks are compiled from public postings and filings and are shown in the table above as percentile ranges by role and industry. Coverage is expanding.',
     },
     {
       q: 'How does Chief AI Officer compensation compare to Chief Data Officer pay?',
-      a: 'Chief AI Officers typically earn a 10-15% premium over Chief Data Officers. The median CAIO total cash compensation is approximately $325,000 across all industries, compared to $295,000 for CDOs. In Financial Services, the CAIO median reaches $385,000.',
+      a: 'The table above shows benchmarks for both roles side by side as percentile ranges, compiled from public postings and filings. Coverage is expanding.',
     },
     {
       q: 'Where does CDAO Insights compensation data come from?',
-      a: 'Compensation benchmarks are aggregated from BLS Occupational Employment Statistics, Glassdoor, Levels.fyi, and public company filings. Figures represent total cash compensation (base + bonus). Equity varies significantly and is excluded. Data is refreshed quarterly.',
+      a: 'Compensation benchmarks are aggregated from BLS Occupational Employment Statistics, Glassdoor, Levels.fyi, and public company filings. Figures represent total cash compensation (base plus bonus). Equity varies and is excluded. Data is updated as new data lands.',
     },
   ]
 
@@ -109,7 +109,7 @@ export default async function CompensationPage({
       </h1>
       <p className="text-base text-[#6B6864] leading-relaxed max-w-2xl mb-10">
         Salary benchmarks for CDO, CAIO, and senior data leadership roles.
-        Percentile breakdowns by industry. Updated quarterly.
+        Percentile breakdowns by industry. Updated as new data lands.
       </p>
 
       {/* Role filter */}
@@ -195,7 +195,7 @@ export default async function CompensationPage({
         <div className="border border-[#C9C4BB] rounded-sm p-12 text-center">
           <p className="text-[#6B6864] mb-2">No compensation data yet</p>
           <p className="text-sm text-[#6B6864]">
-            Benchmark data is refreshed monthly. Run the initial data load to populate.
+            Benchmark data is updated as new data lands. Run the initial data load to populate.
           </p>
         </div>
       )}
@@ -208,8 +208,8 @@ export default async function CompensationPage({
         <p className="text-xs text-[#6B6864] leading-relaxed">
           Compensation data is aggregated from BLS Occupational Employment Statistics,
           Glassdoor, Levels.fyi, and public company filings. Figures represent total
-          cash compensation (base + bonus). Equity compensation varies significantly
-          and is not included. Data is refreshed quarterly.
+          cash compensation (base plus bonus). Equity compensation varies
+          and is not included. Data is updated as new data lands.
         </p>
       </div>
 

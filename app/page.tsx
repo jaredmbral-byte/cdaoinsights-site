@@ -29,22 +29,8 @@ const MOVE_TYPE_LABELS: Record<string, string> = {
   promoted: 'Promoted',
 }
 
-const TOPIC_COLORS: Record<string, string> = {
-  ai: 'border-blue-500/30 text-blue-400',
-  genai: 'border-purple-500/30 text-purple-400',
-  governance: 'border-amber-500/30 text-amber-400',
-  strategy: 'border-green-500/30 text-green-400',
-  leadership: 'border-rose-500/30 text-rose-400',
-  funding: 'border-emerald-500/30 text-emerald-400',
-  'data-quality': 'border-orange-500/30 text-orange-400',
-  security: 'border-red-500/30 text-red-400',
-  'agentic-ai': 'border-indigo-500/30 text-indigo-400',
-  infrastructure: 'border-cyan-500/30 text-cyan-400',
-  layoffs: 'border-red-500/30 text-red-400',
-  'ai-deployment': 'border-violet-500/30 text-violet-400',
-  'microsoft-fabric': 'border-blue-400/30 text-blue-300',
-  general: 'border-[#8A8782] text-[#6B6864]',
-}
+// Monochrome topic tag style — one style for all topics
+const TOPIC_TAG_STYLE = 'border-[#C9C4BB] text-[#6B6864]'
 
 
 export default async function Home() {
@@ -167,10 +153,10 @@ export default async function Home() {
             id="hero-heading"
             className="text-2xl sm:text-3xl font-semibold leading-[1.2] tracking-[-0.5px] text-[#0A0A0A] mb-2"
           >
-            Know what your peers are doing before your next board meeting
+            See what your peers are doing before the board asks
           </h1>
           <p className="text-sm text-[#6B6864] leading-relaxed max-w-xl">
-            Real-time intelligence for CDOs and CAIOs. Track executive moves, hiring patterns, and what tools enterprises are actually deploying — not what vendors say they're deploying.
+            Executive moves, hiring, vendor activity, and market signal across enterprise data and AI. Tracked daily and verified. Built for CDOs, CAIOs, and VPs of AI and ML.
           </p>
         </section>
 
@@ -180,7 +166,7 @@ export default async function Home() {
             <h2 className="font-mono text-[10px] uppercase tracking-[0.1em] text-[#6B6864]">
               Signal Brief · the week in numbers
             </h2>
-            <span className="font-mono text-[10px] text-[#8A8782]">↻ updated continuously</span>
+            <span className="font-mono text-[10px] text-[#8A8782]">updated daily</span>
           </div>
           <StatStrip stats={analytics.headlineStats} />
         </section>
@@ -286,7 +272,7 @@ export default async function Home() {
               </div>
               {latestMoves.length === 0 ? (
                 <div className="p-6 text-center">
-                  <p className="text-xs text-[#6B6864]">No recent executive moves. Feed refreshes every 6 hours.</p>
+                  <p className="text-xs text-[#6B6864]">No recent executive moves. Feed refreshes daily.</p>
                 </div>
               ) : (
                 <div className="divide-y divide-[#C9C4BB]">
@@ -301,7 +287,7 @@ export default async function Home() {
                             href={move.source_url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-sm text-[#0A0A0A] hover:text-[#3B82F6] leading-snug block"
+                            className="text-sm text-[#0A0A0A] hover:opacity-60 leading-snug block"
                           >
                             {cleanTitle(move.headline)}
                           </a>
@@ -363,7 +349,7 @@ export default async function Home() {
                       href="/intelligence"
                       className="flex items-center justify-between py-1.5 border-b border-[#C9C4BB] last:border-0 hover:bg-[#111111] transition-colors group"
                     >
-                      <span className={`font-mono text-[10px] uppercase tracking-[1px] px-1.5 py-0.5 rounded-sm border ${TOPIC_COLORS[topic] || TOPIC_COLORS.general}`}>
+                      <span className={`font-mono text-[10px] uppercase tracking-[1px] px-1.5 py-0.5 rounded-sm border ${TOPIC_TAG_STYLE}`}>
                         {topic.replace('-', ' ')}
                       </span>
                       <span className="font-mono text-sm font-semibold text-[#0A0A0A]">
@@ -391,16 +377,7 @@ export default async function Home() {
             </div>
             <p className="text-sm text-[#6B6864] leading-relaxed">
               <span className="text-[#0A0A0A] font-semibold">{aiToolsCount}</span> enterprise AI signals tracked this week.
-              Snowflake Cortex, Databricks AI, agentic analytics, and more.
             </p>
-            <div className="flex flex-wrap gap-2 mt-3">
-              {["Snowflake Cortex", "Databricks AI", "Agentic Analytics", "Microsoft Copilot", "WisdomAI"].map((tool) => (
-                <a key={tool} href="/ai-tools"
-                  className="font-mono text-[10px] uppercase tracking-[1px] px-2 py-1 border border-[#C9C4BB] rounded-sm text-[#6B6864] hover:border-[#8A8782] hover:text-[#6B6864] transition-colors">
-                  {tool}
-                </a>
-              ))}
-            </div>
           </div>
         </section>
 
@@ -413,7 +390,7 @@ export default async function Home() {
                 Get the weekly brief
               </h2>
               <p className="text-sm text-[#6B6864] mb-4">
-                One email. Five minutes. What CDOs and CAIOs are actually doing — not what vendors say they're doing.
+                One email. Five minutes. The week's executive moves, hiring signals, and vendor activity.
               </p>
               <form className="flex flex-col sm:flex-row gap-3" action="https://cdn.forms-content-1.com/sf/..." method="POST">
                 <input
@@ -431,7 +408,7 @@ export default async function Home() {
                 </button>
               </form>
               <p className="font-mono text-[10px] text-[#6B6864] mt-3">
-                No spam. Unsubscribe anytime. Join 200+ data leaders.
+                No spam. Unsubscribe anytime.
               </p>
             </div>
           </div>
@@ -445,7 +422,7 @@ export default async function Home() {
           {/* Section head: "01 — Foundation" + display H2 */}
           <div className="grid grid-cols-1 md:grid-cols-[1fr_3fr] gap-6 pb-12 items-baseline">
             <div className="font-mono text-xs tracking-[0.08em] text-[#6B6864]">
-              01 — Foundation
+              01 · Foundation
             </div>
             <h2
               id="foundation-heading"
@@ -467,7 +444,7 @@ export default async function Home() {
                 <span className="text-[#6B6864]">
                   We exist to make that boundary legible
                 </span>{' '}
-                — to the people inside it, and to the vendors, boards and peers circling it.
+                to the people inside it, and to the vendors, boards and peers circling it.
               </p>
               <div className="mt-10">
                 <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[#6B6864]">

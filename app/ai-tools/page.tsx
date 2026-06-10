@@ -175,18 +175,18 @@ export default async function AiToolsPage({
       </h1>
       <p className="text-sm text-[#6B6864] leading-relaxed max-w-2xl mb-8">
         Real-time tracking of AI tools enterprise CDOs and CAIOs are evaluating and deploying.
-        Case studies, releases, and signals — updated continuously.
+        Releases, deployments, and coverage, updated daily.
       </p>
 
       {/* Platform Spotlights */}
       <section className="mb-8">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="font-mono text-[10px] uppercase tracking-[2px] text-[#6B6864]">Platform AI — Databricks & Snowflake</h2>
+          <h2 className="font-mono text-[10px] uppercase tracking-[2px] text-[#6B6864]">Platform AI · Databricks & Snowflake</h2>
           <span className="font-mono text-[10px] text-[#6B6864]">30d</span>
         </div>
         {spotlightArticles.length === 0 ? (
           <div className="border border-[#C9C4BB] rounded-sm p-6 text-center">
-            <p className="text-xs text-[#6B6864]">No platform articles yet — check back after next ingest.</p>
+            <p className="text-xs text-[#6B6864]">No platform articles yet. Check back after next ingest.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -257,7 +257,7 @@ export default async function AiToolsPage({
           <div className="border border-[#C9C4BB] rounded-sm p-4">
             <div className="flex items-center justify-between mb-3">
               <h2 className="font-mono text-[10px] uppercase tracking-[2px] text-[#6B6864]">Trending Tools</h2>
-              <span className="font-mono text-[10px] text-[#6B6864]">auto-discovered · 30d</span>
+              <span className="font-mono text-[10px] text-[#6B6864]">tracked · 30d</span>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               {topTools.map(([tool, count], i) => (

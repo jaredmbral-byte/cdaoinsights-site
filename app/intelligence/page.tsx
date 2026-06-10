@@ -7,12 +7,12 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Market Intelligence Dashboard | CDAO Insights',
   description:
-    'Real-time signal tracking for data and AI executives — AI regulation, governance shifts, vendor moves, and market signals aggregated by topic.',
+    'Real-time signal tracking for data and AI executives: AI regulation, governance shifts, vendor moves, and market signals aggregated by topic.',
   keywords: 'CDO newsletter, data executive briefing, AI governance news, enterprise data strategy, CDO weekly brief',
   alternates: { canonical: 'https://cdaoinsights.com/intelligence' },
   openGraph: {
     title: 'Market Intelligence Dashboard | CDAO Insights',
-    description: 'Real-time signal tracking for data and AI executives — AI regulation, governance shifts, vendor moves, and market signals aggregated by topic.',
+    description: 'Real-time signal tracking for data and AI executives: AI regulation, governance shifts, vendor moves, and market signals aggregated by topic.',
     url: 'https://cdaoinsights.com/intelligence',
     siteName: 'CDAO Insights',
     type: 'website',

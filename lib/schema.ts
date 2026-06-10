@@ -6,7 +6,7 @@ export function hiringListSchema(signals: HiringSignal[]) {
   return {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
-    name: 'Enterprise Data & AI Executive Hiring — CDAO Insights',
+    name: 'Enterprise Data & AI Executive Hiring | CDAO Insights',
     description:
       'Real-time tracking of Chief Data Officer, Chief AI Officer, and senior data leadership hires at large enterprises.',
     numberOfItems: signals.length,
@@ -34,9 +34,9 @@ export function articleListSchema(articles: MarketArticle[]) {
   return {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
-    name: 'Enterprise Data & AI Market Intelligence — CDAO Insights',
+    name: 'Enterprise Data & AI Market Intelligence | CDAO Insights',
     description:
-      'Curated intelligence feed for Chief Data Officers and Chief AI Officers — AI regulation, data strategy, vendor moves, and market signals.',
+      'Curated intelligence feed for Chief Data Officers and Chief AI Officers: AI regulation, data strategy, vendor moves, and market signals.',
     numberOfItems: articles.length,
     itemListElement: articles.slice(0, 50).map((a, i) => ({
       '@type': 'ListItem',
@@ -59,7 +59,7 @@ export function movesListSchema(moves: ExecutiveMove[]) {
   return {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
-    name: 'CDO / CAIO / CDAIO Executive Appointment Tracker — CDAO Insights',
+    name: 'CDO / CAIO / CDAIO Executive Appointment Tracker | CDAO Insights',
     description:
       'Real-time feed of Chief Data Officer, Chief AI Officer, and CDAIO executive appointments, departures, and leadership changes at large enterprises.',
     numberOfItems: moves.length,
@@ -93,7 +93,7 @@ export function movesFaqSchema() {
         name: 'What is the CDAO Insights Executive Moves feed?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'The Executive Moves feed tracks Chief Data Officer (CDO), Chief AI Officer (CAIO), and Chief Data and AI Officer (CDAIO) appointments, departures, and leadership transitions at enterprise organizations. Sources include press releases, news coverage, and company announcements. The feed is updated every 6 hours.',
+          text: 'The Executive Moves feed tracks Chief Data Officer (CDO), Chief AI Officer (CAIO), and Chief Data and AI Officer (CDAIO) appointments, departures, and leadership transitions at enterprise organizations. Sources include press releases, news coverage, and company announcements. The feed is updated daily.',
         },
       },
       {
@@ -109,7 +109,7 @@ export function movesFaqSchema() {
         name: 'How often is the executive moves feed updated?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'The executive moves feed is refreshed every 6 hours from Google News and PR Newswire RSS sources. Articles are deduplicated by URL to prevent repeat entries.',
+          text: 'The executive moves feed is refreshed daily from Google News and PR Newswire RSS sources. Articles are deduplicated by URL to prevent repeat entries.',
         },
       },
     ],
@@ -126,7 +126,7 @@ export function hiringFaqSchema() {
         name: 'What roles does the CDAO Insights hiring tracker cover?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'The hiring tracker monitors Chief Data Officer (CDO), Chief AI Officer (CAIO), Chief Data and AI Officer (CDAIO), VP of Data, VP of Analytics, Head of Data, Head of AI, and Director-level data leadership roles at enterprise organizations. Job postings are sourced from Indeed and Firecrawl search.',
+          text: 'The hiring tracker monitors Chief Data Officer (CDO), Chief AI Officer (CAIO), Chief Data and AI Officer (CDAIO), VP of Data, VP of Analytics, Head of Data, Head of AI, and Director-level data leadership roles at enterprise organizations. Postings are pulled daily from public job boards and company careers pages, then filtered to senior data and AI leadership roles.',
         },
       },
       {
@@ -134,7 +134,7 @@ export function hiringFaqSchema() {
         name: 'How often is the hiring data updated?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'The hiring feed is refreshed every 6 hours from Indeed RSS feeds and Firecrawl web search. Listings are deduplicated by job title and company name to prevent duplicates.',
+          text: 'The hiring feed is refreshed daily from public job boards and company careers pages. Listings are deduplicated by job title and company name to prevent duplicates.',
         },
       },
       {
@@ -156,10 +156,10 @@ export function compFaqSchema() {
     mainEntity: [
       {
         '@type': 'Question',
-        name: 'What is the average salary for a Chief Data Officer in 2026?',
+        name: 'What does a Chief Data Officer earn?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'The median total cash compensation for a Chief Data Officer in the United States is approximately $295,000 across all industries. In Financial Services, the median rises to $350,000. In Technology, the median is approximately $335,000. These figures include base salary and bonus but exclude equity compensation.',
+          text: 'Benchmarks are compiled from public postings and filings and are shown on the compensation page as percentile ranges by role and industry. Coverage is expanding.',
         },
       },
       {
@@ -167,7 +167,7 @@ export function compFaqSchema() {
         name: 'How does Chief AI Officer compensation compare to Chief Data Officer pay?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Chief AI Officers typically earn a 10-15% premium over Chief Data Officers. The median CAIO total cash compensation is approximately $325,000 across all industries, compared to $295,000 for CDOs. In Financial Services, the CAIO median reaches $385,000.',
+          text: 'The compensation page shows benchmarks for both roles side by side as percentile ranges, compiled from public postings and filings. Coverage is expanding.',
         },
       },
       {
@@ -175,7 +175,7 @@ export function compFaqSchema() {
         name: 'Where does CDAO Insights compensation data come from?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Compensation benchmarks are aggregated from BLS Occupational Employment Statistics, Glassdoor, Levels.fyi, and public company filings. Figures represent total cash compensation (base + bonus). Equity varies significantly and is excluded. Data is refreshed quarterly.',
+          text: 'Compensation benchmarks are aggregated from BLS Occupational Employment Statistics, Glassdoor, Levels.fyi, and public company filings. Figures represent total cash compensation (base plus bonus). Equity varies and is excluded. Data is updated as new data lands.',
         },
       },
     ],

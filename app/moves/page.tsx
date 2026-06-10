@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { createClient } from '@supabase/supabase-js'
+import { createServerClient } from '@/lib/supabase-server'
 import type { ExecutiveMove } from '@/lib/types'
 import { movesListSchema, movesFaqSchema } from '@/lib/schema'
 import { cleanTitle } from '@/lib/text'
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
 const faqs = [
   {
     q: 'What is the CDAO Insights Executive Moves feed?',
-    a: 'The Executive Moves feed tracks Chief Data Officer (CDO), Chief AI Officer (CAIO), and Chief Data and AI Officer (CDAIO) appointments, departures, and leadership transitions at enterprise organizations. Sources include press releases, news coverage, and company announcements. The feed is updated every 6 hours.',
+    a: 'The Executive Moves feed tracks Chief Data Officer (CDO), Chief AI Officer (CAIO), and Chief Data and AI Officer (CDAIO) appointments, departures, and leadership transitions at enterprise organizations. Sources include press releases, news coverage, and company announcements. The feed is updated daily.',
   },
   {
     q: 'Why do CDO and CAIO executive moves matter?',
@@ -35,7 +35,7 @@ const faqs = [
   },
   {
     q: 'How often is the executive moves feed updated?',
-    a: 'The executive moves feed is refreshed every 6 hours from Google News and PR Newswire RSS sources. Articles are deduplicated by URL to prevent repeat entries.',
+    a: 'The executive moves feed is refreshed daily from Google News and PR Newswire RSS sources. Articles are deduplicated by URL to prevent repeat entries.',
   },
 ]
 
@@ -68,10 +68,7 @@ export default async function MovesPage({
   const moveType = params.type || ''
   const days = parseInt(params.days || '90', 10)
 
-  const supabase = createClient(
-    process.env.SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  )
+  const supabase = createServerClient()
 
   const cutoff = new Date()
   cutoff.setDate(cutoff.getDate() - days)
@@ -181,8 +178,8 @@ export default async function MovesPage({
           {typedMoves.length === 0 ? (
             <div className="border border-[#C9C4BB] rounded-sm p-8 text-center">
               <p className="text-sm text-[#6B6864]">
-                No executive moves found for this time period. Check back soon — the
-                feed refreshes every 6 hours.
+                No executive moves found for this time period. Check back soon.
+                The feed refreshes daily.
               </p>
             </div>
           ) : (

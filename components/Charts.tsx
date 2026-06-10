@@ -24,7 +24,7 @@ function DeltaBadge({ delta }: { delta: Delta }) {
 }
 
 function EmptyNote() {
-  return <p className="text-xs text-[#6B6864] py-4">Not enough data yet — check back as signals accrue.</p>
+  return <p className="text-xs text-[#6B6864] py-4">Not enough data yet. Check back as signals accrue.</p>
 }
 
 // ── Card chrome ─────────────────────────────────────────────────────────────

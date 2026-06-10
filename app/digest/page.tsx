@@ -147,7 +147,7 @@ export default async function DigestPage() {
       {validMoves.length > 0 && (
         <section className="max-w-[1200px] mx-auto px-6 mt-16 lg:mt-24 border-t border-[#C9C4BB]">
           <div className="py-6 flex items-baseline justify-between">
-            <Label>The Board — Leadership Moves</Label>
+            <Label>The Board · Leadership Moves</Label>
             <span className="font-mono text-[10px] text-[#8A8782] tabular-nums">
               {validMoves.length}
             </span>
@@ -181,7 +181,7 @@ export default async function DigestPage() {
       {hiring.length > 0 && (
         <section className="max-w-[1200px] mx-auto px-6 mt-16 lg:mt-24 border-t border-[#C9C4BB]">
           <div className="py-6">
-            <Label>Hiring Signal — Senior Openings</Label>
+            <Label>Hiring Signal · Senior Openings</Label>
           </div>
           <div className="divide-y divide-[#C9C4BB] border-t border-[#C9C4BB]">
             {hiring.map((h, i) => {
@@ -206,7 +206,7 @@ export default async function DigestPage() {
       {articles.length > 0 && (
         <section className="max-w-[1200px] mx-auto px-6 mt-16 lg:mt-24 border-t border-[#C9C4BB]">
           <div className="py-6">
-            <Label>The Wire — What Moved the Market</Label>
+            <Label>The Wire · What Moved the Market</Label>
           </div>
           <div className="divide-y divide-[#C9C4BB] border-t border-[#C9C4BB]">
             {articles.map((a, i) => {
