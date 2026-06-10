@@ -48,8 +48,8 @@ export default async function VendorsPage() {
           The data &amp; AI <span className="text-[#6B6864]">landscape.</span>
         </h1>
         <p className="mt-5 max-w-[640px] text-[#3A3A3A] text-[16px] leading-[1.5]">
-          Every vendor we track, drawn from the MAD landscape, the Gartner Data &amp; Analytics
-          forum, and Ai4. Each one watched daily for funding, launches, and leadership moves.
+          Every vendor selling into the enterprise data and AI stack, watched daily for funding,
+          launches, and leadership moves. New entrants are added as they surface.
         </p>
       </header>
       <VendorDirectory vendors={vendors} />
