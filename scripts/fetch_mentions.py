@@ -70,6 +70,39 @@ def fetch(v):
         pass
     return out
 
+STOP = {"the", "a", "an", "of", "for", "to", "in", "on", "and", "with", "its", "is", "at", "by", "as"}
+
+def tokens(title):
+    return {w for w in re.sub(r"[^a-z0-9 ]", " ", title.lower()).split() if w not in STOP and len(w) > 2}
+
+def recent_titles_by_vendor():
+    """Titles already in market_articles (last 21d), keyed by vendor (topics[0])."""
+    from datetime import datetime, timedelta, timezone
+    cutoff = urllib.parse.quote((datetime.now(timezone.utc) - timedelta(days=21)).isoformat())
+    out, start = {}, 0
+    while True:
+        url = (f"{BASE}/rest/v1/market_articles?select=title,topics"
+               f"&ingested_at=gte.{cutoff}&topics=not.is.null&limit=1000&offset={start}")
+        try:
+            page = json.loads(urllib.request.urlopen(urllib.request.Request(url, headers=H), timeout=40).read())
+        except Exception:
+            return out
+        for a in page:
+            tp = a.get("topics") or []
+            if tp:
+                out.setdefault(tp[0], []).append(tokens(a.get("title") or ""))
+        if len(page) < 1000:
+            return out
+        start += 1000
+
+def is_dupe_story(tok, kept_list):
+    """Same story, different outlet: high token overlap on the headline."""
+    for other in kept_list:
+        inter = len(tok & other)
+        if inter and inter / max(1, min(len(tok), len(other))) >= 0.6:
+            return True
+    return False
+
 def main():
     vendors = get_vendors()
     print(f"  monitoring {len(vendors)} tracked vendors (last {DAYS}d, top {PER_VENDOR}/vendor)")
@@ -77,13 +110,23 @@ def main():
     with ThreadPoolExecutor(max_workers=8) as ex:
         for res in ex.map(fetch, vendors):
             rows.extend(res)
-    # dedupe within this run by source_url
-    seen, deduped = set(), []
+    # dedupe: by source_url, then collapse same-story-from-multiple-outlets per vendor
+    # (token-overlap on headlines, checked against this run AND the last 21 days in the DB)
+    existing = recent_titles_by_vendor()
+    seen, kept_tokens, deduped, story_dupes = set(), {}, [], 0
     for r in rows:
         if r["source_url"] in seen:
             continue
         seen.add(r["source_url"])
+        vendor = (r.get("topics") or ["?"])[0]
+        tok = tokens(r["title"])
+        if is_dupe_story(tok, kept_tokens.get(vendor, [])) or is_dupe_story(tok, existing.get(vendor, [])):
+            story_dupes += 1
+            continue
+        kept_tokens.setdefault(vendor, []).append(tok)
         deduped.append(r)
+    if story_dupes:
+        print(f"  collapsed {story_dupes} same-story duplicates (multiple outlets, one event)")
     inserted = 0
     for i in range(0, len(deduped), 100):
         batch = deduped[i : i + 100]
