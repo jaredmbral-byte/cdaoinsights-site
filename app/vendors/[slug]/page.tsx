@@ -19,13 +19,6 @@ function fmtDate(iso: string | null): string {
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 }
 
-const SOURCE_LABEL: Record<string, string> = {
-  mad: 'MAD landscape',
-  'gartner-dna': 'Gartner D&A',
-  ai4: 'Ai4',
-  manual: 'Manual',
-}
-
 export default async function VendorProfile(
   { params }: { params: Promise<{ slug: string }> },
 ) {
@@ -57,7 +50,7 @@ export default async function VendorProfile(
     ['Funding', String(v.raised || '—')],
     ['Founded', v.founded ? String(v.founded) : '—'],
     ['HQ', String(v.country || '—')],
-    ['Source', SOURCE_LABEL[String(v.source || '')] || String(v.source || '—')],
+    ['Events', v.verified_count ? String(v.verified_count) : '0'],
   ]
 
   return (

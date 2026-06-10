@@ -11,15 +11,20 @@ export const dynamic = 'force-dynamic'
 
 async function fetchAllVendors(): Promise<LakeVendor[]> {
   const sb = createServerClient()
+  const FULL = 'name,slug,category,sub_category,raised,founded,mention_count,verified_count,last_event_at'
+  const BASIC = 'name,slug,category,sub_category,raised,founded'
+  // Graceful before migration 005: fall back if the activity columns don't exist yet.
+  const probe = await sb.from('vendors').select(FULL).limit(1)
+  const cols = probe.error ? BASIC : FULL
   const all: LakeVendor[] = []
   for (let start = 0; start < 4000; start += 1000) {
     const { data } = await sb
       .from('vendors')
-      .select('name,slug,category,sub_category,website_url,domain,source,raised,founded,country')
+      .select(cols)
       .order('name', { ascending: true })
       .range(start, start + 999)
     if (!data || data.length === 0) break
-    all.push(...(data as LakeVendor[]))
+    all.push(...(data as unknown as LakeVendor[]))
     if (data.length < 1000) break
   }
   return all
