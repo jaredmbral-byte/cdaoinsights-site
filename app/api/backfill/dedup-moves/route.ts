@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase-admin'
 
+export const dynamic = 'force-dynamic'
+
 // One-time cleanup: deduplicate executive_moves table + remove non-move articles
 // Usage: POST /api/backfill/dedup-moves with Authorization: Bearer <CRON_SECRET>
 // Add ?dry=true to preview without deleting

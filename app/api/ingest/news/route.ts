@@ -125,6 +125,8 @@ const RSS_FEEDS = [
 
 import { stripHtml } from '@/lib/text'
 
+export const dynamic = 'force-dynamic'
+
 // Topic classification based on keywords
 function classifyTopics(title: string, summary: string): string[] {
   const text = `${title} ${summary}`.toLowerCase()

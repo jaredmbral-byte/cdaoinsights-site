@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase-admin'
 import { extractTechStack } from '@/lib/tech-stack'
 
+export const dynamic = 'force-dynamic'
+
 // One-time backfill: infer tech_stack from job titles for rows where it's null/empty
 // Usage: POST /api/backfill/tech-stack with Authorization: Bearer <CRON_SECRET>
 

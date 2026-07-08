@@ -156,7 +156,7 @@ export default async function Home() {
             See what your peers are doing before the board asks
           </h1>
           <p className="text-sm text-[#6B6864] leading-relaxed max-w-xl">
-            Executive moves, hiring, vendor activity, and market signal across enterprise data and AI. Tracked daily and verified. Built for CDOs, CAIOs, and VPs of AI and ML.
+            Executive moves, hiring, vendor activity, and market signal across enterprise data and AI. Tracked daily and screened. Built for CDOs, CAIOs, and VPs of AI and ML.
           </p>
         </section>
 

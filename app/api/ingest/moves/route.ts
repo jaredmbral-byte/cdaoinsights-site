@@ -3,6 +3,8 @@ import { supabaseAdmin } from '@/lib/supabase-admin'
 import { passesNegativeFilter } from '@/lib/filters'
 import Anthropic from '@anthropic-ai/sdk'
 
+export const dynamic = 'force-dynamic'
+
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
 async function extractMoveDetails(headline: string): Promise<{ person_name: string | null; title: string | null; company_name: string | null; move_type: string | null }> {

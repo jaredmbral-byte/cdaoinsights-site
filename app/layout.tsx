@@ -20,14 +20,14 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: 'CDAO Insights | Intelligence for Chief Data & AI Officers',
   description:
-    'The go-to resource for CDOs and CAIOs: executive moves, compensation benchmarks, hiring signals, and weekly intelligence briefs.',
-  keywords: 'chief data officer, CDAO, CDO insights, data executive intelligence, CDO compensation, CDO moves',
+    'The go-to resource for CDOs and CAIOs: executive moves, hiring signals, market intelligence, and weekly briefs.',
+  keywords: 'chief data officer, CDAO, CDO insights, data executive intelligence, CDO moves',
   metadataBase: new URL('https://cdaoinsights.com'),
   alternates: { canonical: 'https://cdaoinsights.com' },
   openGraph: {
     title: 'CDAO Insights | Intelligence for Chief Data & AI Officers',
     description:
-      'The go-to resource for CDOs and CAIOs: executive moves, compensation benchmarks, hiring signals, and weekly intelligence briefs.',
+      'The go-to resource for CDOs and CAIOs: executive moves, hiring signals, market intelligence, and weekly briefs.',
     url: 'https://cdaoinsights.com',
     siteName: 'CDAO Insights',
     type: 'website',
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     site: '@cdaoinsights',
     title: 'CDAO Insights | Intelligence for Chief Data & AI Officers',
-    description: 'The go-to resource for CDOs and CAIOs: executive moves, compensation benchmarks, hiring signals, and weekly intelligence briefs.',
+    description: 'The go-to resource for CDOs and CAIOs: executive moves, hiring signals, market intelligence, and weekly briefs.',
   },
   robots: {
     index: true,
@@ -83,10 +83,10 @@ const structuredData = {
       '@type': 'FAQPage',
       '@id': 'https://cdaoinsights.com/#faq',
       mainEntity: [
-        { '@type': 'Question', name: 'What is CDAO Insights?', acceptedAnswer: { '@type': 'Answer', text: 'CDAO Insights is an independent intelligence resource for enterprise Chief Data Officers (CDOs), Chief AI Officers (CAIOs), and senior data and analytics leaders. It tracks executive moves, hiring signals, market and vendor intelligence, and compensation benchmarks across large enterprises. Vendor sponsorship does not influence editorial.' } },
-        { '@type': 'Question', name: 'What does CDAO Insights cover?', acceptedAnswer: { '@type': 'Answer', text: 'Five tracks: executive appointments and departures in data and AI leadership, senior data and AI job postings, market and vendor intelligence, enterprise AI tool activity, and compensation benchmarks for data leadership roles.' } },
-        { '@type': 'Question', name: 'Where does CDAO Insights data come from?', acceptedAnswer: { '@type': 'Answer', text: 'Public sources: press releases, news coverage, company announcements, public job boards and company careers pages, and public filings. Compensation benchmarks draw on BLS Occupational Employment Statistics, Glassdoor, Levels.fyi, and public company filings.' } },
-        { '@type': 'Question', name: 'How often is CDAO Insights updated?', acceptedAnswer: { '@type': 'Answer', text: 'Hiring, market intelligence, and executive move feeds refresh daily. Compensation benchmarks are updated as new data lands.' } },
+        { '@type': 'Question', name: 'What is CDAO Insights?', acceptedAnswer: { '@type': 'Answer', text: 'CDAO Insights is an independent intelligence resource for enterprise Chief Data Officers (CDOs), Chief AI Officers (CAIOs), and senior data and analytics leaders. It tracks executive moves, hiring signals, and market and vendor intelligence across large enterprises. Vendor sponsorship does not influence editorial.' } },
+        { '@type': 'Question', name: 'What does CDAO Insights cover?', acceptedAnswer: { '@type': 'Answer', text: 'Four tracks: executive appointments and departures in data and AI leadership, senior data and AI job postings, market and vendor intelligence, and enterprise AI tool activity.' } },
+        { '@type': 'Question', name: 'Where does CDAO Insights data come from?', acceptedAnswer: { '@type': 'Answer', text: 'Public sources: press releases, news coverage, company announcements, public job boards and company careers pages, and public filings.' } },
+        { '@type': 'Question', name: 'How often is CDAO Insights updated?', acceptedAnswer: { '@type': 'Answer', text: 'Hiring, market intelligence, and executive move feeds refresh daily.' } },
       ],
     },
   ],
@@ -138,12 +138,6 @@ export default function RootLayout({
               </a>
               <a href="/intelligence" className="font-mono text-[11px] uppercase tracking-[0.06em] text-[#6B6864] hover:text-[#0A0A0A] transition-colors">
                 Intelligence
-              </a>
-              <a href="/ai-tools" className="font-mono text-[11px] uppercase tracking-[0.06em] text-[#6B6864] hover:text-[#0A0A0A] transition-colors">
-                AI Tools
-              </a>
-              <a href="/compensation" className="font-mono text-[11px] uppercase tracking-[0.06em] text-[#6B6864] hover:text-[#0A0A0A] transition-colors">
-                Compensation
               </a>
             </div>
             <div className="flex md:hidden items-center gap-4">

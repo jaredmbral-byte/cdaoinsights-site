@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase-admin'
 import { classifyPersona } from '@/lib/taxonomy'
 
+export const dynamic = 'force-dynamic'
+
 // One-time backfill: classify persona on all existing hiring_signals rows
 // Run once after migration 004 is applied, then this route can be removed.
 // Usage: POST /api/backfill/persona with Authorization: Bearer <CRON_SECRET>

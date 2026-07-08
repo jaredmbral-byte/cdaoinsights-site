@@ -110,8 +110,7 @@ export default async function MovesPage({
           </h1>
           <p className="text-base text-[#6B6864] leading-relaxed max-w-2xl mb-8">
             Appointments, departures, and promotions across enterprise data and AI
-            leadership. Sourced from news coverage and press releases, updated every
-            6 hours.
+            leadership. Sourced from news coverage and press releases, updated daily.
           </p>
 
 

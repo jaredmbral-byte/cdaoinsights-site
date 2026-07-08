@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase-admin'
 import { stripHtml } from '@/lib/text'
 
+export const dynamic = 'force-dynamic'
+
 // One-time cleanup: strip HTML from existing market_articles titles and summaries
 // POST /api/clean-articles with Authorization: Bearer <CRON_SECRET>
 

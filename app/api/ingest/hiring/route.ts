@@ -5,17 +5,28 @@ import { passesNegativeFilter } from '@/lib/filters'
 import { classifyPersona } from '@/lib/taxonomy'
 import { extractTechStack } from '@/lib/tech-stack'
 
+export const dynamic = 'force-dynamic'
+
 // Multi-source hiring ingestion (job postings only):
 // 1. Adzuna API (primary — free tier, 250 req/day, full descriptions)
 // 2. USAJobs API (government CDO/CAIO roles — completely free)
 // 3. Firecrawl search API (fallback — uses credits)
 // NOTE: Executive appointment announcements are handled by /api/ingest/moves
 
+interface AdzunaJob {
+  title?: string
+  company?: { display_name?: string }
+  location?: { display_name?: string }
+  redirect_url?: string
+  created?: string
+  description?: string
+}
+
 interface ScrapedJob {
   title: string
   company: string
-  location?: string
-  url?: string
+  location?: string | null
+  url?: string | null
   date?: string
   description?: string
   source: string
@@ -267,18 +278,19 @@ async function ingestFromAdzuna(): Promise<ScrapedJob[]> {
           break
         }
 
-        const data = await response.json()
-        const jobResults = data.results || []
+        const data = (await response.json()) as { results?: AdzunaJob[] }
+        const jobResults = data.results ?? []
         fetchedOnPage = jobResults.length
 
         for (const job of jobResults) {
-          if (!job.title || !job.company?.display_name) continue
+          const company = job.company?.display_name
+          if (!job.title || !company) continue
           if (!isRelevantTitle(job.title, job.description || '')) continue
           if (!passesNegativeFilter(job.title, job.description || '', job.redirect_url || '')) continue
 
           results.push({
             title: job.title,
-            company: job.company.display_name,
+            company,
             location: job.location?.display_name || null,
             url: job.redirect_url || null,
             date: job.created ? new Date(job.created).toISOString() : undefined,

@@ -101,7 +101,7 @@ export default async function VendorProfile(
       <section className="mt-12">
         <div className="flex items-baseline justify-between pb-4 border-b border-[#C9C4BB]">
           <span className="font-mono text-[10px] uppercase tracking-[0.06em] text-[#6B6864]">
-            Verified Signal
+            Screened Signal
           </span>
           <span className="font-mono text-[10px] text-[#8A8782] tabular-nums">{verified.length}</span>
         </div>

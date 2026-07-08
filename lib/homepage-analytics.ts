@@ -117,7 +117,7 @@ export async function getHomepageAnalytics(
   const windowStart = new Date(weeks[0].start).toISOString()
   const cutoff90 = new Date(now.getTime() - 90 * DAY_MS).toISOString()
 
-  const [movesRes, hiringRes, topicsRes, compRes] = await Promise.all([
+  const [movesRes, hiringRes, topicsRes] = await Promise.all([
     sb
       .from('executive_moves')
       .select('title, headline, published_at')
@@ -136,11 +136,6 @@ export async function getHomepageAnalytics(
       .gte('published_at', windowStart)
       .gte('relevance', 0.4)
       .limit(5000),
-    sb
-      .from('comp_benchmarks')
-      .select('p50')
-      .eq('role_title', 'Chief Data Officer')
-      .limit(1),
   ])
 
   const moves = (movesRes.data || []) as { title: string | null; headline: string | null; published_at: string }[]
@@ -151,7 +146,6 @@ export async function getHomepageAnalytics(
     posted_at: string
   }[]
   const articles = (topicsRes.data || []) as { topics: string[] | null; published_at: string }[]
-  const cdoP50 = (compRes.data?.[0] as { p50: number } | undefined)?.p50 ?? null
 
   // ── Appointment velocity (weekly counts of appointments) ──────────────────
   const velocity: WeekPoint[] = weeks.map((w) => ({ label: w.label, iso: w.iso, value: 0 }))
@@ -271,12 +265,6 @@ export async function getHomepageAnalytics(
       sub: topIndustry ? `${topIndustry.value} roles · 90d` : '',
       href: '/hiring',
     },
-    {
-      label: 'CDO median base',
-      value: cdoP50 ? formatCompact(cdoP50) : '—',
-      sub: 'P50 · all industries',
-      href: '/compensation',
-    },
   ]
 
   return {
@@ -288,10 +276,4 @@ export async function getHomepageAnalytics(
     topicMomentum,
     windowWeeks: WINDOW,
   }
-}
-
-function formatCompact(n: number): string {
-  if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`
-  if (n >= 1_000) return `$${Math.round(n / 1_000)}K`
-  return `$${n}`
 }

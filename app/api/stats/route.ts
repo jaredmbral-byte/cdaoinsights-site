@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase-admin'
 
+export const dynamic = 'force-dynamic'
+
 // Public API: returns counts for hiring signals, articles, and benchmarks
 // Used by the homepage ticker and any external consumers
 

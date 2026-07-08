@@ -24,3 +24,6 @@
 *.tsbuildinfo
 next-env.d.ts
 .env.local
+
+# nested worktrees (not part of the app)
+.claude/worktrees/
