@@ -2,6 +2,7 @@ import { createServerClient } from '@/lib/supabase-server'
 import { articleListSchema } from '@/lib/schema'
 import type { MarketArticle } from '@/lib/types'
 import { cleanTitle } from '@/lib/text'
+import { isPublicTopic } from '@/lib/taxonomy'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -75,7 +76,9 @@ export default async function IntelligencePage({
   searchParams: Promise<{ topic?: string }>
 }) {
   const params = await searchParams
-  const activeTopic = params.topic || ''
+  // Ignore any topic the allowlist does not recognize. Without this,
+  // /intelligence?topic=rejected serves the articles the classifier threw out.
+  const activeTopic = params.topic && isPublicTopic(params.topic) ? params.topic : ''
 
   const supabase = createServerClient()
 
@@ -110,6 +113,7 @@ export default async function IntelligencePage({
 
   for (const article of allArticles) {
     for (const t of article.topics || []) {
+      if (!isPublicTopic(t)) continue
       topicCounts[t] = (topicCounts[t] || 0) + 1
     }
     if (article.source_name) {

@@ -175,3 +175,36 @@ export const PERSONA_GROUPS: Record<SeniorityLevel, Persona[]> = {
   ],
   Senior: [],
 }
+
+/**
+ * Topics that are safe to show publicly.
+ *
+ * The article classifier writes internal statuses into the same `topics`
+ * column it uses for real subjects (for example `rejected`, which marks an
+ * article the classifier discarded). Those values are not topics and must
+ * never reach a public surface.
+ *
+ * This is an allowlist on purpose. A blocklist would leak the next status
+ * value someone adds to the classifier.
+ */
+export const PUBLIC_TOPICS = new Set<string>([
+  'ai',
+  'genai',
+  'governance',
+  'strategy',
+  'leadership',
+  'funding',
+  'data-quality',
+  'security',
+  'agentic-ai',
+  'infrastructure',
+  'layoffs',
+  'ai-deployment',
+  'microsoft-fabric',
+  'enterprise-ai-tools',
+])
+
+/** True when a topic value belongs on a public page. */
+export function isPublicTopic(topic: string): boolean {
+  return PUBLIC_TOPICS.has(topic)
+}

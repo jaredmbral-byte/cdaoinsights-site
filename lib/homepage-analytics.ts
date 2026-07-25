@@ -3,6 +3,7 @@
 // renders the output through static SVG/CSS chart components (no client JS).
 
 import type { SupabaseClient } from '@supabase/supabase-js'
+import { isPublicTopic } from '@/lib/taxonomy'
 
 export interface WeekPoint {
   label: string // short axis label e.g. "Apr 14"
@@ -206,7 +207,7 @@ export async function getHomepageAnalytics(
       : null
     if (!bucket) continue
     for (const topic of a.topics || []) {
-      if (topic === 'general') continue
+      if (!isPublicTopic(topic)) continue
       bucket.set(topic, (bucket.get(topic) || 0) + 1)
     }
   }
