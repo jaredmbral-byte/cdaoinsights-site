@@ -7,12 +7,12 @@ import FaqAccordion from '@/components/FaqAccordion'
 export const metadata: Metadata = {
   title: 'CDO & CAIO Job Openings | CDAO Insights',
   description:
-    'Active chief data officer and chief AI officer job postings from enterprise companies. Updated daily.',
+    'Open chief data officer, chief AI officer, and VP-level data leadership roles, pulled daily from public job boards and government listings.',
   keywords: 'CDO jobs, chief data officer job openings, CAIO hiring, data executive roles, CDO job board',
   alternates: { canonical: 'https://cdaoinsights.com/hiring' },
   openGraph: {
     title: 'CDO & CAIO Job Openings | CDAO Insights',
-    description: 'Active chief data officer and chief AI officer job postings from enterprise companies. Updated daily.',
+    description: 'Open chief data officer, chief AI officer, and VP-level data leadership roles, pulled daily from public job boards and government listings.',
     url: 'https://cdaoinsights.com/hiring',
     siteName: 'CDAO Insights',
     type: 'website',
@@ -77,7 +77,7 @@ export default async function HiringPage({
   const hiringFaqs = [
     {
       q: 'What roles does the CDAO Insights hiring tracker cover?',
-      a: 'The hiring tracker monitors Chief Data Officer (CDO), Chief AI Officer (CAIO), Chief Data and AI Officer (CDAIO), VP of Data, VP of Analytics, Head of Data, Head of AI, and Director-level data leadership roles at enterprise organizations. Postings are pulled daily from public job boards and company careers pages, then filtered to senior data and AI leadership roles.',
+      a: 'The tracker monitors Chief Data Officer (CDO), Chief AI Officer (CAIO), Chief Data and AI Officer (CDAIO), VP of Data, VP of Analytics, Head of Data, Head of AI, and director-level data leadership roles. Postings come daily from public job boards and USAJobs. Two filters run on every posting: commercial roles are removed, since titles like "Head of AI Sales" match the same patterns as data leadership while carrying a quota, and staffing-agency reposts are removed, since the employer they list is the agency rather than the hiring company.',
     },
     {
       q: 'How often is the hiring data updated?',
@@ -99,7 +99,10 @@ export default async function HiringPage({
         Open CDO, CAIO &amp; data leadership roles
       </h1>
       <p className="text-base text-[#6B6864] leading-relaxed max-w-2xl mb-10">
-        Open job postings for CDO, CAIO, VP Data, and senior data leadership roles at large enterprises. Updated daily.
+        Where the market is buying data and AI leadership. Open CDO, CAIO, VP,
+        and director-level roles pulled daily from public job boards and
+        government listings. Commercial roles and staffing-agency reposts are
+        filtered out.
       </p>
 
       {/* Time window */}

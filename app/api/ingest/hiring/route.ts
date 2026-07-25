@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { firecrawl } from '@/lib/firecrawl'
 import { supabaseAdmin } from '@/lib/supabase-admin'
-import { passesNegativeFilter } from '@/lib/filters'
+import { passesNegativeFilter, isCommercialRole, isStaffingAgency } from '@/lib/filters'
 import { classifyPersona } from '@/lib/taxonomy'
 import { extractTechStack } from '@/lib/tech-stack'
 
@@ -170,6 +170,11 @@ function classifyIndustry(text: string): string | null {
 // Check if a title is relevant to our target roles
 function isRelevantTitle(title: string, context: string = ''): boolean {
   const t = title.toLowerCase()
+
+  // Reject commercial roles before anything else. "Head of AI Sales" and
+  // "Head of AI Inference GTM" both match the target phrases below, and
+  // neither person owns a data function.
+  if (isCommercialRole(title)) return false
 
   // Tier 1: Executive roles (featured on site)
   const TARGET_PHRASES = [
@@ -484,6 +489,15 @@ export async function POST(request: Request) {
 
   for (const job of uniqueJobs) {
     if (!job.title || job.company === 'Unknown' || job.company === 'See Article') {
+      skippedInvalid++
+      skipped++
+      continue
+    }
+
+    // Staffing agencies post on behalf of a client they will not name, so the
+    // company column carries no signal and the same role shows up under
+    // several agencies at once.
+    if (isStaffingAgency(job.company)) {
       skippedInvalid++
       skipped++
       continue
